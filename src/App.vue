@@ -46,7 +46,7 @@
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/registre/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem>
+				<AppMenuItem :href="'/registre/'+ personnelHabilite.id" icon="bi bi-person" v-for="personnelHabilite in personnelHabilites()" :key="personnelHabilite.id">{{personnelHabilite.cache_nom}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -80,10 +80,7 @@ export default {
 			pending: {
 				elements: true
 			},
-			isConnectedUser: false,
-
-			temp_habilitations: [],
-			temp_personnels: []
+			isConnectedUser: false
 		}
 	},
 
@@ -92,6 +89,31 @@ export default {
 	},
 
 	methods: {
+
+		// personnelHabilites(){
+		// 	let personnelHabilite = [];
+
+		// 	for(let personnel of this.personnels){
+		// 		for(let habilitation of this.habilitations){
+		// 			if(personnel.id == habilitation.personnel_id){
+		// 				personnelHabilite.push(personnel)
+		// 			}
+		// 		}
+		// 	}
+
+		// 	return personnelHabilite;
+		// },
+		personnelHabilites() {
+			const personnelHabiliteSet = new Set();
+			for (const habilitation of this.habilitations) {
+				const personnel = this.personnels.find(personnel => personnel.id === habilitation.personnel_id);
+				if (personnel) {
+					personnelHabiliteSet.add(personnel);
+				}
+			}
+			console.log(personnelHabiliteSet)
+			return Array.from(personnelHabiliteSet);
+		},
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
 		 * @param {Object} user Un objet LocalUser
@@ -116,29 +138,39 @@ export default {
 				apiRoute: 'v2/sample'
 			});
 
-			elementsCollection.reset();
-
+			
 			const typesCollection = new AssetsCollection(this, {
 				assetName: 'types',
 				apiRoute: 'v2/sample/types'
 			});
-
+			
 			const habilitationCollection = new AssetsCollection(this, {
 				assetName: 'habilitations',
 				apiRoute: 'v2/habilitation'
 			});
 
+			const habilitationTypeCollection = new AssetsCollection(this, {
+				assetName: 'habilitationType',
+				apiRoute: 'v2/habilitation/type'
+			});
+			
 			const personnelsCollection = new AssetsCollection(this, {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel'
 			});
-
+			
+			habilitationCollection.reset();
+			personnelsCollection.reset();
+			elementsCollection.reset();
 			typesCollection.reset();
+			habilitationTypeCollection.reset();
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
 			this.$assets.addCollection("habilitations", habilitationCollection);
 			this.$assets.addCollection("personnels", personnelsCollection);
+			this.$assets.addCollection("habilitationType", habilitationTypeCollection);
+			
 		}
 	},
 
@@ -159,7 +191,27 @@ export default {
 
 				this.pending.elements = true;
 				try {
-					await this.$assets.getCollection("elements").load();
+					this.$assets.getCollection("elements").load();
+
+					const personnelsCollection = this.$assets.getCollection("personnels");
+					
+					await personnelsCollection.load();
+
+					const personnels = personnelsCollection.getCollection();
+
+					let ids = [];
+
+					personnels.forEach(personnel => {
+						ids.push(personnel.id);
+					});
+
+					const collection = this.$assets.getCollection("habilitations");
+					collection.requestPayload = {
+						personnel_id: ids.join(",")
+					};
+
+					this.$assets.getCollection("habilitations").load();
+					this.$assets.getCollection("habilitationType").load();
 				}
 				catch (e) {
 					this.$app.catchError(e);
@@ -170,9 +222,6 @@ export default {
 			}
 		});
 
-		this.$app.apiGet('v2/hebilitations').then((data)=>this.habilitations = data);
-
-		console.log(this.habilitations)
 	}
 
 }

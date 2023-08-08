@@ -8,6 +8,7 @@ export default createStore({
 		elements: [],
 		types: [],
 		habilitations: [],
+		habilitationType: [],
 		personnels: [],
 		openedElement: null
 	},

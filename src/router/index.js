@@ -8,9 +8,15 @@ const routes = [
     component: Home
   },
   {
-    path: '/registre/:id',
+    path: '/registre/',
     name: 'registre',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Registrehabilitation.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Registrehabilitation.vue'),
+    children: [
+      {
+        path: ':id',
+        component: () => import('../views/Registrehabilitation.vue')
+      },
+    ]
   },
   {
     path: '/element/:id',

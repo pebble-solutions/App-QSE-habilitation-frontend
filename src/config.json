@@ -16,10 +16,10 @@
                 "href": "/"
             },
             {
-                "label": "À propos",
+                "label": "Registre d'habilitation",
                 "icon": "bi bi-info-square",
-                "key": "about",
-                "href": "/about"
+                "key": "registre",
+                "href": "/registre"
             }
         ]
     },
