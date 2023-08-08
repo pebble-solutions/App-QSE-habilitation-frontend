@@ -10,7 +10,7 @@ const routes = [
   {
     path: '/registre/:id',
     name: 'registre',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Registrehabilitation.vue')
   },
   {
     path: '/element/:id',

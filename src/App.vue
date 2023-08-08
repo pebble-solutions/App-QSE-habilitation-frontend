@@ -80,12 +80,15 @@ export default {
 			pending: {
 				elements: true
 			},
-			isConnectedUser: false
+			isConnectedUser: false,
+
+			temp_habilitations: [],
+			temp_personnels: []
 		}
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement'])
+		...mapState(['elements', 'openedElement', 'habilitations', 'personnels'])
 	},
 
 	methods: {
@@ -120,10 +123,22 @@ export default {
 				apiRoute: 'v2/sample/types'
 			});
 
+			const habilitationCollection = new AssetsCollection(this, {
+				assetName: 'habilitations',
+				apiRoute: 'v2/habilitation'
+			});
+
+			const personnelsCollection = new AssetsCollection(this, {
+				assetName: 'personnels',
+				apiRoute: 'v2/personnel'
+			});
+
 			typesCollection.reset();
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
+			this.$assets.addCollection("habilitations", habilitationCollection);
+			this.$assets.addCollection("personnels", personnelsCollection);
 		}
 	},
 
@@ -154,6 +169,10 @@ export default {
 				}
 			}
 		});
+
+		this.$app.apiGet('v2/hebilitations').then((data)=>this.habilitations = data);
+
+		console.log(this.habilitations)
 	}
 
 }

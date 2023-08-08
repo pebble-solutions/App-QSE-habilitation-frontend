@@ -7,6 +7,8 @@ export default createStore({
 		login: null,
 		elements: [],
 		types: [],
+		habilitations: [],
+		personnels: [],
 		openedElement: null
 	},
 	getters: {
