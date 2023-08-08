@@ -20,6 +20,12 @@
                 "icon": "bi bi-info-square",
                 "key": "about",
                 "href": "/about"
+            },
+            {
+                "label": "Carte",
+                "icon": "bi bi-info-square",
+                "key": "carte",
+                "href": "/carte"
             }
         ]
     },
