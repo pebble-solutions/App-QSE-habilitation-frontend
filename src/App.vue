@@ -37,20 +37,16 @@
 		</template>
 
 
-		<!-- Menu additionnel -->
-		<!--
-			Modifier cfgSlots.menu = true; dans config.json pour activer.
-		-->
-		<!--<template v-slot:menu>
+		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
+				<AppMenuItem href="/registre" look="dark" icon="bi bi-app">Registre d'habilitation</AppMenuItem>
 			</AppMenu>
-		</template>-->
+		</template>
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem>
+				<AppMenuItem :href="'/registre/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
