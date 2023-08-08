@@ -1,9 +1,9 @@
 {
-    "name": "sample",
+    "name": "habilitation",
     "env": "dev",
     "cfg": {
-        "module": "sample",
-        "moduleLabel": "Sample module",
+        "module": "habilitation",
+        "moduleLabel": "App-QSE-habilitation",
         "aside": true,
         "app_mode": "default",
         "ppp": "private",
