@@ -50,7 +50,7 @@
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem>
+				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.nom}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -116,14 +116,14 @@ export default {
 		initCollections() {
 			const elementsCollection = new AssetsCollection(this, {
 				assetName: 'elements',
-				apiRoute: 'v2/sample'
+				apiRoute: 'v2/habilitation/type'
 			});
 
 			elementsCollection.reset();
 
 			const typesCollection = new AssetsCollection(this, {
 				assetName: 'types',
-				apiRoute: 'v2/sample/types'
+				apiRoute: 'v2/habilitation/type'
 			});
 
 			typesCollection.reset();
