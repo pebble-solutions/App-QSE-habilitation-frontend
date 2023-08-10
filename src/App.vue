@@ -72,6 +72,8 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapState } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 
+import { getAuth } from '@firebase/auth';
+
 import CONFIG from "@/config.json"
 
 export default {
@@ -128,6 +130,27 @@ export default {
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
+		},
+
+		/**
+		 * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
+		 */
+		getFirebaseAppLicence() {
+			const auth = getAuth();
+			const user = auth.currentUser;
+
+			const appLicences = this.$app.licence;
+
+			const licences = appLicences.users.includes(user.email) ? appLicences.apps : [];
+
+			for (const lic of licences) {
+				if (lic.includes("kn")) {
+					console.log("J'ai aussi kn regarde");
+					
+				}
+			}
+
+			console.log(licences);
 		}
 	},
 
@@ -157,6 +180,7 @@ export default {
 					this.pending.elements = false;
 				}
 			}
+			this.getFirebaseAppLicence();
 		});
 	}
 
