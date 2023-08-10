@@ -14,9 +14,14 @@ const routes = [
     children: [
       {
         path: ':id',
-        component: () => import('../views/Registrehabilitation.vue')
+        component: () => import('../views/Registrehabilitation.vue'),
       },
-    ]
+    ],
+  },
+  {
+    path: '/registre/information/:idhabilitation',
+    name: 'registreInformation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/InformationProcessusModal.vue'),
   },
   {
     path: '/element/:id',
