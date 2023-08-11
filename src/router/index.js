@@ -29,6 +29,17 @@ const routes = [
         component: () => import('../views/ElementInformations.vue')
       }
     ]
+  },
+  {
+    path: '/suspensions',
+    name: 'Suspensions',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Suspensions.vue'),
+    children: [
+      {
+        path: ':id',
+        component: () => import('../views/SuspensionsInformations.vue')
+      }
+    ]
   }
 ]
 

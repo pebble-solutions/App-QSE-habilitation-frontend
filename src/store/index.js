@@ -7,6 +7,7 @@ export default createStore({
 		login: null,
 		elements: [],
 		types: [],
+		suspensions: [],
 		openedElement: null
 	},
 	getters: {

@@ -41,16 +41,17 @@
 		<!--
 			Modifier cfgSlots.menu = true; dans config.json pour activer.
 		-->
-		<!--<template v-slot:menu>
+		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
 				<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
+				<AppMenuItem href="/suspensions" look="dark" icon="bi bi-app">Suspensions</AppMenuItem>
 			</AppMenu>
-		</template>-->
+		</template>
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.nom}}</AppMenuItem>
+				<AppMenuItem :href="'/suspensions/'+el.id" icon="bi bi-file-earmark" v-for="el in suspensions" :key="el.id">{{el}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -89,7 +90,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement'])
+		...mapState(['elements', 'openedElement', 'suspensions'])
 	},
 
 	methods: {
@@ -128,6 +129,23 @@ export default {
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
+
+
+
+
+
+
+			// Create a collection
+			const suspensionsCollection = new AssetsCollection(this, {
+				assetName: 'suspensions',
+				apiRoute: 'v2/habilitation/suspension'
+			});
+
+			// reset the collection if exist before
+			suspensionsCollection.reset();
+
+			// Add the collection
+			this.$assets.addCollection("suspensions", suspensionsCollection);
 		}
 	},
 
@@ -148,7 +166,8 @@ export default {
 
 				this.pending.elements = true;
 				try {
-					await this.$assets.getCollection("elements").load();
+					// Load all suspensions
+					this.$assets.getCollection("suspensions").load();
 				}
 				catch (e) {
 					this.$app.catchError(e);
