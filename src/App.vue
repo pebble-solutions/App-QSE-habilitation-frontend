@@ -41,16 +41,15 @@
 		<!--
 			Modifier cfgSlots.menu = true; dans config.json pour activer.
 		-->
-		<!--<template v-slot:menu>
+		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
+				<AppMenuItem href="/veille" look="dark" icon="bi bi-app">Veilles</AppMenuItem>
 			</AppMenu>
-		</template>-->
+		</template>
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.nom}}</AppMenuItem>
+				<AppMenuItem :href="'/veille/'+el.id" icon="bi bi-file-earmark" v-for="el in veilles" :key="el.id">{{el}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -91,7 +90,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement'])
+		...mapState(['types', 'veilles'])
 	},
 
 	methods: {
@@ -116,10 +115,8 @@ export default {
 		initCollections() {
 			const veillesCollection = new AssetsCollection(this, {
 				assetName: 'veilles',
-				apiRoute: 'v2/habilitation/type'
+				apiRoute: 'v2/habilitation/veille'
 			});
-
-			elementsCollection.reset();
 
 			const typesCollection = new AssetsCollection(this, {
 				assetName: 'types',

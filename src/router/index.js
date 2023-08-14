@@ -16,18 +16,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/element/:id',
-    name: 'Element',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Element.vue'),
+    path: '/veille',
+    name: 'ConsultationVeille',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationVeille.vue'),
     children: [
       {
-        path: 'properties',
-        component: () => import('../views/ElementProperties.vue')
+        path: ':id',
+        name: 'ConsultationVeilleInformation',
+        component: () => import('../views/ConsultationVeilleInformation.vue')
       },
-      {
-        path: 'informations',
-        component: () => import('../views/ElementInformations.vue')
-      }
     ]
   }
 ]
