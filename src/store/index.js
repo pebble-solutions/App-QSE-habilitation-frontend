@@ -5,7 +5,7 @@ export default createStore({
 		structures: [],
 		activeStructureId: null,
 		login: null,
-		elements: [],
+		veilles: [],
 		types: [],
 		openedElement: null
 	},

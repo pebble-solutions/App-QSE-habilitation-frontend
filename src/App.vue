@@ -114,8 +114,8 @@ export default {
 		 * Initialise les collections de données au niveau du contrôleur d'assets
 		 */
 		initCollections() {
-			const elementsCollection = new AssetsCollection(this, {
-				assetName: 'elements',
+			const veillesCollection = new AssetsCollection(this, {
+				assetName: 'veilles',
 				apiRoute: 'v2/habilitation/type'
 			});
 
@@ -126,9 +126,10 @@ export default {
 				apiRoute: 'v2/habilitation/type'
 			});
 
+			veillesCollection.reset();
 			typesCollection.reset();
 
-			this.$assets.addCollection("elements", elementsCollection);
+			this.$assets.addCollection("veilles", veillesCollection);
 			this.$assets.addCollection("types", typesCollection);
 		},
 
@@ -146,7 +147,7 @@ export default {
 			for (const lic of licences) {
 				if (lic.includes("kn")) {
 					console.log("J'ai aussi kn regarde");
-					
+
 				}
 			}
 
@@ -171,7 +172,7 @@ export default {
 
 				this.pending.elements = true;
 				try {
-					await this.$assets.getCollection("elements").load();
+					await this.$assets.getCollection("veilles").load();
 				}
 				catch (e) {
 					this.$app.catchError(e);
