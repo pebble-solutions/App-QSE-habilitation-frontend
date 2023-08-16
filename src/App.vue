@@ -44,7 +44,6 @@
 		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
 				<AppMenuItem href="/suspensions" look="dark" icon="bi bi-app">Suspensions</AppMenuItem>
 			</AppMenu>
 		</template>

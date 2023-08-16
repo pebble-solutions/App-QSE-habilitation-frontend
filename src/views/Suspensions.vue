@@ -8,11 +8,6 @@
 			bla bla bla
 			bla bla bla
 		</p>
-
-		<h2>Licences</h2>
-		<p>
-			Ce projet est distribué sous la <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">licence GNU GPL V3</a>.
-		</p>
 	</div>
 </template>
 

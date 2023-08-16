@@ -16,21 +16,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/element/:id',
-    name: 'Element',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Element.vue'),
-    children: [
-      {
-        path: 'properties',
-        component: () => import('../views/ElementProperties.vue')
-      },
-      {
-        path: 'informations',
-        component: () => import('../views/ElementInformations.vue')
-      }
-    ]
-  },
-  {
     path: '/suspensions',
     name: 'Suspensions',
     component: () => import(/* webpackChunkName: "about" */ '../views/Suspensions.vue'),
