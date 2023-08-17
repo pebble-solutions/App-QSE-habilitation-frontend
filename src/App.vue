@@ -50,7 +50,7 @@
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/suspensions/'+el.id" icon="bi bi-file-earmark" v-for="el in suspensions" :key="el.id">{{el}}</AppMenuItem>
+				<AppMenuItem :href="'/suspensions/'+el.id" icon="bi bi-person-fill" v-for="el in suspensions" :key="el.id">{{el}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -152,7 +152,7 @@ export default {
 		/**
 		 * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
 		 */
-		 getFirebaseAppLicence() {
+		getFirebaseAppLicence() {
 			const auth = getAuth();
 			const user = auth.currentUser;
 
