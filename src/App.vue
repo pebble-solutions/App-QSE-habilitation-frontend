@@ -21,7 +21,7 @@
 					</a>
 				</router-link>
 
-				<div class="dropdown">
+				<div class="dropdown"> 
 					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown" aria-expanded="false">
 						Fichier
 					</button>
@@ -50,7 +50,12 @@
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/suspensions/'+el.id" icon="bi bi-person-fill" v-for="el in suspensions" :key="el.id">{{el}}</AppMenuItem>
+				<AppMenuItem :href="'/suspensions/'+el.id" v-for="el in personnels" :key="el.id">
+					<itemPersonnelSuspension
+						:personnel="el"
+						:icon="'bi bi-person-fill'"
+						:num="el.id"/>
+				</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -71,6 +76,7 @@ import AppMenu from '@/components/pebble-ui/AppMenu.vue'
 import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapState } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
+import itemPersonnelSuspension from './components/itemPersonnelSuspension.vue'
 
 import { getAuth } from '@firebase/auth';
 
@@ -91,7 +97,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'suspensions'])
+		...mapState(['elements', 'openedElement', 'personnels'])
 	},
 
 	methods: {
@@ -114,29 +120,23 @@ export default {
 		 * Initialise les collections de données au niveau du contrôleur d'assets
 		 */
 		initCollections() {
-			const elementsCollection = new AssetsCollection(this, {
-				assetName: 'elements',
-				apiRoute: 'v2/habilitation/type'
+	
+
+			// Create a collection de personnels
+			const personnelsCollection = new AssetsCollection(this, {
+				assetName: 'personnels',
+				apiRoute: 'v2/personnel'
 			});
 
-			elementsCollection.reset();
+			// reset the collection if exist before
+			personnelsCollection.reset();
 
-			const typesCollection = new AssetsCollection(this, {
-				assetName: 'types',
-				apiRoute: 'v2/habilitation/type'
-			});
-
-			typesCollection.reset();
-
-			this.$assets.addCollection("elements", elementsCollection);
-			this.$assets.addCollection("types", typesCollection);
+			// Add the collection
+			this.$assets.addCollection("personnels", personnelsCollection);
 
 
 
-
-
-
-			// Create a collection
+			// Create a collection de suspensions
 			const suspensionsCollection = new AssetsCollection(this, {
 				assetName: 'suspensions',
 				apiRoute: 'v2/habilitation/suspension'
@@ -147,6 +147,20 @@ export default {
 
 			// Add the collection
 			this.$assets.addCollection("suspensions", suspensionsCollection);
+
+			//create a collection d'habilitations
+
+			const habilitationsCollection = new AssetsCollection(this, {
+				assetName: 'habilitations',
+				apiRoute: 'v2/habilitation'
+			});
+
+			// reset the collection if exist before
+			habilitationsCollection.reset();
+
+			// Add the collection
+			this.$assets.addCollection("habilitations", habilitationsCollection);
+			
 		},
 
 		/**
@@ -174,7 +188,8 @@ export default {
 	components: {
 		AppWrapper,
 		AppMenu,
-		AppMenuItem
+		AppMenuItem,
+		itemPersonnelSuspension
 	},
 
 	mounted() {
@@ -189,7 +204,21 @@ export default {
 				this.pending.elements = true;
 				try {
 					// Load all suspensions
+					const personnelsCollection = this.$assets.getCollection("personnels");
 					this.$assets.getCollection("suspensions").load();
+					await personnelsCollection.load();
+
+					const personnels = personnelsCollection.getCollection();
+
+					let ids = [];
+
+					personnels.forEach(personnel => {
+						ids.push(personnel.id);
+					});
+
+					this.$assets.getCollection("habilitations").load({
+						personnel_id: ids.join(',')
+					});
 				}
 				catch (e) {
 					this.$app.catchError(e);

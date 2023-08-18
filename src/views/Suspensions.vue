@@ -1,26 +1,13 @@
 <template>
 	<div class="container py-4">
-		<h1>À propos</h1>
-		<p>
-			{{cfg.moduleLabel}} pour Pebble 5
-		</p>
-		<p>
-			bla bla bla
-			bla bla bla
-		</p>
+		<p class="text-center">Liste des habilitations suspendues :</p>
 	</div>
+	<router-view/>
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			cfg: null
-		}
-	},
 
-	beforeMount() {
-		this.cfg = this.$app.cfg;
-	}
+export default {
+
 }
 </script>

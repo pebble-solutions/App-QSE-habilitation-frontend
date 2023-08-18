@@ -1,20 +1,100 @@
 <template>
-	<div class="container py-4">
-		<h1>{{ $route.params.id }}</h1>
-		{{ el }}
-	</div>
+    <div class="container">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 v-if="personnel" class="text-center">{{ personnel.cache_nom }} (ID: {{ $route.params.id }})</h1>
+
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Habilitations :</h2>
+                        <ul>
+                            <li class="text-danger" v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+                                {{ getHabilitationTypeName(hab.habilitation_type_id) }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Habilitations suspendues :</h2>
+                        <ul>
+                            <li class="text-danger" v-for="hab in getSuspendedHabilitations" :key="hab.id">
+                                {{ getHabilitationTypeName(hab.habilitation_type_id) }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center mt-5">
+            <div class="card-body bg-danger">
+                <h2 class="text-white">Débogage :</h2>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">Habilitations by perso :</h2>
+                        <div>{{ habilitationPersonnel }}</div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">Suspensions : </h2>
+                        <div>{{ suspensions }}</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Types :</h2>
+                        <div>{{ types }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			cfg: null
-		}
-	},
+import { mapState } from 'vuex';
 
-	beforeMount() {
-		this.cfg = this.$app.cfg;
-	}
-}
+export default {
+    computed: {
+        ...mapState(['suspensions', 'personnels', 'habilitations', 'types']),
+
+        personnel() {
+            return this.personnels.find(el => el.id == this.$route.params.id);
+        },
+
+        habilitationPersonnel() {
+            return this.habilitations.filter(el => el.personnel_id == this.$route.params.id);
+        },
+
+        getSuspensions() {
+            return this.habilitationPersonnel.reduce((suspensions, hab) => {
+                const suspension = this.suspensions.find(el => el.habilitation_id === hab.id);
+                if (suspension) {
+                    suspensions.push(suspension);
+                }
+                return suspensions;
+            }, []);
+        },
+
+        getNonSuspendedHabilitations() {
+            return this.habilitationPersonnel.filter(hab => !this.getSuspensions.some(sus => sus.habilitation_id === hab.id));
+        },
+
+        getSuspendedHabilitations() {
+            return this.habilitationPersonnel.filter(hab => this.getSuspensions.some(sus => sus.habilitation_id === hab.id));
+        },
+
+        getHabilitationTypeName() {
+            return habilitationTypeId => {
+                const habilitationType = this.types.find(type => type.id === habilitationTypeId);
+                return habilitationType ? habilitationType.nom : '';
+            };
+        },
+    },
+};
 </script>
