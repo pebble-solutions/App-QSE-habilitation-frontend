@@ -20,6 +20,12 @@
                 "icon": "bi bi-info-square",
                 "key": "about",
                 "href": "/about"
+            },
+            {
+                "label": "Types",
+                "icon": "bi bi-gear-fill", 
+                "key": "types",
+                "href": "/types"
             }
         ]
     },

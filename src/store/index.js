@@ -7,7 +7,11 @@ export default createStore({
 		login: null,
 		elements: [],
 		types: [],
-		openedElement: null
+		openedElement: null,
+		habilitationType: [],
+		veilles: [],
+		personnels: [],
+
 	},
 	getters: {
 		activeStructure(state) {
@@ -40,6 +44,15 @@ export default createStore({
 		 */
 		setStructureId(state, structureId) {
 			state.activeStructureId = structureId;
+		},
+
+		/**
+		 * Enregistre les types d'habilitations
+		 * @param	{Object}	state le state de VueX
+		 * @param	{Array}		habilitations	Liste des type d'habilitations
+		 */
+		setHabilitationType(state, habilitationType) {
+			state.habilitationType = habilitationType;
 		},
 
 		/**
@@ -79,7 +92,15 @@ export default createStore({
 		 */
 		switchStructure(context, payload) {
 			context.commit('setStructureId', payload);
-		}
+		},
+		/**
+		 * met à jour la liste des types d'habilitation
+		 * @param {Object} context l'instance de VueX
+		 * @param {Array} data liste des types d'habilitations
+		 */
+		refreshHabilitationType(context, data) {
+			context.commit('setHabilitationType', data);
+		},
 	},
 	modules: {
 	}
