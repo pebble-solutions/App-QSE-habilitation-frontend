@@ -162,16 +162,23 @@ export default {
 				assetName: 'veilles',
 				apiRoute: 'v2/controle/veille'
 			});
-			const personnels = new AssetsCollection (this, {
+			const personnelsCollection = new AssetsCollection (this, {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel'
+			});
+			const habilitationsPersonnelsCollection = new AssetsCollection (this, {
+				assetName: 'habilitationsPersonnels',
+				apiRoute: 'v2/characteristic/personnel'
 			});
 
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
 			this.$assets.addCollection("veilles", veillesCollection);
-			this.$assets.addCollection("personnels", personnels);
+			this.$assets.addCollection("personnels", personnelsCollection);
+			this.$assets.addCollection("habilitationsPersonnels", habilitationsPersonnelsCollection);
+
+
 
 
 		},
@@ -210,6 +217,9 @@ export default {
 					await this.$assets.getCollection("types").load();
 					await this.$assets.getCollection("veilles").load();
 					await this.$assets.getCollection("personnels").load();
+					await this.$assets.getCollection("habilitationsPersonnels").load();
+
+
 
 
 				}

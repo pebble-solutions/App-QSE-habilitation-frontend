@@ -9,7 +9,6 @@
     :cancel-btn="true"
     
     >
-    {{ type }} 
     <FormConfigType
     :config-type="type"
     @update-type="updateType"
@@ -37,6 +36,7 @@ export default {
                 config: false
             },
             type: {
+                id:'',
                 nom:'',
                 dd:'',
                 df:'',
@@ -63,8 +63,10 @@ export default {
                 df: this.type.df,
                 expiration: this.type.duree,
             })
-            .then((data) => 
-            console.log(data))
+            .then((data) => {
+                this.type = data,
+                alert('type habilitation '+data.label+' crée')
+            })
             .catch(this.$app.catchError)
             .finally(() => {
                 this.pending.config = false

@@ -1,51 +1,47 @@
 <template>
     <div>
         <div v-if="hab">
-            <div class="d-flex justify-content-between  align-items-center py-3">
-                <h5> <span class="fw-lighter">#{{ hab.id }}</span> Configuration du TYPE  > {{ hab.nom }}</h5>
-                <div>
-                    <button class="btn btn-outline-primary" @click.prevent="$router.push($route.path + '/edit')" >Modifier</button>
+            <h4 class="my-3">   {{ hab.nom }}</h4>
+            <div class="row">
+                <div class="card col-6 ">
+                    <div class="d-flex justify-content-between  align-items-center py-3">
+                        <h5>Configuration du TYPE <span class="fw-lighter">#{{ hab.id }}</span></h5>
+                        <div>
+                            <button class="btn btn-outline-primary" @click.prevent="$router.push($route.path + '/edit')" >Modifier</button>
+                        </div>
+                    </div>
+                    <div>Date début : <span>{{ hab.dd }}</span> </div>
+                    <div>Date fin :  <span>{{ hab.df }}</span> </div>
+                    <div>Durée de validité :  <span>{{ hab.expiration }}</span> </div>
+                </div>
+                <br>
+                <div class="card col-6">
+                    <spinner v-if="pending.load"></spinner>
+                    <div v-else-if="veilleConfig">
+                        <div class="d-flex justify-content-between  align-items-center py-3">
+                            <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
+                            <div>
+                                <button class="btn btn-outline-primary" >Modifier ?</button>
+                            </div>
+                        </div>
+                        
+                        <div>Date début : <span>{{ veilleConfig.dd }}</span> </div>
+                        <div>Date fin :  <span>{{ veilleConfig.df }}</span> </div>
+                        <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
+                        <div>Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
+                        <div>Commentaire :  <span>{{ veilleConfig.commentaire }}</span> </div>
+                        
+                    </div>
+                    <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer?</button></AlertMessage>
                 </div>
             </div>
-                
-            <div>Date début : <span>{{ hab.dd }}</span> </div>
-            <div>Date fin :  <span>{{ hab.df }}</span> </div>
-            <div>Durée de validité :  <span>{{ hab.expiration }}</span> </div>
         </div>
-       <br>
-       
-        <spinner v-if="pending.load"></spinner>
-        <div v-else-if="veilleConfig">
-            <div class="d-flex justify-content-between  align-items-center py-3">
-                <h5> <span class="fw-lighter">#{{ veilleConfig.id }}</span> <span>Configuration de la VEILLE  > {{ veilleConfig.nom }}</span></h5>
-                <div>
-                    <button class="btn btn-outline-primary" >Modifier ?</button>
-                </div>
-            </div>
-                
-            <div>Date début : <span>{{ veilleConfig.dd }}</span> </div>
-            <div>Date fin :  <span>{{ veilleConfig.df }}</span> </div>
-            <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
-            <div>Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
-            <div>Commentaire :  <span>{{ veilleConfig.commentaire }}</span> </div>
-
-            <div class="mt-5 fst-italic">
-                veilleConfig{{ veilleConfig }}
-            </div>
-        </div>
-        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer?</button></AlertMessage>
         <div>
             <VigilHab v-if="veilleConfig" :idVeille="veilleConfig.id" :idForm="veilleConfig.formulaire_id"></VigilHab>
         </div>
-        <!-- <div>
-         veille config {{ findVeille(hab.id) }}
-        </div> -->
-        <!-- <div v-for="veille in veilles" :key="veille.id">
-             {{ veille.id }}  {{ veille.nom }} {{ veille.objet_id }}
-        </div> -->
-        <!-- <div>
-             veille :{{ veille }}
-        </div> -->
+        <br>
+        
+       
        
 
         <RouterView></RouterView>
@@ -72,7 +68,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(['habilitationType','types', 'veilles']),
+        ...mapState(['habilitationType','types', 'veilles', 'personnels', 'habilitationsPersonnels']),
     },
     methods: {
         /**
@@ -92,10 +88,15 @@ export default {
             this.veilleConfig = veille;
             this.pending.load = false;
             return veille
-        }
+        },
+
+       
     },
+
     /**
-     * Lorsque la route interne est mise à jour, la nouvelle config doit etre chargée
+     * Lorsque la route interne est mise à jour, les nouvelles config
+     * du type d'habilitation et de la veille sont chargées
+     * 
      */
     beforeRouteUpdate(to) {
         if (to.params.id != this.hab.id) {
@@ -103,13 +104,15 @@ export default {
             this.findVeille(to.params.id)
         }
     },
+
+    /**
+     * charge les config du type d'habilitation et de la veille
+     */
     beforeMount() {
-        /**
-         * charge la config de l'habilitation concernée
-         */
         this.findType(this.$route.params.id);
         this.findVeille(this.$route.params.id);
     },
+
     components: { RouterView, AlertMessage, Spinner, VigilHab}
 }
 </script>
