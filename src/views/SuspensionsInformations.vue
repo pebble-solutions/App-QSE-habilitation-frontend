@@ -8,7 +8,7 @@
                     <div class="card-body">
                         <h2 class="card-title text-center">Habilitations :</h2>
                         <ul>
-                            <li class="text-danger" v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+                            <li class="text-success" v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
                                 {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                             </li>
                         </ul>
