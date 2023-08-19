@@ -1,11 +1,5 @@
 <template>
-
-	<AppWrapper
-		:cfg="cfg"
-		:cfg-menu="cfgMenu"
-		:cfg-slots="cfgSlots"
-		
-		@auth-change="setLocal_user">
+	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user">
 
 		<template v-slot:header>
 			<div class="mx-2 d-flex align-items-center" v-if="openedElement">
@@ -14,20 +8,22 @@
 						<i class="bi bi-arrow-left"></i>
 					</a>
 				</router-link>
-				<router-link :to="'/element/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
+				<router-link :to="'/element/' + openedElement.id + '/properties'" custom v-slot="{ navigate, href }">
 					<a class="btn btn-dark me-2" :href="href" @click="navigate">
 						<i class="bi bi-file-earmark me-1"></i>
-						{{openedElement.name}}
+						{{ openedElement.name }}
 					</a>
 				</router-link>
 
-				<div class="dropdown"> 
-					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown" aria-expanded="false">
+				<div class="dropdown">
+					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown"
+						aria-expanded="false">
 						Fichier
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="fileDdMenu">
 						<li>
-							<router-link :to="'/element/'+openedElement.id+'/informations'" custom v-slot="{ navigate, href }">
+							<router-link :to="'/element/' + openedElement.id + '/informations'" custom
+								v-slot="{ navigate, href }">
 								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
 							</router-link>
 						</li>
@@ -39,8 +35,8 @@
 
 		<!-- Menu additionnel -->
 		<!--
-			Modifier cfgSlots.menu = true; dans config.json pour activer.
-		-->
+Modifier cfgSlots.menu = true; dans config.json pour activer.
+-->
 		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
@@ -48,16 +44,51 @@
 			</AppMenu>
 		</template>
 
+
+
+		<!-- Bouton de commutation et Affichage de la liste -->
 		<template v-slot:list>
-			<AppMenu>
-				<AppMenuItem :href="'/suspensions/'+el.id" v-for="el in personnels" :key="el.id">
-					<itemPersonnelSuspension
-						:personnel="el"
-						:icon="'bi bi-person-fill'"
-						:num="el.id"/>
-				</AppMenuItem>
-			</AppMenu>
+			<div>
+				<div class="d-flex mt-3">
+					<button class="btn w-100 mx-1"
+						:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
+						@click="toggleShow(true)">
+						Personnels
+					</button>
+					<button class="btn w-100 mx-1"
+						:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
+						@click="toggleShow(false)">
+						Habilitations
+					</button>
+				</div>
+
+				<div class="mt-4">
+					<AppMenu v-if="pending.elements">
+						<div class="text-center">
+							<div class="spinner-border text-primary" role="status">
+								<span class="visually-hidden">Loading...</span>
+							</div>
+						</div>
+					</AppMenu>
+					<AppMenu v-else>
+						<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
+							<template v-if="showPersonnels">
+								<itemPersonnelSuspension :personnel="item" :icon="'bi bi-person-fill'" :num="item.id" />
+							</template>
+							<template v-else>
+								<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'"
+									:num="item.id" />
+							</template>
+							<a>
+								{{ showPersonnels ? item.personnel_name : item.habilitation_name }}
+							</a>
+						</AppMenuItem>
+					</AppMenu>
+					
+				</div>
+			</div>
 		</template>
+
 
 		<template v-slot:core>
 			<div class="px-2 bg-light">
@@ -66,7 +97,6 @@
 		</template>
 
 	</AppWrapper>
-	
 </template>
 
 <script>
@@ -77,6 +107,7 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapState } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import itemPersonnelSuspension from './components/itemPersonnelSuspension.vue'
+import itemHabilitationSuspension from './components/itemHabilitationSuspension.vue'
 
 import { getAuth } from '@firebase/auth';
 
@@ -92,15 +123,38 @@ export default {
 			pending: {
 				elements: true
 			},
-			isConnectedUser: false
+			isConnectedUser: false,
+			showPersonnels: true,
+			currentList: [], // Initial empty list
 		}
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'personnels'])
+		...mapState(['elements', 'openedElement', 'personnels', 'suspensions', 'habilitations', 'types']),
+
+		listItems() {
+			return this.showPersonnels ? this.personnels : this.habilitations;
+		},
 	},
 
 	methods: {
+
+
+		toggleShow(showPersonnels) {
+			this.showPersonnels = showPersonnels;
+			this.currentList = showPersonnels ? this.personnels : this.habilitations;
+		},
+
+
+		getItemLink(item) {
+			if (this.showPersonnels) {
+				return `/suspensions/personnel/${item.id}`;
+			} else {
+				// Adjust the route for habilitations if needed
+				return `/suspensions/habilitation/${item.id}`;
+			}
+		},
+
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
 		 * @param {Object} user Un objet LocalUser
@@ -120,7 +174,7 @@ export default {
 		 * Initialise les collections de données au niveau du contrôleur d'assets
 		 */
 		initCollections() {
-	
+
 
 			// Create a collection de personnels
 			const personnelsCollection = new AssetsCollection(this, {
@@ -160,7 +214,7 @@ export default {
 
 			// Add the collection
 			this.$assets.addCollection("habilitations", habilitationsCollection);
-			
+
 		},
 
 		/**
@@ -177,7 +231,7 @@ export default {
 			for (const lic of licences) {
 				if (lic.includes("kn")) {
 					console.log("J'ai aussi kn regarde");
-					
+
 				}
 			}
 
@@ -189,7 +243,8 @@ export default {
 		AppWrapper,
 		AppMenu,
 		AppMenuItem,
-		itemPersonnelSuspension
+		itemPersonnelSuspension,
+		itemHabilitationSuspension
 	},
 
 	mounted() {

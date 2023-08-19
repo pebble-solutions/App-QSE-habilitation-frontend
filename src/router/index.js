@@ -21,9 +21,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Suspensions.vue'),
     children: [
       {
-        path: ':id',
-        name: 'SuspensionsInformations',
-        component: () => import('../views/SuspensionsInformations.vue')
+        path: 'personnel/:id',
+        name: 'SuspensionsPersonnelInformations',
+        component: () => import('../views/SuspensionsPersonnelInformations.vue')
+      },
+      {
+        path: 'habilitation/:id',
+        name: 'SuspensionsHabilitationInformations',
+        component: () => import('../views/SuspensionsHabilitationInformations.vue')
       }
     ]
   }

@@ -16,6 +16,12 @@
                 "href": "/"
             },
             {
+                "label": "Suspensions",
+                "icon": "bi bi-dash-circle-dotted",
+                "key": "suspensions",
+                "href": "/suspension"
+            },
+            {
                 "label": "À propos",
                 "icon": "bi bi-info-square",
                 "key": "about",
