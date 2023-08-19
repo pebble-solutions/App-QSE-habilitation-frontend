@@ -2,15 +2,18 @@
 	<div class="container py-2">
 		<div class="card bg-custom mt-4">
 			<div class="card-body">
-				<h1 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span class="text-warning">#{{
-					$route.params.id }}</span></h1>
+				<h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
+						class="text-secondary">#{{
+							$route.params.id }}</span></h2>
 
 				<div class="card mb-4">
 					<div class="card-body">
-						<h2 class="card-title text-center">Habilitations suspendues :</h2>
-						<ul>
-							<li class="text-danger" v-for="hab in getSuspendedHabilitations" :key="hab.id">
-								{{ getHabilitationTypeName(hab.habilitation_type_id) }}
+						<h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
+						<ul class="custom-ul">
+							<li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
+								v-for="hab in getSuspendedHabilitations" :key="hab.id">
+								<span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
+								<span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
 							</li>
 						</ul>
 					</div>
@@ -18,9 +21,10 @@
 
 				<div class="card mb-4">
 					<div class="card-body">
-						<h2 class="card-title text-center">Autres habilitations :</h2>
-						<ul>
-							<li class="text-success" v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+						<h3 class="card-title text-center mb-3">Autres habilitations</h3>
+						<ul class="custom-ul">
+							<li class="d-flex justify-content-between align-items-center bg-success rounded text-white px-3 py-2 mb-2"
+								v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
 								{{ getHabilitationTypeName(hab.habilitation_type_id) }}
 							</li>
 						</ul>
@@ -28,8 +32,9 @@
 							habilitation</p>
 					</div>
 				</div>
-			</div>
-		</div>
+
+				<!-- debogage
+
 		<div class="card text-center mt-5">
 			<div class="card-body bg-danger">
 				<h2 class="text-white">Débogage :</h2>
@@ -54,6 +59,10 @@
 						<div>{{ types }}</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	-->
+
 			</div>
 		</div>
 	</div>
@@ -98,12 +107,31 @@ export default {
 				return habilitationType ? habilitationType.nom : '';
 			};
 		},
+		getSuspensionDate() {
+			return habilitationId => {
+				const suspension = this.suspensions.find(sus => sus.habilitation_id === habilitationId);
+				return suspension ? suspension.dd : '';
+			};
+		},
+		formatSuspensionDate() {
+			return date => {
+				if (date) {
+					const options = { year: 'numeric', month: 'long', day: 'numeric' };
+					return new Date(date).toLocaleDateString('fr-FR', options);
+				}
+				return '';
+			};
+		}
 	},
 };
 </script>
 
 <style scoped>
-.bg-custom {
-	background-color: #F78C6B;
+.custom-ul {
+	padding-left: 0;
+	list-style: none;
 }
-</style>
+
+.bg-custom {
+	background-color: #f78c6b9a;
+}</style>
