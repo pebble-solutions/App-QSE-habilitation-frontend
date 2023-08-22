@@ -1,8 +1,8 @@
 <template>
     <spinner v-if="pending.load"></spinner>
     <template v-else-if="listHab">
-        <div class="list-group" >
-            <h5 class="my-3">Liste des personnels habilités:</h5>
+        <div class="list-group card m-2 p-2 custom-color" >
+            <h4 class="my-3 text-white text-center">Liste des personnels habilités :</h4>
 
             <div class="list-group-item" v-for="hab in listHab" :key="hab.id">
                 <div class="row align-items-center">
@@ -128,9 +128,13 @@ methods: {
     }
 
 },
-
-mounted(){
-}
 }
 
 </script>
+
+<style scoped>
+.custom-color{
+    background-color: #F78C6B;
+}
+</style>
+```

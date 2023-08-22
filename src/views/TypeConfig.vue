@@ -1,52 +1,58 @@
 <template>
     <div class="pt-4">
-        <div v-if="hab">
+        <!-- Image avec hauteur max de 200px et marge de 4 -->
+        <div class="d-flex justify-content-center align-items-center m-2 mb-4">
+    <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
+    <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid" style="max-width: 500px; width: 100%;">
+</div>
+        <div v-if="hab" class="card m-2 p-2 text-white text-center custom-background-color">
             <h4 class="">{{ hab.nom }}</h4>
-            <div class="row">
-                <div class="card col-6 ">
-                    <div class="d-flex justify-content-between  align-items-center py-3">
-                        <h5>Configuration du TYPE <span class="fw-lighter">#{{ hab.id }}</span></h5>
-                    </div>
-                    <div>Date début : <span>{{ hab.dd }}</span> </div>
-                    <div>Date fin :  <span>{{ hab.df }}</span> </div>
-                    <div>Durée de validité :  <span>{{ hab.expiration }}</span> </div>
-                    <div class="d-flex justify-content-start my-3">
-                        <button class="btn btn-outline-primary" @click.prevent="$router.push($route.path + '/edit')" >Modifier</button>
+            <div class="row g-2">
+                <div class="col-12 col-md-6">
+                    <div class="card p-2 d-flex flex-column h-100">
+                        <div class="d-flex justify-content-center align-items-center py-3">
+                            <h5>Configuration du TYPE <span class="fw-lighter">#{{ hab.id }}</span></h5>
+                        </div>
+                        <div>Date début : <span>{{ hab.dd }}</span> </div>
+                        <div>Date fin :  <span>{{ hab.df }}</span> </div>
+                        <div class="mb-2">Durée de validité :  <span>{{ hab.expiration }}</span> </div>
+                        <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
+                            <button class="btn btn-outline-primary w-100" @click.prevent="$router.push($route.path + '/edit')">Modifier</button>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="card col-6">
-                    <spinner v-if="pending.load"></spinner>
-                    <div v-else-if="veilleConfig">
-                        <div class="d-flex justify-content-between  align-items-center py-3">
-                            <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
+                
+                <div class="col-12 col-md-6">
+                    <div class="card p-2 d-flex flex-column h-100">
+                        <spinner v-if="pending.load"></spinner>
+                        <div v-else-if="veilleConfig">
+                            <div class="d-flex justify-content-center align-items-center py-3">
+                                <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
+                            </div>
+                            <div>Date début : <span>{{ veilleConfig.dd }}</span> </div>
+                            <div>Date fin :  <span>{{ veilleConfig.df }}</span> </div>
+                            <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
+                            <div class="mb-2">Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
+                            <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
+                                <button class="btn btn-outline-primary w-100">Modifier</button>
+                            </div>
                         </div>
-                        
-                        <div>Date début : <span>{{ veilleConfig.dd }}</span> </div>
-                        <div>Date fin :  <span>{{ veilleConfig.df }}</span> </div>
-                        <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
-                        <div>Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
-                        <!-- <div>Commentaire :  <span>{{ veilleConfig.commentaire }}</span> </div> -->
-                        <div class="d-flex justify-content-start my-3">
-                            <button class="btn btn-outline-primary" >Modifier ?</button>
-                        </div>
-                        
+                        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer ?</button></AlertMessage>
                     </div>
-                    <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer ?</button></AlertMessage>
                 </div>
             </div>
         </div>
+
         <div>
             <VigilHab v-if="veilleConfig" :idVeille="veilleConfig.id" :idForm="veilleConfig.formulaire_id"></VigilHab>
         </div>
-        <br>
-        
-       
-       
 
+        <br>
         <RouterView></RouterView>
     </div>
 </template>
+
+
 <script>
 import { RouterView } from 'vue-router';
 import { mapState } from 'vuex';
@@ -116,3 +122,14 @@ export default {
     components: { RouterView, AlertMessage, Spinner, VigilHab}
 }
 </script>
+
+<style scoped>
+.custom-background-color {
+    background-color: #F78C6B;
+}
+.logo {
+    width: 20%;
+    height: auto;
+}
+</style>
+```
