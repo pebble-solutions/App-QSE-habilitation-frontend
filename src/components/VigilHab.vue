@@ -79,7 +79,7 @@ methods: {
 
         let assembler = new AssetsAssembler(listHabilitationPersonnels);
         await assembler.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
-        let joinedListHab = assembler.getResult();
+        // let joinedListHab = assembler.getResult();
 
            
         this.pending.load = false;
