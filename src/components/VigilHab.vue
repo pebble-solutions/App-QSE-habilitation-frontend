@@ -1,7 +1,7 @@
 <template>
-    <spinner v-if="pending.control"></spinner>
-    <template v-else>
-        <div class="list-group" v-if="listHab">
+    <spinner v-if="pending.load"></spinner>
+    <template v-else-if="listHab">
+        <div class="list-group" >
             <h5 class="my-3">Liste des personnels habilités:</h5>
 
             <div class="list-group-item" v-for="hab in listHab" :key="hab.id">
@@ -18,8 +18,9 @@
                 </div>
             </div>
         </div>
-
+{{ listHab }}
     </template>
+    <alert-message v-else>Il n'y a pas de personnel habilité</alert-message>
 
 
 </template>
@@ -28,6 +29,8 @@ import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import AlertMessage from './pebble-ui/AlertMessage.vue';
+import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 
 
 export default{
@@ -42,7 +45,7 @@ props: {
     },
 },
 
-components: {ProgressBar, Spinner}, //RouterLink
+components: {ProgressBar, Spinner, AlertMessage}, //RouterLink
 
 computed: {
     ...mapState(['habilitationType','habilitationsPersonnels', 'personnels'])
@@ -70,10 +73,16 @@ methods: {
      * @param {*} id 
      */
 
-    findHabilitationPersonnel(id) {
+    async findHabilitationPersonnel(id) {
         this.pending.load = true;
         let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
         this.listHab = listHabilitationPersonnels;
+
+        let assembler = new AssetsAssembler(listHabilitationPersonnels);
+        await assembler.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
+        let joinedListHab = assembler.getResult();
+        console.log(joinedListHab, 'assembler')
+
            
         this.pending.load = false;
         return listHabilitationPersonnels

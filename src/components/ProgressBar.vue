@@ -13,10 +13,10 @@ export default {
 
     props: {
         dd: {
-            type: String,
+            type: Date,
         },
         df: {
-            type: String,
+            type: Date,
         },
         value: Object,
         label: {
@@ -126,7 +126,7 @@ export default {
          */
         barLabel(data) {
             if (data.remainingDays <= 0) {
-                return "expiré depuis " + daysToYearMonthDay(Math.abs(data.remainingDays));
+                return "Expiré depuis " + daysToYearMonthDay(Math.abs(data.remainingDays));
             } else {
                 return 'Renouvellement sous ' + daysToYearMonthDay(Math.abs(data.remainingDays));
             }
