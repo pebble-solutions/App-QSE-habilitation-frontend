@@ -49,13 +49,14 @@
 		</template> -->
 
 		<template v-slot:list>
-			<AppMenu>
+			<AppMenu v-if="listMode ==='habilitation'" >
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
 				<!-- <AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem> -->
 				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in  listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
 			</AppMenu>
 			
 		</template>
+			
 
 		<template v-slot:core>
 			<div class="px-2 bg-light">
@@ -83,6 +84,8 @@ import AppMenu from '@/components/pebble-ui/AppMenu.vue'
 import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapState,mapActions } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
+import { ROUTES_NAMES } from './js/route';
+
 
 import CONFIG from "@/config.json"
 
@@ -103,11 +106,42 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'habilitationType', 'types']) 
+		...mapState(['elements', 'openedElement', 'habilitationType', 'types']),
+
+		/**
+		 * Détermine quelle liste afficher :
+		 * collecte, programmation
+		 * 
+		 * @return {string}
+		 */
+		listMode() {
+			return this.getRouteGroupName(this.$route.name);
+		},
+
 	},
 
 	methods: {
 		...mapActions(['refreshHabilitationType']),
+
+
+		/**
+		 * Retourne le nom du groupe auquel appartient la route à analyser.
+		 * 
+		 * @param {string} routeName Nom de la route à analyser
+		 * 
+		 * @return {string}
+		 */
+		getRouteGroupName(routeName) {
+			for (const groupName in ROUTES_NAMES) {
+			const names = ROUTES_NAMES[groupName];
+
+				if (names.includes(routeName)) {
+				return groupName;
+				}
+				}
+				return null;
+		},
+
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
