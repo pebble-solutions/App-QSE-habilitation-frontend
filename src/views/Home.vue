@@ -1,7 +1,7 @@
 <template>
 	<div class="py-2" v-if="$store.state.login">
 		<div>
-			<img src="@/assets/pebble-dev.png" alt="Pebble Dev" class="logo w-100">
+			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
 		</div>
 		<h1 class="text-center">Bienvenue dans votre nouvelle application</h1>
 		<hr>
@@ -51,9 +51,11 @@
 
 <style lang="scss" scoped>
 .logo {
-	max-width:360px;
+	max-width: 800px;
 	display:block;
-	margin:20px auto;
+	margin: 100px auto;
+	margin-left: 20px auto;
+	margin-right: 20px auto;
 }
 </style>
 
