@@ -52,7 +52,7 @@
 			<AppMenu>
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
 				<!-- <AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem> -->
-				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in  listConsultation(habilitationType)" :key="type.id" >{{ type.nom }}</AppMenuItem>
+				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in  listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
 			</AppMenu>
 			
 		</template>
@@ -66,6 +66,15 @@
 	</AppWrapper>
 	
 </template>
+<style lang="scss">
+.fs-7 {
+	font-size: 0.80rem !important;
+}
+
+.progress-ht {
+	height: 25px !important;
+}
+</style>
 
 <script>
 
@@ -94,7 +103,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'habilitationType' ]) 
+		...mapState(['elements', 'openedElement', 'habilitationType', 'types']) 
 	},
 
 	methods: {
@@ -156,8 +165,7 @@ export default {
 				assetName: 'types',
 				apiRoute: 'v2/habilitation/type'
 			});
-			typesCollection.reset();
-
+			
 			const veillesCollection = new AssetsCollection (this, {
 				assetName: 'veilles',
 				apiRoute: 'v2/controle/veille'
@@ -170,7 +178,8 @@ export default {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel'
 			});
-
+			
+			// typesCollection.reset();
 
 			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);

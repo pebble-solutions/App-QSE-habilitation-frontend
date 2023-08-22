@@ -12,7 +12,8 @@
     :delete-btn="true"
     :pending="pending.type"
     >
-        <FormConfigType :config-type="habConfig" @update-type="updateType"></FormConfigType>
+        <Spinner v-if="pending.type"></Spinner>
+        <FormConfigType v-else :config-type="habConfig" @update-type="updateType"></FormConfigType>
     </AppModal>
     
 </template>
@@ -20,6 +21,7 @@
 import FormConfigType from '../components/FormConfigType.vue';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 import { mapState } from 'vuex';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 
 export default {
@@ -30,16 +32,17 @@ export default {
                 type: false
             },
             type: {
-                nom:'',
-                dd:'',
-                df:'',
-                duree:'',
+                nom: null,
+                dd: null,
+                df: null,
+                duree: null,
             }
+
         }
     },
     
     computed: {
-        ...mapState(['habilitationType'])
+        ...mapState(['habilitationType','types'])
       
 
 
@@ -47,7 +50,7 @@ export default {
         
     methods: {
         updateType(payload) {
-            console.log(payload)
+            // console.log(payload)
             this.type = payload;
         },
 
@@ -59,10 +62,9 @@ export default {
          */
         getConfig(id) {
             if(id) {
-                let config = this.habilitationType.find(e => e.id == id);
+                let config = this.types.find(e => e.id == id);
                 this.habConfig = config
             }
-
         },
 
 
@@ -81,12 +83,15 @@ export default {
                     expiration: this.type.duree,
                    
                 })
-                .then((data) => 
-                    console.log(data),
-                )
+                .then((data) => {
+                    console.log(data)
+					this.$assets.getCollection("types").load();
+                    this.$router.push('/types/'+this.$route.params.id);
+                })
                 .catch(this.$app.catchError)
                 .finally(() => {
-                    this.pending.type = false
+                    this.pending.type = false;
+                    this.$router.push('/types/'+this.$route.params.id);
                 });
                 this.pending.type = false  
 
@@ -102,14 +107,21 @@ export default {
                     // expiration: this.type.duree,
                    
                 })
-                .then((data) => 
-                    alert('la configuration ' +data.label+' a été supprimmée'),
-                    this.routeToParent())
+                .then((data) => {
+                    alert('la configuration "' + data.label + '" a été supprimée');
+					this.$assets.getCollection("types").reset();
+                    
+                    this.$assets.getCollection("types").load();
+                    this.$router.push('/types');
+
+                })
                 .catch(this.$app.catchError)
                 .finally(() => {
-                    this.pending.type = false
+                    this.pending.type = false;
+                    this.$router.push('/types/');
+
                 });
-                this.pending.type = false  
+                this.pending.type = false;
         },
         /**
          * Retourne a la vue précédente
@@ -127,7 +139,7 @@ export default {
     },
     
         
-    components: {AppModal, FormConfigType}, //
+    components: {AppModal, FormConfigType, Spinner}, //
 
 }
 </script>

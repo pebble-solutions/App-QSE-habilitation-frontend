@@ -25,7 +25,7 @@ import { mapState } from 'vuex'
 export default {
 
     computed: {
-        ...mapState(['habilitationType']),
+        ...mapState(['types']),
     },
 
     components: {AppModal, FormConfigType},
@@ -65,11 +65,14 @@ export default {
             })
             .then((data) => {
                 this.type = data,
-                alert('type habilitation '+data.label+' crée')
+                alert('type habilitation '+data.label+'/'+data.id+' crée'),
+				this.$assets.getCollection("types").load();
+                
             })
             .catch(this.$app.catchError)
             .finally(() => {
                 this.pending.config = false
+                // this.$router.push('/types/'+this.type.id);
                 this.routeToParent()
             });
 

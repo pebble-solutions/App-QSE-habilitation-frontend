@@ -18,7 +18,6 @@
                 </div>
             </div>
         </div>
-{{ listHab }}
     </template>
     <alert-message v-else>Il n'y a pas de personnel habilité</alert-message>
 
