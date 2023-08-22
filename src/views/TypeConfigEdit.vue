@@ -36,7 +36,8 @@ export default {
                 dd: null,
                 df: null,
                 duree: null,
-            }
+            },
+            config:null,
 
         }
     },
@@ -84,7 +85,7 @@ export default {
                    
                 })
                 .then((data) => {
-                    console.log(data)
+                    this.config = data;
 					this.$assets.getCollection("types").load();
                     this.$router.push('/types/'+this.$route.params.id);
                 })
@@ -134,7 +135,6 @@ export default {
    
     mounted() {
         
-        console.log (this.$route.params.id);
         this.getConfig(this.$route.params.id)
     },
     

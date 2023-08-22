@@ -80,7 +80,6 @@ methods: {
         let assembler = new AssetsAssembler(listHabilitationPersonnels);
         await assembler.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
         let joinedListHab = assembler.getResult();
-        console.log(joinedListHab, 'assembler')
 
            
         this.pending.load = false;
