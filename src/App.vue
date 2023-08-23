@@ -49,10 +49,14 @@
 		</template> -->
 
 		<template v-slot:list>
-			<AppMenu v-if="listMode ==='habilitation'" >
+			<AppMenu v-if="listMode === 'operateur'">
+				<AppMenuItem :href="'/personnels/'+personnel.id" v-for="personnel in personnels" :key="personnel.id">
+					<span class="fw-lighter"># {{ personnel.id }}</span> {{ personnel.cache_nom }}  
+				</AppMenuItem>
+			</AppMenu>
+			<AppMenu v-else-if="listMode ==='habilitation'" >
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
-				<!-- <AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem> -->
-				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in  listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
+				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
 			</AppMenu>
 			
 		</template>
@@ -106,7 +110,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'habilitationType', 'types']),
+		...mapState(['elements', 'openedElement', 'habilitationType', 'types', 'personnels']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -220,9 +224,6 @@ export default {
 			this.$assets.addCollection("veilles", veillesCollection);
 			this.$assets.addCollection("personnels", personnelsCollection);
 			this.$assets.addCollection("habilitationsPersonnels", habilitationsPersonnelsCollection);
-
-
-
 
 		},
 

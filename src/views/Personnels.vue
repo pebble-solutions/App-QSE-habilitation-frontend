@@ -1,5 +1,5 @@
 <template>
     <div>
-        ici le fis
+        ici le suivi du personnel
     </div>
 </template>
