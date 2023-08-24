@@ -32,19 +32,12 @@
 			</div>
 		</template>
 
+		<AppMenu>
+			<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
+			<AppMenuItem href="/suspensions" look="dark" icon="bi bi-app">Suspensions</AppMenuItem>
+		</AppMenu>
 
-		<!-- Menu additionnel -->
-		<!--Modifier cfgSlots.menu = true; dans config.json pour activer-->
-		<!-- <template v-slot:menu>
 
-			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/suspensions" look="dark" icon="bi bi-app">Suspensions</AppMenuItem>
-			</AppMenu>
-
-		</template>
-
-		<!-- Bouton de commutation et Affichage de la liste -->
 		<template v-slot:list>
 			<div>
 				<div class="d-flex mt-3">
@@ -87,17 +80,19 @@
 				</div>
 			</div>
 			<AppMenu v-if="listMode === 'operateur'">
-				<AppMenuItem :href="'/personnels/'+personnel.id" v-for="personnel in personnels" :key="personnel.id">
-					<span class="fw-lighter"># {{ personnel.id }}</span> {{ personnel.cache_nom }}  
+				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
+					<span class="fw-lighter"># {{ personnel.id }}</span> {{ personnel.cache_nom }}
 				</AppMenuItem>
 			</AppMenu>
-			<AppMenu v-else-if="listMode ==='habilitation'" >
-				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
-				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
+			<AppMenu v-else-if="listMode === 'habilitation'">
+				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-gear" v-for="consultation in listConsultation(types)"
+					:key="type.id">{{ consultation.nom }}
+				</AppMenuItem>
 			</AppMenu>
-			
+
+
 		</template>
-			
 
 
 		<template v-slot:core>
@@ -108,6 +103,7 @@
 
 	</AppWrapper>
 </template>
+
 <style lang="scss">
 .fs-7 {
 	font-size: 0.80rem !important;
@@ -123,7 +119,7 @@
 import AppWrapper from '@/components/pebble-ui/AppWrapper.vue'
 import AppMenu from '@/components/pebble-ui/AppMenu.vue'
 import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
-import { mapState,mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import itemPersonnelSuspension from './components/itemPersonnelSuspension.vue'
 import itemHabilitationSuspension from './components/itemHabilitationSuspension.vue'
@@ -158,9 +154,10 @@ export default {
 		...mapState(['elements', 'openedElement', 'personnels', 'suspensions', 'habilitations', 'types', 'habilitationType']),
 
 		/**
- * Retourne la liste des personnels si `showPersonnels` est `true`, sinon retourne la liste des habilitations.
- * @returns {Array} - La liste des personnels ou habilitations en fonction de la valeur de `showPersonnels`.
- */
+		 * Retourne la liste des personnels si `showPersonnels` est `true`, sinon retourne la liste des habilitations.
+		 * 
+		 * @returns {Array} - La liste des personnels ou habilitations en fonction de la valeur de `showPersonnels`.
+		 */
 		listItems() {
 			return this.showPersonnels ? this.personnels : this.habilitations;
 		},
@@ -179,8 +176,7 @@ export default {
 
 
 	methods: {
-
-
+		...mapActions(['refreshHabilitationType']),
 
 		/**
 		 * Bascule l'affichage entre les personnels et les habilitations, et met à jour la liste courante.
@@ -208,8 +204,6 @@ export default {
 			}
 		},
 
-		...mapActions(['refreshHabilitationType']),
-
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
 		 * 
@@ -219,13 +213,13 @@ export default {
 		 */
 		getRouteGroupName(routeName) {
 			for (const groupName in ROUTES_NAMES) {
-			const names = ROUTES_NAMES[groupName];
+				const names = ROUTES_NAMES[groupName];
 
 				if (names.includes(routeName)) {
-				return groupName;
+					return groupName;
 				}
-				}
-				return null;
+			}
+			return null;
 		},
 
 		/**
@@ -246,11 +240,13 @@ export default {
 
 		/**
 		 * retourne un tableau des types d'habilitations filtrés
+		 * 
 		 * @param {Array} list liste des types d'habilitation
+		 * 
 		 * @returns	{Array}	typeFiltred	résultat du filtre
 		 */
 		listConsultation(list) {
-			
+
 			let typeFiltred = list;
 			if (this.displaySearch) {
 				const searchInput = this.displaySearch.trim();
@@ -261,7 +257,7 @@ export default {
 					typeFiltred = typeFiltred.filter(item => item.nom?.toUpperCase().match(searchPattern));
 				}
 				else {
-					if (confirm('Cette recherche n\'est pas acceptée: "'+ this.displaySearch +'". Filtre sur caractères numériques et alphabétiques uniquement.')) {
+					if (confirm('Cette recherche n\'est pas acceptée: "' + this.displaySearch + '". Filtre sur caractères numériques et alphabétiques uniquement.')) {
 						this.displaySearch = '';
 					}
 				}
@@ -336,26 +332,26 @@ export default {
 			}
 
 			console.log(licences);
-		}
 
-			const typesCollection = new AssetsCollection(this, {
+
+			let typesCollection = new AssetsCollection(this, {
 				assetName: 'types',
 				apiRoute: 'v2/habilitation/type'
 			});
-			
-			const veillesCollection = new AssetsCollection (this, {
+
+			let veillesCollection = new AssetsCollection(this, {
 				assetName: 'veilles',
 				apiRoute: 'v2/controle/veille'
 			});
-			const personnelsCollection = new AssetsCollection (this, {
+			let personnelsCollection = new AssetsCollection(this, {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel'
 			});
-			const habilitationsPersonnelsCollection = new AssetsCollection (this, {
+			let habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel'
 			});
-			
+
 			// typesCollection.reset();
 
 			this.$assets.addCollection("elements", elementsCollection);
@@ -372,9 +368,9 @@ export default {
 		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/habilitation/type')
-			.then((data) => {
-				this.refreshHabilitationType(data);
-			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+				.then((data) => {
+					this.refreshHabilitationType(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 
 	},
@@ -434,6 +430,7 @@ export default {
 			this.getFirebaseAppLicence();
 		});
 	}
-
 }
+
+
 </script>
