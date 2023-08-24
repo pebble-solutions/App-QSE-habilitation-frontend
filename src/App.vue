@@ -67,6 +67,11 @@
 	
 </template>
 <style lang="scss">
+@import './variables'; 
+
+.custom-app-color {
+	background-color: $theme-color !important;
+}
 .fs-7 {
 	font-size: 0.80rem !important;
 }
