@@ -351,6 +351,10 @@ export default {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel'
 			});
+			let elementsCollection = new AssetsCollection(this, {
+				assetName: 'elements',
+				apiRoute: 'v2/element'
+			});
 
 			// typesCollection.reset();
 
