@@ -16,6 +16,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+
+    path: '/suspensions',
+    name: 'Suspensions',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Suspensions.vue'),
+  },
+  {
     path: '/types',
     name: 'types',
     // route level code-splitting
@@ -68,14 +74,17 @@ const routes = [
     path: '/element/:id',
     name: 'Element',
     component: () => import(/* webpackChunkName: "about" */ '../views/Element.vue'),
+
     children: [
       {
-        path: 'properties',
-        component: () => import('../views/ElementProperties.vue')
+        path: 'personnel/:id',
+        name: 'SuspensionsPersonnelInformations',
+        component: () => import('../views/SuspensionsPersonnelInformations.vue')
       },
       {
-        path: 'informations',
-        component: () => import('../views/ElementInformations.vue')
+        path: 'habilitation/:id',
+        name: 'SuspensionsHabilitationInformations',
+        component: () => import('../views/SuspensionsHabilitationInformations.vue')
       }
     ]
   }

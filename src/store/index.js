@@ -6,6 +6,8 @@ export default createStore({
 		activeStructureId: null,
 		login: null,
 		elements: [],
+
+
 		types: [],
 		openedElement: null,
 		habilitationType: [],

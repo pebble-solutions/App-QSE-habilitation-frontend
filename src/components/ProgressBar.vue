@@ -1,11 +1,10 @@
 <template>
-    <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar" :class="returnClass(varTime)" :style="widthStyle(varTime)" >
-            {{ barLabel(varTime) }}
-        </div>
+
+    <div v-if="varTime" class="progress progress-ht text-light text-shadow-effect position-relative" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <span class="position-absolute w-100 text-center">{{ barLabel(varTime) }}</span>
+        <div class="progress-bar progress-ht overflow-visible " role="progressbar" :class="returnClass(varTime)" :style="widthStyle(varTime)"></div>
     </div>
 </template>
-
 <script>
 import {daysToYearMonthDay} from '../js/date.js';
 
@@ -139,7 +138,9 @@ export default {
             }
             else {
                 if (data.consoPerCent >= 71) {
-                    return this.cleanLabel(label + ' à réaliser sous ')+ ' ' + daysToYearMonthDay(Math.abs(data.remainingDays))
+
+                    return this.cleanLabel(label + ' à réaliser sous ')+ ' ' + daysToYearMonthDay(Math.abs(data.remainingDays));
+
                 }
             }
         },
@@ -153,5 +154,19 @@ export default {
         },
     },
 }
-
 </script>
+
+<style scoped>
+.text-shadow-effect {
+    text-shadow: 2px 1px 2px #000000df; /* Vous pouvez modifier cette valeur selon vos préférences */
+}
+.position-absolute {
+    top: 55%;  /* décalage légèrement vers le bas */
+    transform: translateY(-50%);
+    font-weight: bold; /* augmenter le poids de la police */
+    font-size: 110%; /* augmenter la taille de la police de 20% */
+}
+</style>
+
+
+
