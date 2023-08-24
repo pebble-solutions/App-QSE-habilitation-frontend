@@ -32,6 +32,12 @@
                 "icon": "bi bi-person-gear", 
                 "key": "personnels",
                 "href": "/personnels"
+            },
+            {
+                "label": "Suspensions",
+                "icon": "bi bi-person-gear", 
+                "key": "suspension",
+                "href": "/suspension"
             }
         ]
     },

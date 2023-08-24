@@ -58,6 +58,38 @@
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
 				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
 			</AppMenu>
+
+			<AppMenu v-else-if="listMode ==='suspension'">
+				<button class="btn w-100 mx-1"
+				:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
+				@click="toggleShow(true)">
+				Personnels
+			</button>
+			<button class="btn w-100 mx-1"
+				:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
+				@click="toggleShow(false)">
+				Habilitations
+			</button>
+				<div class="text-center">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>
+			</AppMenu>
+			<AppMenu v-else>
+				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
+					<template v-if="showPersonnels">
+						<itemPersonnelSuspension :personnel="item" :icon="'bi bi-person-fill'" :num="item.id" />
+					</template>
+					<template v-else>
+						<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'"
+							:num="item.id" />
+					</template>
+					<a>
+						{{ showPersonnels ? item.personnel_name : item.habilitation_name }}
+					</a>
+				</AppMenuItem>
+			</AppMenu>
 			
 		</template>
 			

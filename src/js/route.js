@@ -7,7 +7,7 @@ export const ROUTES_NAMES = {
 				],
 	operateur: ['personnels',
 				'ficheIndividuelleSuivi'],
-	statistiques: ['Statistiques','NewRequest'],
+	suspension: ['suspension'],
 	home: ['Home'],
 	echeancier: ['Echeancier']
 };
