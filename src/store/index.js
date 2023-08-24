@@ -10,7 +10,8 @@ export default createStore({
 		habilitations: [],
 		habilitationType: [],
 		personnels: [],
-		openedElement: null
+		openedElement: null,
+		
 	},
 	getters: {
 		activeStructure(state) {
