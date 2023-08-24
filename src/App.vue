@@ -86,8 +86,8 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-gear" v-for="consultation in listConsultation(types)"
-					:key="type.id">{{ consultation.nom }}
+				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-gear" v-for="type in listConsultation(types)"
+					:key="type.id">{{ type.nom }}
 				</AppMenuItem>
 			</AppMenu>
 
