@@ -72,19 +72,20 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 					</AppMenu>
 					<AppMenu v-else>
 						<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
-							<template v-if="showPersonnels">
-								<itemPersonnelSuspension :personnel="item" :icon="'bi bi-person-fill'" :num="item.id" />
-							</template>
-							<template v-else>
-								<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'"
-									:num="item.id" />
-							</template>
+
+							<itemPersonnelSuspension v-if="showPersonnels" :personnel="item" :icon="'bi bi-person-fill'"
+								:num="item.id" />
+
+
+							<itemHabilitationSuspension v-else :habilitation="item" :icon="'bi bi-patch-check-fill'"
+								:num="item.id" />
+
 							<a>
 								{{ showPersonnels ? item.personnel_name : item.habilitation_name }}
 							</a>
 						</AppMenuItem>
 					</AppMenu>
-					
+
 				</div>
 			</div>
 		</template>
@@ -132,31 +133,48 @@ export default {
 	computed: {
 		...mapState(['elements', 'openedElement', 'personnels', 'suspensions', 'habilitations', 'types']),
 
+		/**
+ * Retourne la liste des personnels si `showPersonnels` est `true`, sinon retourne la liste des habilitations.
+ * @returns {Array} - La liste des personnels ou habilitations en fonction de la valeur de `showPersonnels`.
+ */
 		listItems() {
 			return this.showPersonnels ? this.personnels : this.habilitations;
 		},
 	},
 
+
 	methods: {
 
 
+		/**
+		 * Bascule l'affichage entre les personnels et les habilitations, et met à jour la liste courante.
+		 * 
+		 * @param {boolean} showPersonnels - Si vrai, affiche les personnels. Sinon, affiche les habilitations.
+		 */
 		toggleShow(showPersonnels) {
 			this.showPersonnels = showPersonnels;
 			this.currentList = showPersonnels ? this.personnels : this.habilitations;
 		},
 
-
+		/**
+		 * Génère un lien basé sur l'élément donné, en fonction de l'affichage actuel (personnels ou habilitations).
+		 * 
+		 * @param {Object} item - L'élément pour lequel générer le lien.
+		 * 
+		 * @returns {string} - Le lien généré pour l'élément donné.
+		 */
 		getItemLink(item) {
 			if (this.showPersonnels) {
 				return `/suspensions/personnel/${item.id}`;
 			} else {
-				// Adjust the route for habilitations if needed
+				// Ajustez la route pour les habilitations si nécessaire
 				return `/suspensions/habilitation/${item.id}`;
 			}
 		},
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
+		 * 
 		 * @param {Object} user Un objet LocalUser
 		 */
 		setLocal_user(user) {
@@ -244,7 +262,7 @@ export default {
 		AppMenu,
 		AppMenuItem,
 		itemPersonnelSuspension,
-		itemHabilitationSuspension
+		itemHabilitationSuspension,
 	},
 
 	mounted() {
