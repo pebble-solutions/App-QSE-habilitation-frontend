@@ -26,6 +26,12 @@
                 "icon": "bi bi-gear-fill", 
                 "key": "types",
                 "href": "/types"
+            },
+            {
+                "label": "Personnels",
+                "icon": "bi bi-person-gear", 
+                "key": "personnels",
+                "href": "/personnels"
             }
         ]
     },
