@@ -1,4 +1,5 @@
 <template>
+
     <div v-if="varTime" class="progress progress-ht text-light text-shadow-effect position-relative" role="progressbar" aria-valuemin="0" aria-valuemax="100">
         <span class="position-absolute w-100 text-center">{{ barLabel(varTime) }}</span>
         <div class="progress-bar progress-ht overflow-visible " role="progressbar" :class="returnClass(varTime)" :style="widthStyle(varTime)"></div>
@@ -84,7 +85,6 @@ export default {
 
     },
     methods: {
-        
         returnClass(data) {  
             if (180 < data.remainingDays) {
                 return 'bg-success';
@@ -138,7 +138,9 @@ export default {
             }
             else {
                 if (data.consoPerCent >= 71) {
+
                     return this.cleanLabel(label + ' à réaliser sous ')+ ' ' + daysToYearMonthDay(Math.abs(data.remainingDays));
+
                 }
             }
         },
@@ -152,7 +154,6 @@ export default {
         },
     },
 }
-
 </script>
 
 <style scoped>
@@ -166,3 +167,6 @@ export default {
     font-size: 110%; /* augmenter la taille de la police de 20% */
 }
 </style>
+
+
+

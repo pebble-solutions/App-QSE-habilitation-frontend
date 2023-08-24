@@ -16,9 +16,65 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+
     path: '/suspensions',
     name: 'Suspensions',
     component: () => import(/* webpackChunkName: "about" */ '../views/Suspensions.vue'),
+  },
+  {
+    path: '/types',
+    name: 'types',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Types.vue'),
+    children: [
+      {
+        path: 'new',
+        name: 'newConfig',
+        component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfigNew.vue')
+      },
+
+    ],
+  },
+  {
+    path: '/types/:id',
+    name: 'typeConfig',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfig.vue'),
+    children: [
+      
+      {
+        path: 'edit',
+        name: 'editConfig',
+        component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfigEdit.vue')
+      }
+    ]
+  },
+  {
+    path: '/personnels',
+    name: 'personnels',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Personnels.vue'),
+  },
+  {
+    path: '/personnels/:id',
+    name: 'ficheIndividuelleSuivi',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/FicheIndividuelle.vue'),
+  },
+
+  {
+    path: '/element/:id',
+    name: 'Element',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Element.vue'),
+
     children: [
       {
         path: 'personnel/:id',
