@@ -40,7 +40,7 @@
 		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/registre" look="dark" icon="bi bi-app">Registre d'habilitation</AppMenuItem>
+				<AppMenuItem href="/registre/" look="dark" icon="bi bi-app">Registre d'habilitation</AppMenuItem>
 			</AppMenu>
 		</template>
 
