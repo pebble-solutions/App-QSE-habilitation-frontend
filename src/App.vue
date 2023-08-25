@@ -60,7 +60,7 @@
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode ==='suspension'">
-				<button class="btn w-100 mx-1"
+				<!-- <button class="btn w-100 mx-1"
 				:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
 				@click="toggleShow(true)">
 				Personnels
@@ -74,7 +74,7 @@
 					<div class="spinner-border text-primary" role="status">
 						<span class="visually-hidden">Loading...</span>
 					</div>
-				</div>
+				</div> -->
 			</AppMenu>
 			<AppMenu v-else>
 				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
@@ -340,7 +340,7 @@ export default {
 				try {
 
 					const personnelsCollection = this.$assets.getCollection("personnels");
-                    this.$assets.getCollection("suspensions").load();
+                    // this.$assets.getCollection("suspensions").load();
                     await personnelsCollection.load();
                     const personnels = personnelsCollection.getCollection();
                     let ids = [];
