@@ -24,7 +24,7 @@
           </div>
           <!-- Colonne 2 : Résultat de groupe -->
           <div class="col">
-            <div class="d-flex align-items-center justify-content-start my-2">
+            <div class="d-flex flex-row flex-row-reverse align-items-center justify-content-start my-2">
               <button v-for="kn in listControlDone" :key="kn.id"
                 :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
                 :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">

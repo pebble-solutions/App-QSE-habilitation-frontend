@@ -34,6 +34,12 @@
                 "href": "/personnels"
             },
             {
+                "label": "Échéancier",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "echeancier",
+                "href": "/echeancier"
+            },
+            {
                 "label": "Suspensions",
                 "icon": "bi bi-person-gear", 
                 "key": "suspension",

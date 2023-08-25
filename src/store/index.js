@@ -14,6 +14,10 @@ export default createStore({
 		veilles: [],
 		personnels: [],
 		habilitations: [],
+		habilitationsTypes: [],
+		echeancier: [],
+
+
 
 	},
 	getters: {
@@ -47,6 +51,16 @@ export default createStore({
 		 */
 		setStructureId(state, structureId) {
 			state.activeStructureId = structureId;
+		},
+		
+		/**
+		 * Enregistre l'echeance dans le store
+		 * @param {Object} state Le state de l'instance vueX
+		 * @param {Object} echeancier L'objet Login
+		 */
+		setEcheance(state, echeancier) {
+			console.log(echeancier, 'toto')
+			state.echeancier = echeancier
 		},
 
 		/**

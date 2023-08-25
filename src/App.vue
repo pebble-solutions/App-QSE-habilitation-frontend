@@ -76,6 +76,9 @@
 					</div>
 				</div> -->
 			</AppMenu>
+			<AppMenu v-else-if="listMode === 'echeancier'">
+				<FilterFormEcheancier />
+			</AppMenu>
 			<AppMenu v-else>
 				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
 					<template v-if="showPersonnels">
@@ -123,6 +126,8 @@ import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
 import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
+import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
+
 
 
 import CONFIG from "@/config.json"
@@ -278,6 +283,10 @@ export default {
                 assetName: 'habilitations',
                 apiRoute: 'v2/habilitation'
             });
+			const habilitationsTypesCollection = new AssetsCollection(this, {
+                assetName: 'habilitationsTypes',
+                apiRoute: 'v2/controle/habilitation/type'
+            });
 
 			
 			// typesCollection.reset();
@@ -289,6 +298,8 @@ export default {
 			this.$assets.addCollection("habilitationsPersonnels", habilitationsPersonnelsCollection);
 			this.$assets.addCollection("suspensions", suspensionsCollection);
 			this.$assets.addCollection("habilitations", habilitationsCollection);
+			this.$assets.addCollection("habilitationsTypes", habilitationsTypesCollection);
+
 		},
 
 		/**
@@ -324,6 +335,7 @@ export default {
 		AppMenuItem,
 		itemHabilitationSuspension,
 		itemPersonnelSuspension,
+		FilterFormEcheancier,
 	},
 
 	mounted() {
@@ -338,6 +350,7 @@ export default {
 
 				this.pending.elements = true;
 				try {
+					this.loadHabilitationType();
 
 					const personnelsCollection = this.$assets.getCollection("personnels");
                     // this.$assets.getCollection("suspensions").load();
