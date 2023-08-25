@@ -1,10 +1,10 @@
 <template>
     <spinner v-if="pending.load"></spinner>
     <template v-else-if="listHab">
-        <div class="list-group card m-2 p-2 custom-color" >
+        <div class="card m-2 p-2 custom-color" >
             <h4 class="my-3 text-white text-center">Liste des personnels habilités :</h4>
 
-            <div class="list-group-item" v-for="hab in listHab" :key="hab.id">
+            <div class="list-group-item mb-2" v-for="hab in listHab" :key="hab.id">
                         <!-- {{returnName(hab.personnel_id)}} -->
                         <hab-monitor :habId="hab.id" :displayAgent="true" :displayHab="false"></hab-monitor>
                    
@@ -12,7 +12,7 @@
             </div>
         </div>
     </template>
-    <alert-message v-else>Il n'y a pas de personnel habilité</alert-message>
+    <div class="text-warning text-center" v-else>Il n'y a pas de personnel habilité</div>
 
 
 </template>
@@ -21,7 +21,6 @@ import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 // import ProgressBar from './ProgressBar.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import HabMonitor from './HabMonitor.vue';
 
@@ -38,7 +37,7 @@ props: {
     },
 },
 
-components: { Spinner, AlertMessage, HabMonitor}, //RouterLink, ProgressBar
+components: { Spinner, HabMonitor}, //RouterLink, ProgressBar
 
 computed: {
     ...mapState(['habilitationType','habilitationsPersonnels', 'personnels'])

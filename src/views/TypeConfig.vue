@@ -5,7 +5,7 @@
     <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
     <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid" style="max-width: 500px; width: 100%;">
 </div>
-        <div v-if="hab" class="card m-2 p-2 text-white text-center custom-background-color">
+        <div v-if="hab" class="card m-2 p-2 text-white text-center custom-app-color">
             <h4 class="">{{ hab.nom }}</h4>
             <div class="row g-2">
                 <div class="col-12 col-md-6">
@@ -17,7 +17,7 @@
                         <div>Date fin :  <span>{{ hab.df }}</span> </div>
                         <div class="mb-2">Durée de validité :  <span>{{ hab.expiration }}</span> </div>
                         <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
-                            <button class="btn btn-outline-primary w-100" @click.prevent="$router.push($route.path + '/edit')">Modifier</button>
+                            <button class="btn btn-custom-primary w-100" @click.prevent="$router.push($route.path + '/edit')">Modifier</button>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
                             <div class="mb-2">Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
                             <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
-                                <button class="btn btn-outline-primary w-100">Modifier</button>
+                                <button class="btn btn-custom-primary w-100">Modifier</button>
                             </div>
                         </div>
                         <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer ?</button></AlertMessage>
@@ -124,12 +124,27 @@ export default {
 </script>
 
 <style scoped>
-.custom-background-color {
-    background-color: #F78C6B;
-}
+
 .logo {
     width: 20%;
     height: auto;
+}
+
+.custom-app-color {
+    background-color: #F78C6B;
+}
+
+.btn-custom-primary {
+    color: #F78C6B;
+    background-color: #fff;
+    border: 1px solid #F78C6B;
+    width: 300px; /* Ajuster la largeur selon vos besoins */
+}
+
+.btn-custom-primary:hover {
+    color: #fff;
+    background-color: #F78C6B;
+    border: 1px solid #F78C6B;
 }
 </style>
 ```

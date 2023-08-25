@@ -16,12 +16,6 @@
                 "href": "/"
             },
             {
-                "label": "À propos",
-                "icon": "bi bi-info-square",
-                "key": "about",
-                "href": "/about"
-            },
-            {
                 "label": "Types",
                 "icon": "bi bi-gear-fill", 
                 "key": "types",
@@ -41,7 +35,7 @@
             },
             {
                 "label": "Suspensions",
-                "icon": "bi bi-person-gear", 
+                "icon": "bi bi-pause-circle-fill", 
                 "key": "suspension",
                 "href": "/suspension"
             }
