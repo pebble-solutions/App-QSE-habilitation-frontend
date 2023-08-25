@@ -2,7 +2,8 @@
     <div class="card custom-app-color mt-4 mx-2 text-white py-2 px-2">
         <Spinner v-if="pending.agent"></Spinner>
         <template v-if="habilitationFromPerso.length">
-            <h2 class="text-center">Liste des habilitations de {{ returnName($route.params.id) }}</h2>
+            
+            <h2 class="text-center">Liste des habilitations de {{ returnName(habilitationFromPerso[0].personnel_id) }}</h2>
 
             <div class="mb-3" v-for="hab in habilitationFromPerso" :key="hab.id">
                 <HabMonitor :habId="hab.id" :displayHab="true" :displayAgent="false"></HabMonitor>
@@ -82,10 +83,11 @@ export default {
 
         returnName(id) {
             let personnel = this.personnels.find(e => e.id === id);
+            console.log(personnel, 'personnel')
             if (personnel) {
                 return personnel.cache_nom;
             } else {
-                return id;
+                return personnel;
             }
         },
 

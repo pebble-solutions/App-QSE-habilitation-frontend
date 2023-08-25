@@ -20,7 +20,7 @@
             </div>
             <!-- Composant ProgressBar -->
             <!-- {{ habilitationPerso }} -->
-            <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="hab.dd" :df="hab.df"></ProgressBar>
+            <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="new Date(hab.dd)  " :df="new Date(hab.df)"></ProgressBar>
           </div>
           <!-- Colonne 2 : Résultat de groupe -->
           <div class="col">
