@@ -24,15 +24,14 @@
           </div>
           <!-- Colonne 2 : Résultat de groupe -->
           <div class="col">
-            <div class="d-flex align-items-center justify-content-start my-2">
-              <button v-for="kn in listControlDone" :key="kn.id"
+        <div class="d-flex flex-row-reverse align-items-center justify-content-end my-2">
+            <button v-for="kn in listControlDone" :key="kn.id"
                 :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
                 :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
                 {{ kn.result_var }}
-              </button>
-            </div>
-            
-          </div>
+            </button>
+        </div>
+    </div>
           
           <div class="col-lg-4 col-12">
             <template v-if="listControlToDo?.length">
@@ -44,7 +43,7 @@
               </div>
               <!-- Composant ProgressBar -->
               <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
-              <AlertMessage v-else> {{ noLastControl }}</AlertMessage>
+              <div class="text-success" v-else> {{ noLastControl }}<i class="bi bi-check text-success"></i></div>
             </template>
             <div class="text-secondary d-flex align-items-center" v-else>
               <i class="bi bi-calendar2-x me-2"></i>
@@ -63,9 +62,8 @@
   import ProgressBar from '../components/ProgressBar.vue';
   import { dateFormat, classNameFromSAMI } from '../js/collecte';
   import { mapState } from 'vuex';
-  import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
   export default {
-    components: { ProgressBar , AlertMessage},
+    components: { ProgressBar},
     props: {
       habId: Number,
       collecte: Object,
