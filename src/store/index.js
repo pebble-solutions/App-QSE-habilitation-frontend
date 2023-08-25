@@ -10,9 +10,10 @@ export default createStore({
 		openedElement: null,
 		habilitationType: [],
 		habilitationsPersonnels: [],
-
+		suspensions:[],
 		veilles: [],
 		personnels: [],
+		habilitations: [],
 
 	},
 	getters: {

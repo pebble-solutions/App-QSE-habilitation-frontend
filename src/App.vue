@@ -121,6 +121,8 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapState,mapActions } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
+import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
+import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
 
 
 import CONFIG from "@/config.json"
@@ -138,6 +140,8 @@ export default {
 			},
 			isConnectedUser: false,
 			displaySearch: '',
+			currentList: [],
+			showPersonnels: true,
 		}
 	},
 
@@ -154,10 +158,28 @@ export default {
 			return this.getRouteGroupName(this.$route.name);
 		},
 
+		listItems() {
+            return this.showPersonnels ? this.personnels : this.habilitations;
+        },
+
 	},
 
 	methods: {
 		...mapActions(['refreshHabilitationType']),
+
+		toggleShow(showPersonnels) {
+            this.showPersonnels = showPersonnels;
+            this.currentList = showPersonnels ? this.personnels : this.habilitations;
+        },
+
+		getItemLink(item) {
+            if (this.showPersonnels) {
+                return `/suspensions/personnel/${item.id}`;
+            } else {
+                // Adjust the route for habilitations if needed
+                return `/suspensions/habilitation/${item.id}`;
+            }
+        },
 
 
 		/**
@@ -248,6 +270,15 @@ export default {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel'
 			});
+			const suspensionsCollection = new AssetsCollection(this, {
+                assetName: 'suspensions',
+                apiRoute: 'v2/habilitation/suspension'
+            });
+			const habilitationsCollection = new AssetsCollection(this, {
+                assetName: 'habilitations',
+                apiRoute: 'v2/habilitation'
+            });
+
 			
 			// typesCollection.reset();
 
@@ -256,7 +287,8 @@ export default {
 			this.$assets.addCollection("veilles", veillesCollection);
 			this.$assets.addCollection("personnels", personnelsCollection);
 			this.$assets.addCollection("habilitationsPersonnels", habilitationsPersonnelsCollection);
-
+			this.$assets.addCollection("suspensions", suspensionsCollection);
+			this.$assets.addCollection("habilitations", habilitationsCollection);
 		},
 
 		/**
@@ -269,12 +301,29 @@ export default {
 				this.refreshHabilitationType(data);
 			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
+		/**
+         * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
+         */
+		// getFirebaseAppLicence() {
+		// 	const auth = getAuth();
+		// 	const user = auth.currentUser;
+		// 	const appLicences = this.$app.licence;
+		// 	const licences = appLicences.users.includes(user.email) ? appLicences.apps : [];
+		// 	for (const lic of licences) {
+		// 		if (lic.includes("kn")) {
+		// 			console.log("J'ai aussi kn regarde");
+		// 		}
+		// 	}
+		// 	console.log(licences);
+        // }
 	},
 
 	components: {
 		AppWrapper,
 		AppMenu,
-		AppMenuItem
+		AppMenuItem,
+		itemHabilitationSuspension,
+		itemPersonnelSuspension,
 	},
 
 	mounted() {
@@ -289,6 +338,18 @@ export default {
 
 				this.pending.elements = true;
 				try {
+
+					const personnelsCollection = this.$assets.getCollection("personnels");
+                    this.$assets.getCollection("suspensions").load();
+                    await personnelsCollection.load();
+                    const personnels = personnelsCollection.getCollection();
+                    let ids = [];
+                    personnels.forEach(personnel => {
+                        ids.push(personnel.id);
+                    });
+                    this.$assets.getCollection("habilitations").load({
+                        personnel_id: ids.join(',')
+                    });
 					await this.$assets.getCollection("elements").load();
 					await this.$assets.getCollection("types").load();
 					await this.$assets.getCollection("veilles").load();
@@ -306,6 +367,7 @@ export default {
 					this.pending.elements = false;
 				}
 			}
+			// this.getFirebaseAppLicence();
 		});
 	}
 

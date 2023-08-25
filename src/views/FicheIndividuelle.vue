@@ -2,13 +2,9 @@
     <div class="container py-2 px-2" >
         <Spinner v-if="pending.agent"></Spinner>
         <template v-if="habilitationFromPerso.length" >
+            <h5>Liste des habilitations</h5>
 
             <div class="mb-3" v-for="hab in habilitationFromPerso" :key="hab.id">
-                <div class="d-flex justify-content-between MB-3">
-                    <span>{{ findHabilitationType(hab.habilitation_type_id) }}</span>
-                    <span>Échéance : {{ changeFormatDateLit(hab.df) }}</span>
-                </div>
-                <ProgressBar :dd= "new Date(hab.dd)" :df="new Date(hab.df)"></ProgressBar>
                 <HabMonitor :habId="hab.id"></HabMonitor>
             </div>
             <div>
@@ -22,7 +18,6 @@
 // import {mapState, mapActions} from 'vuex'; 
 // import HabMonitor from '../components/HabMonitor.vue';
 import { mapState } from 'vuex';
-import ProgressBar from '../components/ProgressBar.vue';
 import HabMonitor from '../components/HabMonitor.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
@@ -31,7 +26,7 @@ import { dateFormat } from '../js/date';
 
 export default {
 
-    components:  {ProgressBar, AlertMessage, Spinner,HabMonitor},
+    components:  { AlertMessage, Spinner,HabMonitor},
 
     computed: {
         ...mapState(['types'])
@@ -53,16 +48,16 @@ export default {
 
     methods: {
 
-        /**
-         * retourne le nom de  habilitation type en fonction de l'id fourni
-         * @param {number} id 
-         * @returns {string}    le nom du type d'habilitation
-         */
-        findHabilitationType(id) {
-        let habilitationType = this.types.find((e) => e.id == id);
-        // let nom = habilitationType.nom
-        return habilitationType.nom
-        },
+        // /**
+        //  * retourne le nom de  habilitation type en fonction de l'id fourni
+        //  * @param {number} id 
+        //  * @returns {string}    le nom du type d'habilitation
+        //  */
+        // findHabilitationType(id) {
+        // let habilitationType = this.types.find((e) => e.id == id);
+        // // let nom = habilitationType.nom
+        // return habilitationType.nom
+        // },
 
         /**
          * Envoie une requête pour charger la liste des habilitation d'un personnel
