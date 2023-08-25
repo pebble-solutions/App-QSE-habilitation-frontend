@@ -5,17 +5,10 @@
             <h4 class="my-3 text-white text-center">Liste des personnels habilités :</h4>
 
             <div class="list-group-item" v-for="hab in listHab" :key="hab.id">
-                <div class="row align-items-center">
-                    <div class="col-3">
-                        {{returnName(hab.personnel_id)}}
-                    </div>
+                        <!-- {{returnName(hab.personnel_id)}} -->
+                        <hab-monitor :habId="hab.id" :displayAgent="true" :displayHab="false"></hab-monitor>
+                   
                     
-                    <div class="col">
-                        <progress-bar :dd="new Date(hab.dd)" :df="new Date(hab.df)" label="contrôle"></progress-bar>
-        
-                    </div>
-                    
-                </div>
             </div>
         </div>
     </template>
@@ -26,10 +19,11 @@
 <script>
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
-import ProgressBar from './ProgressBar.vue';
+// import ProgressBar from './ProgressBar.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
+import HabMonitor from './HabMonitor.vue';
 
 
 export default{
@@ -44,7 +38,7 @@ props: {
     },
 },
 
-components: {ProgressBar, Spinner, AlertMessage}, //RouterLink
+components: { Spinner, AlertMessage, HabMonitor}, //RouterLink, ProgressBar
 
 computed: {
     ...mapState(['habilitationType','habilitationsPersonnels', 'personnels'])

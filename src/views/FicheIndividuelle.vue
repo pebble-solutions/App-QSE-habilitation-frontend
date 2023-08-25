@@ -5,7 +5,7 @@
             <h5>Liste des habilitations</h5>
 
             <div class="mb-3" v-for="hab in habilitationFromPerso" :key="hab.id">
-                <HabMonitor :habId="hab.id"></HabMonitor>
+                <HabMonitor :habId="hab.id" :displayHab="true" :displayAgent="false"></HabMonitor>
             </div>
             <div>
             </div>

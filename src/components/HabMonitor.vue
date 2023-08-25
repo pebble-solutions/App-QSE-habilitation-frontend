@@ -3,15 +3,14 @@
       <div class="card-body">
         <!-- Titre -->
         <div class="text-secondary text-center mb-1">
-          <span class="fw-light me-2">Habilitation #{{ hab.habilitation_type_id }}</span>
-          <strong>
-            {{ getCharacteristicName(hab.habilitation_type_id)}}
-          </strong>
+          <strong v-if="displayAgent" class="me-2">{{returnName(hab.personnel_id)}}</strong>
+          <strong v-if="displayHab">{{getCharacteristicName(hab.habilitation_type_id)}}</strong>
+          <!-- <span class="fw-light me-2">#{{ hab.habilitation_type_id }}</span> -->
   
         </div>
         <div class="row">
           <!-- Colonne 1 : Validité -->
-          <div class="col-lg-3 col-12">
+          <div class="col-lg-4 col-12">
             <div class="">
               <div class="fw-bold col-12">Validité : 3 ans</div>
               <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
@@ -35,7 +34,7 @@
             
           </div>
           
-          <div class="col-lg-3 col-12">
+          <div class="col-lg-4 col-12">
             <template v-if="listControlToDo?.length">
               <div class="">
                 <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
@@ -71,16 +70,17 @@
       habId: Number,
       collecte: Object,
       info: Object,
+      displayAgent: Boolean,
+      displayHab: Boolean
     },
     computed: {
-      ...mapState(['habilitationType', 'listActifs', 'veilleConfig']),
+      ...mapState(['habilitationType', 'listActifs', 'veilleConfig','personnels']),
   
   
   
       returnFormulaireId() {
         let formulaire = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
         return formulaire.formulaire_id
-  
       }
   
   
@@ -102,6 +102,20 @@
       };
     },
     methods: {
+       /**
+     * retourne le nom du personnel
+     * 
+     * @param {number}  id du personnel
+     * 
+     * @return {string}
+     */
+    returnName(id){
+        let personnel = this.personnels.find (e => e.id == id);
+        if(personnel) {
+            return personnel.cache_nom
+        }
+        else return id
+    },
   
   
       filterhabilitationType(id) {
