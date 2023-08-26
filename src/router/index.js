@@ -5,7 +5,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { transitionName: 'fade' }, 
   },
   {
     path: '/about',
@@ -18,6 +19,7 @@ const routes = [
   {
     path: '/types',
     name: 'types',
+    meta: { transitionName: 'fade' } ,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -50,6 +52,7 @@ const routes = [
   {
     path: '/personnels',
     name: 'personnels',
+    meta: { transitionName: 'fade' }, 
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -58,6 +61,7 @@ const routes = [
   {
     path: '/suspension',
     name: 'suspension',
+    meta: { transitionName: 'fade' }, 
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -74,6 +78,7 @@ const routes = [
   {
     path:'/echeancier',
     name: 'Echeancier',
+    meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
   },
 
