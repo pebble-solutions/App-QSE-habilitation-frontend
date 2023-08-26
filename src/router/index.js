@@ -81,6 +81,13 @@ const routes = [
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
   },
+  {
+    path:'/statistiques',
+    name: 'Statistiques',
+    meta: { transitionName: 'fade' }, 
+    component: () => import(/* webpackChunkName: "about" */ '../views/Statistiques.vue')
+  },
+
 
   {
     path: '/element/:id',

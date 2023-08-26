@@ -41,7 +41,7 @@
             },
             {
                 "label": "Statistiques",
-                "icon": "bar-chart-line-fill", 
+                "icon": "bi bi-bar-chart-line-fill", 
                 "key": "statistiques",
                 "href": "/statistiques"
             }
