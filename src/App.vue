@@ -107,12 +107,20 @@
 	
 </template>
 <style lang="scss">
+@import './variables';
 .fs-7 {
 	font-size: 0.80rem !important;
 }
 
 .progress-ht {
 	height: 25px !important;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: var(--bs-list-group-active-color)!important;;
+    background-color: $theme-color!important;;
+    border-color: $theme-color!important;;
 }
 </style>
 
