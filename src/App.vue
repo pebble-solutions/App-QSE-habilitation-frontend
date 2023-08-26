@@ -1,11 +1,5 @@
 <template>
-
-	<AppWrapper
-		:cfg="cfg"
-		:cfg-menu="cfgMenu"
-		:cfg-slots="cfgSlots"
-		
-		@auth-change="setLocal_user">
+	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user">
 
 		<template v-slot:header>
 			<div class="mx-2 d-flex align-items-center" v-if="openedElement">
@@ -14,20 +8,22 @@
 						<i class="bi bi-arrow-left"></i>
 					</a>
 				</router-link>
-				<router-link :to="'/element/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
+				<router-link :to="'/element/' + openedElement.id + '/properties'" custom v-slot="{ navigate, href }">
 					<a class="btn btn-dark me-2" :href="href" @click="navigate">
 						<i class="bi bi-file-earmark me-1"></i>
-						{{openedElement.name}}
+						{{ openedElement.name }}
 					</a>
 				</router-link>
 
 				<div class="dropdown">
-					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown" aria-expanded="false">
+					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown"
+						aria-expanded="false">
 						Fichier
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="fileDdMenu">
 						<li>
-							<router-link :to="'/element/'+openedElement.id+'/informations'" custom v-slot="{ navigate, href }">
+							<router-link :to="'/element/' + openedElement.id + '/informations'" custom
+								v-slot="{ navigate, href }">
 								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
 							</router-link>
 						</li>
@@ -50,16 +46,30 @@
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'operateur'">
-				<AppMenuItem :href="'/personnels/'+personnel.id" v-for="personnel in personnels" :key="personnel.id">
-					<span class="fw-lighter"># {{ personnel.id }}</span> {{ personnel.cache_nom }}  
+				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
+					<div
+						:class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
+						<div class="col-1">
+							<span>
+								<UserImage :name="personnel.cache_nom" :size="isActiveItem(personnel) ? 'xl' : ''" />
+							</span>
+						</div>
+						<div class="col-8 ps-4">
+							<span>{{ personnel.cache_nom }}</span>
+						</div>
+						<div class="col-2 text-end">
+							<span class="fw-lighter"># {{ personnel.id }}</span>
+						</div>
+					</div>
 				</AppMenuItem>
 			</AppMenu>
-			<AppMenu v-else-if="listMode ==='habilitation'" >
-				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" >
-				<AppMenuItem :href="'/types/'+type.id" icon="bi bi-gear" v-for="type in listConsultation(types)" :key="type.id" >{{ type.nom }}</AppMenuItem>
+			<AppMenu v-else-if="listMode === 'habilitation'">
+				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-gear" v-for="type in listConsultation(types)"
+					:key="type.id">{{ type.nom }}</AppMenuItem>
 			</AppMenu>
 
-			<AppMenu v-else-if="listMode ==='suspension'">
+			<AppMenu v-else-if="listMode === 'suspension'">
 				<!-- <button class="btn w-100 mx-1"
 				:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
 				@click="toggleShow(true)">
@@ -85,17 +95,16 @@
 						<itemPersonnelSuspension :personnel="item" :icon="'bi bi-person-fill'" :num="item.id" />
 					</template>
 					<template v-else>
-						<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'"
-							:num="item.id" />
+						<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'" :num="item.id" />
 					</template>
 					<a>
 						{{ showPersonnels ? item.personnel_name : item.habilitation_name }}
 					</a>
 				</AppMenuItem>
 			</AppMenu>
-			
+
 		</template>
-			
+
 
 		<template v-slot:core>
 			<div class="px-2 bg-light">
@@ -104,10 +113,11 @@
 		</template>
 
 	</AppWrapper>
-	
 </template>
+
 <style lang="scss">
 @import './variables';
+
 .fs-7 {
 	font-size: 0.80rem !important;
 }
@@ -117,15 +127,25 @@
 }
 
 .list-group-item.active {
-    z-index: 2;
-    color: var(--bs-list-group-active-color)!important;;
-    background-color: $theme-color!important;;
-    border-color: $theme-color!important;;
-	border: solid 15px $theme-color!important;;
+	z-index: 2;
+	color: var(--bs-list-group-active-color) !important;
+	;
+	background-color: $theme-color !important;
+	;
+	border-color: $theme-color !important;
+	;
+	border-top: solid 15px $theme-color !important;
+	border-bottom: solid 15px $theme-color !important;
 	font-size: 110%;
 	font-weight: bold;
-	box-shadow: 0 0 5px $theme-color;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.564);
 
+}
+
+/* Annule les paddings droit et gauche pour les éléments enfants de .row */
+.row>* {
+	padding-right: 0 !important;
+	padding-left: 0 !important;
 }
 </style>
 
@@ -134,7 +154,7 @@
 import AppWrapper from '@/components/pebble-ui/AppWrapper.vue'
 import AppMenu from '@/components/pebble-ui/AppMenu.vue'
 import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
-import { mapState,mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
@@ -178,8 +198,8 @@ export default {
 		},
 
 		listItems() {
-            return this.showPersonnels ? this.personnels : this.habilitations;
-        },
+			return this.showPersonnels ? this.personnels : this.habilitations;
+		},
 
 	},
 
@@ -187,18 +207,23 @@ export default {
 		...mapActions(['refreshHabilitationType']),
 
 		toggleShow(showPersonnels) {
-            this.showPersonnels = showPersonnels;
-            this.currentList = showPersonnels ? this.personnels : this.habilitations;
-        },
+			this.showPersonnels = showPersonnels;
+			this.currentList = showPersonnels ? this.personnels : this.habilitations;
+		},
 
 		getItemLink(item) {
-            if (this.showPersonnels) {
-                return `/suspensions/personnel/${item.id}`;
-            } else {
-                // Adjust the route for habilitations if needed
-                return `/suspensions/habilitation/${item.id}`;
-            }
-        },
+			if (this.showPersonnels) {
+				return `/suspensions/personnel/${item.id}`;
+			} else {
+				// Adjust the route for habilitations if needed
+				return `/suspensions/habilitation/${item.id}`;
+			}
+		},
+
+		isActiveItem(item) {
+			return this.openedElement && this.openedElement.id === item.id;
+		},
+
 
 
 		/**
@@ -210,13 +235,13 @@ export default {
 		 */
 		getRouteGroupName(routeName) {
 			for (const groupName in ROUTES_NAMES) {
-			const names = ROUTES_NAMES[groupName];
+				const names = ROUTES_NAMES[groupName];
 
 				if (names.includes(routeName)) {
-				return groupName;
+					return groupName;
 				}
-				}
-				return null;
+			}
+			return null;
 		},
 
 
@@ -241,7 +266,7 @@ export default {
 		 * @returns	{Array}	typeFiltred	résultat du filtre
 		 */
 		listConsultation(list) {
-			
+
 			let typeFiltred = list;
 			if (this.displaySearch) {
 				const searchInput = this.displaySearch.trim();
@@ -252,7 +277,7 @@ export default {
 					typeFiltred = typeFiltred.filter(item => item.nom?.toUpperCase().match(searchPattern));
 				}
 				else {
-					if (confirm('Cette recherche n\'est pas acceptée: "'+ this.displaySearch +'". Filtre sur caractères numériques et alphabétiques uniquement.')) {
+					if (confirm('Cette recherche n\'est pas acceptée: "' + this.displaySearch + '". Filtre sur caractères numériques et alphabétiques uniquement.')) {
 						this.displaySearch = '';
 					}
 				}
@@ -276,33 +301,33 @@ export default {
 				assetName: 'types',
 				apiRoute: 'v2/habilitation/type'
 			});
-			
-			const veillesCollection = new AssetsCollection (this, {
+
+			const veillesCollection = new AssetsCollection(this, {
 				assetName: 'veilles',
 				apiRoute: 'v2/controle/veille'
 			});
-			const personnelsCollection = new AssetsCollection (this, {
+			const personnelsCollection = new AssetsCollection(this, {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel'
 			});
-			const habilitationsPersonnelsCollection = new AssetsCollection (this, {
+			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel'
 			});
 			const suspensionsCollection = new AssetsCollection(this, {
-                assetName: 'suspensions',
-                apiRoute: 'v2/habilitation/suspension'
-            });
+				assetName: 'suspensions',
+				apiRoute: 'v2/habilitation/suspension'
+			});
 			const habilitationsCollection = new AssetsCollection(this, {
-                assetName: 'habilitations',
-                apiRoute: 'v2/habilitation'
-            });
+				assetName: 'habilitations',
+				apiRoute: 'v2/habilitation'
+			});
 			const habilitationsTypesCollection = new AssetsCollection(this, {
-                assetName: 'habilitationsTypes',
-                apiRoute: 'v2/controle/habilitation/type'
-            });
+				assetName: 'habilitationsTypes',
+				apiRoute: 'v2/controle/habilitation/type'
+			});
 
-			
+
 			// typesCollection.reset();
 
 			this.$assets.addCollection("elements", elementsCollection);
@@ -322,13 +347,13 @@ export default {
 		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/habilitation/type')
-			.then((data) => {
-				this.refreshHabilitationType(data);
-			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+				.then((data) => {
+					this.refreshHabilitationType(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 		/**
-         * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
-         */
+		 * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
+		 */
 		// getFirebaseAppLicence() {
 		// 	const auth = getAuth();
 		// 	const user = auth.currentUser;
@@ -340,7 +365,7 @@ export default {
 		// 		}
 		// 	}
 		// 	console.log(licences);
-        // }
+		// }
 	},
 
 	components: {
@@ -368,16 +393,16 @@ export default {
 					this.loadHabilitationType();
 
 					const personnelsCollection = this.$assets.getCollection("personnels");
-                    // this.$assets.getCollection("suspensions").load();
-                    await personnelsCollection.load();
-                    const personnels = personnelsCollection.getCollection();
-                    let ids = [];
-                    personnels.forEach(personnel => {
-                        ids.push(personnel.id);
-                    });
-                    this.$assets.getCollection("habilitations").load({
-                        personnel_id: ids.join(',')
-                    });
+					// this.$assets.getCollection("suspensions").load();
+					await personnelsCollection.load();
+					const personnels = personnelsCollection.getCollection();
+					let ids = [];
+					personnels.forEach(personnel => {
+						ids.push(personnel.id);
+					});
+					this.$assets.getCollection("habilitations").load({
+						personnel_id: ids.join(',')
+					});
 					await this.$assets.getCollection("elements").load();
 					await this.$assets.getCollection("types").load();
 					await this.$assets.getCollection("veilles").load();
