@@ -24,13 +24,15 @@
           </div>
           <!-- Colonne 2 : Résultat de groupe -->
           <div class="col">
-        <div class="d-flex flex-row-reverse align-items-center justify-content-end my-2">
-            <button v-for="kn in listControlDone" :key="kn.id"
-                :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-                :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
-                {{ kn.result_var }}
-            </button>
-        </div>
+            <div class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+    <button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
+        :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+        :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+        {{ kn.result_var }}
+    </button>
+</div>
+
+
     </div>
           
           <div class="col-lg-4 col-12">
