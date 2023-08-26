@@ -121,6 +121,11 @@
     color: var(--bs-list-group-active-color)!important;;
     background-color: $theme-color!important;;
     border-color: $theme-color!important;;
+	border: solid 15px $theme-color!important;;
+	font-size: 110%;
+	font-weight: bold;
+	box-shadow: 0 0 5px $theme-color;
+
 }
 </style>
 
@@ -135,6 +140,7 @@ import { ROUTES_NAMES } from './js/route';
 import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
 import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
 import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
+import UserImage from './components/pebble-ui/UserImage.vue'
 
 
 
@@ -344,6 +350,7 @@ export default {
 		itemHabilitationSuspension,
 		itemPersonnelSuspension,
 		FilterFormEcheancier,
+		UserImage,
 	},
 
 	mounted() {
