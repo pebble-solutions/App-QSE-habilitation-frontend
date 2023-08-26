@@ -2,9 +2,10 @@
     <div class="pt-4">
         <!-- Image avec hauteur max de 200px et marge de 4 -->
         <div class="d-flex justify-content-center align-items-center m-2 mb-4">
-    <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
-    <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid" style="max-width: 500px; width: 100%;">
-</div>
+            <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
+            <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid"
+                style="max-width: 500px; width: 100%;">
+        </div>
         <div v-if="hab" class="card m-2 p-2 text-white text-center custom-app-color">
             <h4 class="">{{ hab.nom }}</h4>
             <div class="row g-2">
@@ -13,15 +14,19 @@
                         <div class="d-flex justify-content-center align-items-center py-3">
                             <h5>Configuration du TYPE <span class="fw-lighter">#{{ hab.id }}</span></h5>
                         </div>
-                        <div>Date début : <span>{{ hab.dd }}</span> </div>
-                        <div>Date fin :  <span>{{ hab.df }}</span> </div>
-                        <div class="mb-2">Durée de validité :  <span>{{ hab.expiration }}</span> </div>
+                        <div>Date début : <span :class="{ 'text-secondary': !hab.dd }">{{ hab.dd ? formatDate(hab.dd) :
+                            'Date Inconnue' }}</span></div>
+                        <div>Date fin : <span :class="{ 'text-secondary': !hab.df }">{{ hab.df ? formatDate(hab.df) : 'Date Inconnue' }}</span></div>
+                        <div class="mb-2">Durée de validité : <span :class="{ 'text-secondary': !hab.expiration }">{{
+                            hab.expiration ? hab.expiration : 'Durée inconnue' }}</span></div>
+
                         <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
-                            <button class="btn btn-custom-primary w-100" @click.prevent="$router.push($route.path + '/edit')">Modifier</button>
+                            <button class="btn btn-custom-primary w-100"
+                                @click.prevent="$router.push($route.path + '/edit')">Modifier</button>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-12 col-md-6">
                     <div class="card p-2 d-flex flex-column h-100">
                         <spinner v-if="pending.load"></spinner>
@@ -29,15 +34,20 @@
                             <div class="d-flex justify-content-center align-items-center py-3">
                                 <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
                             </div>
-                            <div>Date début : <span>{{ veilleConfig.dd }}</span> </div>
-                            <div>Date fin :  <span>{{ veilleConfig.df }}</span> </div>
-                            <div>Formulaire associé :  <span>{{ veilleConfig.formulaire_id }}</span> </div>
-                            <div class="mb-2">Pas de veille :  <span class="me-1">{{ veilleConfig.control_step }}</span>jours </div>
+                            <div>Date début : <span :class="{ 'text-secondary': !veilleConfig.dd }">{{ veilleConfig.dd ?
+                                formatDate(veilleConfig.dd) : 'Date Inconnue' }}</span></div>
+                            <div>Date fin : <span :class="{ 'text-secondary': !veilleConfig.df }">{{ veilleConfig.df ?
+                                formatDate(veilleConfig.df) : 'Date Inconnue' }}</span></div>
+                            <div>Formulaire associé : <span>{{ veilleConfig.formulaire_id }}</span> </div>
+                            <div class="mb-2">Pas de veille : <span class="me-1">{{ veilleConfig.control_step }}</span>jours
+                            </div>
                             <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
                                 <button class="btn btn-custom-primary w-100">Modifier</button>
                             </div>
                         </div>
-                        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer ?</button></AlertMessage>
+                        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de
+                            veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer
+                                ?</button></AlertMessage>
                     </div>
                 </div>
             </div>
@@ -83,6 +93,7 @@ export default {
         findType(id) {
             let typeHab = this.types.find(e => e.id == id);
             this.hab = typeHab;
+            console.log('Date début (hab.dd):', this.hab.dd);
         },
 
         /**
@@ -96,7 +107,15 @@ export default {
             return veille
         },
 
-       
+        /**
+         * formate la date
+         */
+        formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        },
+
+
     },
 
     /**
@@ -119,12 +138,11 @@ export default {
         this.findVeille(this.$route.params.id);
     },
 
-    components: { RouterView, AlertMessage, Spinner, VigilHab}
+    components: { RouterView, AlertMessage, Spinner, VigilHab }
 }
 </script>
 
 <style scoped>
-
 .logo {
     width: 20%;
     height: auto;
@@ -138,13 +156,12 @@ export default {
     color: #F78C6B;
     background-color: #fff;
     border: 1px solid #F78C6B;
-    width: 300px; /* Ajuster la largeur selon vos besoins */
+    width: 300px;
+    /* Ajuster la largeur selon vos besoins */
 }
 
 .btn-custom-primary:hover {
     color: #fff;
     background-color: #F78C6B;
     border: 1px solid #F78C6B;
-}
-</style>
-```
+}</style>
