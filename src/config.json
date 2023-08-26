@@ -16,16 +16,22 @@
                 "href": "/"
             },
             {
-                "label": "Types",
-                "icon": "bi bi-gear-fill", 
+                "label": "Habilitations",
+                "icon": "bi bi-patch-check-fill", 
                 "key": "types",
                 "href": "/types"
             },
             {
                 "label": "Personnels",
-                "icon": "bi bi-person-gear", 
+                "icon": "bi bi-person-lines-fill", 
                 "key": "personnels",
                 "href": "/personnels"
+            },
+            {
+                "label": "Suspensions",
+                "icon": "bi bi-pause-circle-fill", 
+                "key": "suspension",
+                "href": "/suspension"
             },
             {
                 "label": "Échéancier",
@@ -34,11 +40,12 @@
                 "href": "/echeancier"
             },
             {
-                "label": "Suspensions",
-                "icon": "bi bi-pause-circle-fill", 
-                "key": "suspension",
-                "href": "/suspension"
+                "label": "Statistiques",
+                "icon": "bar-chart-line-fill", 
+                "key": "statistiques",
+                "href": "/statistiques"
             }
+            
         ]
     },
     "domains": {
