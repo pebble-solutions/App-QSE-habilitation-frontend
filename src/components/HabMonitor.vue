@@ -1,8 +1,8 @@
 <template>
-    <div class="card" v-if="!pending.control">
+    <div class="card bg-light" v-if="!pending.control">
       <div class="card-body">
         <!-- Titre -->
-        <div class="text-secondary text-center mb-1">
+        <div class="text-center mb-1">
           <strong v-if="displayAgent" class="me-2">{{returnName(hab.personnel_id)}}</strong>
           <strong v-if="displayHab">{{getCharacteristicName(hab.habilitation_type_id)}}</strong>
           <!-- <span class="fw-light me-2">#{{ hab.habilitation_type_id }}</span> -->
@@ -11,16 +11,15 @@
         <div class="row">
           <!-- Colonne 1 : Validité -->
           <div class="col-lg-4 col-12">
-            <div class="">
+            <div class="px-2 mb-3 mb-lg-0">
               <div class="fw-bold col-12">Validité : 3 ans</div>
               <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
                 au {{ changeFormatDateLit(hab.df) }}
               </div>
-  
+              <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="new Date(hab.dd)  " :df="new Date(hab.df)"></ProgressBar>
             </div>
             <!-- Composant ProgressBar -->
             <!-- {{ habilitationPerso }} -->
-            <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="new Date(hab.dd)  " :df="new Date(hab.df)"></ProgressBar>
           </div>
           <!-- Colonne 2 : Résultat de groupe -->
           <div class="col">
@@ -35,7 +34,7 @@
 
     </div>
           
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-4 col-12 px-2">
             <template v-if="listControlToDo?.length">
               <div class="">
                 <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
