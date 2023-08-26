@@ -35,14 +35,14 @@
 
 		<!-- Menu additionnel -->
 		<!--
-			Modifier cfgSlots.menu = true; dans config.json pour activer.
-		-->
+Modifier cfgSlots.menu = true; dans config.json pour activer.
+-->
 		<!-- <template v-slot:menu>
-			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
-			</AppMenu>
-		</template> -->
+<AppMenu>
+<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
+<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
+</AppMenu>
+</template> -->
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'operateur'">
@@ -65,26 +65,26 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-gear" v-for="type in listConsultation(types)"
-					:key="type.id">{{ type.nom }}</AppMenuItem>
+				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill"
+					v-for="type in listConsultation(types)" :key="type.id">{{ cleanTypeName(type.nom) }}</AppMenuItem>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'suspension'">
 				<!-- <button class="btn w-100 mx-1"
-				:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
-				@click="toggleShow(true)">
-				Personnels
-			</button>
-			<button class="btn w-100 mx-1"
-				:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
-				@click="toggleShow(false)">
-				Habilitations
-			</button>
-				<div class="text-center">
-					<div class="spinner-border text-primary" role="status">
-						<span class="visually-hidden">Loading...</span>
-					</div>
-				</div> -->
+:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
+@click="toggleShow(true)">
+Personnels
+</button>
+<button class="btn w-100 mx-1"
+:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
+@click="toggleShow(false)">
+Habilitations
+</button>
+<div class="text-center">
+<div class="spinner-border text-primary" role="status">
+<span class="visually-hidden">Loading...</span>
+</div>
+</div> -->
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FilterFormEcheancier />
@@ -221,6 +221,11 @@ export default {
 
 		isActiveItem(item) {
 			return this.openedElement && this.openedElement.id === item.id;
+		},
+
+		cleanTypeName(name) {
+			// Supprime le préfixe "Habilitation : " du nom si présent
+			return name.startsWith('Habilitation : ') ? name.substr(14) : name;
 		},
 
 
