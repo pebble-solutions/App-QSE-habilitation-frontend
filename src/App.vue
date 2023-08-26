@@ -180,6 +180,9 @@ export default {
 			displaySearch: '',
 			currentList: [],
 			showPersonnels: true,
+			currentIndex: null,
+			currentItemId: null,
+			idToIndexMap: {},
 		}
 	},
 
@@ -228,7 +231,50 @@ export default {
 			return name.startsWith('Habilitation : ') ? name.substr(14) : name;
 		},
 
+		navigateToPrevItem() {
+			const currentIndex = this.currentList.findIndex(item => this.isActiveItem(item));
+			if (currentIndex > 0) {
+				this.$router.push(this.getItemLink(this.currentList[currentIndex - 1]));
+			}
+		},
 
+		navigateToNextItem() {
+			const currentIndex = this.currentList.findIndex(item => this.isActiveItem(item));
+			if (currentIndex < this.currentList.length - 1) {
+				this.$router.push(this.getItemLink(this.currentList[currentIndex + 1]));
+			}
+		},
+		handleArrowKeyNavigation(event) {
+			// Vérifier si l'utilisateur appuie sur les touches haut ou bas
+			if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+				event.preventDefault(); // Empêcher le comportement par défaut du défilement de la page
+				const items = this.listItems; // Remplacez par la liste appropriée
+
+				if (items.length === 0) {
+					return; // Pas besoin de navigation si la liste est vide
+				}
+
+				// Mettre à jour l'index actuel en fonction de la touche pressée
+				if (event.key === 'ArrowUp') {
+					this.currentIndex = (this.currentIndex - 1 + items.length) % items.length;
+				} else if (event.key === 'ArrowDown') {
+					this.currentIndex = (this.currentIndex + 1) % items.length;
+				}
+
+				// Mettre à jour l'ID de l'élément actuellement sélectionné
+				this.currentItemId = items[this.currentIndex].id;
+
+				// Mettre à jour l'URL en fonction de l'élément actuel
+				this.$router.push(`/personnels/${this.currentItemId}`);
+			}
+		},
+
+		handleItemSelection(item) {
+    console.log("Item selected:", item);
+    this.currentIndex = this.idToIndexMap[item.id];
+    this.currentItemId = item.id;
+    this.$router.push(`/personnels/${this.currentItemId}`);
+},
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
@@ -383,50 +429,66 @@ export default {
 	},
 
 	mounted() {
-		this.$app.addEventListener('structureChanged', async (structureId) => {
-			this.loadHabilitationType();
+		// Ajouter les écouteurs d'événements pour les touches fléchées
+		window.addEventListener('keydown', this.handleArrowKeyNavigation);
+		
+			this.$app.addEventListener('structureChanged', async (structureId) => {
+				this.loadHabilitationType();
 
-			this.$store.dispatch('switchStructure', structureId);
+				this.$store.dispatch('switchStructure', structureId);
 
-			this.$router.push('/');
-			if (this.isConnectedUser) {
-				this.initCollections();
+				this.$router.push('/');
+				if (this.isConnectedUser) {
+					this.initCollections();
 
-				this.pending.elements = true;
-				try {
-					this.loadHabilitationType();
+					this.pending.elements = true;
+					try {
+						this.loadHabilitationType();
 
-					const personnelsCollection = this.$assets.getCollection("personnels");
-					// this.$assets.getCollection("suspensions").load();
-					await personnelsCollection.load();
-					const personnels = personnelsCollection.getCollection();
-					let ids = [];
-					personnels.forEach(personnel => {
-						ids.push(personnel.id);
-					});
-					this.$assets.getCollection("habilitations").load({
-						personnel_id: ids.join(',')
-					});
-					await this.$assets.getCollection("elements").load();
-					await this.$assets.getCollection("types").load();
-					await this.$assets.getCollection("veilles").load();
-					await this.$assets.getCollection("personnels").load();
-					await this.$assets.getCollection("habilitationsPersonnels").load();
+						const personnelsCollection = this.$assets.getCollection("personnels");
+						// this.$assets.getCollection("suspensions").load();
+						await personnelsCollection.load();
+						const personnels = personnelsCollection.getCollection();
+						let ids = [];
+						personnels.forEach(personnel => {
+							ids.push(personnel.id);
+						});
+						this.$assets.getCollection("habilitations").load({
+							personnel_id: ids.join(',')
+						});
+						await this.$assets.getCollection("elements").load();
+						await this.$assets.getCollection("types").load();
+						await this.$assets.getCollection("veilles").load();
+						await this.$assets.getCollection("personnels").load();
+						await this.$assets.getCollection("habilitationsPersonnels").load();
 
-
-
-
+						// Mettre à jour currentItemId en fonction des paramètres de l'URL
+						const currentItemIdFromURL = parseInt(this.$route.params.id);
+						if (!isNaN(currentItemIdFromURL)) {
+							this.currentItemId = currentItemIdFromURL;
+						}
+					}
+					catch (e) {
+						this.$app.catchError(e);
+					}
+					finally {
+						this.pending.elements = false;
+					}
 				}
-				catch (e) {
-					this.$app.catchError(e);
-				}
-				finally {
-					this.pending.elements = false;
-				}
-			}
-			// this.getFirebaseAppLicence();
-		});
-	}
+				this.idToIndexMap = {};
+    this.currentList.forEach((item, index) => {
+        this.idToIndexMap[item.id] = index;
+        console.log(`Item ID ${item.id} has index ${index}`);
+    });
+		},
+		);
+	},
+
+
+			beforeUnmount() {
+			// Nettoyer les écouteurs d'événements avant la destruction du composant
+			window.removeEventListener('keydown', this.handleKeyDown);
+		},
 
 }
 </script>
