@@ -138,8 +138,7 @@
 	border-bottom: solid 15px $theme-color !important;
 	font-size: 110%;
 	font-weight: bold;
-	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.564);
-
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.565);
 }
 
 /* Annule les paddings droit et gauche pour les éléments enfants de .row */
