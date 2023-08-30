@@ -1,5 +1,5 @@
 <template>
-	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user">
+	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user" @config-menu="displayConfig = true">
 
 		<template v-slot:header>
 			<div class="mx-2 d-flex align-items-center" v-if="openedElement">
@@ -110,6 +110,16 @@ Habilitations
 			<div class="px-2 bg-light">
 				<router-view v-if="isConnectedUser" />
 			</div>
+
+			<AppModal title="Configuration du module"
+				id="configModule"
+				:display="displayConfig"
+				:close-btn="true"
+				class-name="modal-dialog-scrollable modal-xl"
+				
+				@modal-hide="displayConfig = false">
+				<Config v-if="!pending.config" />
+			</AppModal>
 		</template>
 
 	</AppWrapper>
@@ -160,6 +170,8 @@ import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.
 import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
 import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
 import UserImage from './components/pebble-ui/UserImage.vue'
+import Config from './components/config/Config.vue'
+import AppModal from './components/pebble-ui/AppModal.vue'
 
 
 
@@ -175,6 +187,7 @@ export default {
 			pending: {
 				elements: true,
 				habilitations: false,
+				config: false
 			},
 			isConnectedUser: false,
 			displaySearch: '',
@@ -183,6 +196,7 @@ export default {
 			currentIndex: null,
 			currentItemId: null,
 			idToIndexMap: {},
+			displayConfig: false,
 		}
 	},
 
@@ -426,6 +440,8 @@ export default {
 		itemPersonnelSuspension,
 		FilterFormEcheancier,
 		UserImage,
+		Config,
+		AppModal
 	},
 
 	mounted() {
