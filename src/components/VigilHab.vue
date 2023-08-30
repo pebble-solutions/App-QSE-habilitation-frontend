@@ -3,26 +3,28 @@
     <template v-else-if="listHab">
         <div class="card m-2 p-2 custom-color" >
             <h4 class="my-3 text-white text-center">Liste des personnels habilités :</h4>
-
-            <div class="list-group-item mb-2" v-for="hab in listHab" :key="hab.id">
-                        <!-- {{returnName(hab.personnel_id)}} -->
-                        <hab-monitor :habId="hab.id" :displayAgent="true" :displayHab="false"></hab-monitor>
-                   
-                    
+            <div class="list-group-item mb-2" v-for="hab in listHabJoin" :key="hab.id">
+                <div>
+                    <span> {{ returnName(hab.personnel_id) }} </span>
+                    <span v-if="hab.personnel.dsortie">
+                        <span class="ms-2">Fin de contrat le </span>{{ changeFormatDateLit(hab.personnel.dsortie) }}
+                    </span>
+                </div>
+                <progress-bar :dd="new Date(hab.dd)" :df="new Date(hab.df)"></progress-bar>
+                <!-- <hab-monitor :habId="hab.id" :displayAgent="true" :displayHab="false"></hab-monitor> -->
+                
             </div>
         </div>
     </template>
     <div class="text-warning text-center" v-else>Il n'y a pas de personnel habilité</div>
-
-
+   
 </template>
 <script>
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
-// import ProgressBar from './ProgressBar.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
-import HabMonitor from './HabMonitor.vue';
+import ProgressBar from './ProgressBar.vue';
 
 
 export default{
@@ -37,7 +39,7 @@ props: {
     },
 },
 
-components: { Spinner, HabMonitor}, //RouterLink, ProgressBar
+components: { Spinner, ProgressBar}, //RouterLink, ProgressBar, 
 
 computed: {
     ...mapState(['habilitationType','habilitationsPersonnels', 'personnels'])
@@ -49,7 +51,9 @@ data() {
             load: false,
         },
         listHab: null,
-        listControl: null
+        listControl: null,
+        listHabJoin: null,
+
     }
 
 },
@@ -60,41 +64,45 @@ watch: {
 },
 
 methods: {
+    
     /**
-     * retourne la liste des personnels habilités en fonction de l'id veille fourni
+     * retourne la liste des habilitations personnelles en fonction de l'id veille fourni
+     * et récupère le nom des personnels par jointure avec la collection personnels
      * @param {*} id 
+     * @returns {Array} liste des personnels habilités
      */
 
     async findHabilitationPersonnel(id) {
         this.pending.load = true;
         let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
         this.listHab = listHabilitationPersonnels;
-
         let assembler = new AssetsAssembler(listHabilitationPersonnels);
         await assembler.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
-        // let joinedListHab = assembler.getResult();
-
-           
+        let joinedListHab = assembler.getResult();
+        console.log(joinedListHab, 'join');
+        this.listHabJoin = joinedListHab;
         this.pending.load = false;
-        return listHabilitationPersonnels
+        return joinedListHab
     },
     
 
      /**
      * Modifie le format de la date entrée en paramètre et la retourne 
      * sous le format 01 févr. 2021
-     * @param {string} date 
+     * @param {date} date 
+     * @returns {date} date formatée
      */
 
     changeFormatDateLit(el) {
         return dateFormat(el);
     },
     /**
-     * retourne le nom du personnel
+     * retourne le nom du personnel en fonction de l'id fourni
      * 
      * @param {number}  id du personnel
      * 
-     * @return {string}
+     * @returns {string} nom du personnel si trouvé
+     * @returns {number} id du personnel si le nom n'est pas trouvé
      */
     returnName(id){
         let personnel = this.personnels.find (e => e.id == id);
@@ -126,8 +134,8 @@ methods: {
 </script>
 
 <style scoped>
-.custom-color{
+/* .custom-color{
     background-color: #F78C6B;
-}
+} */
 </style>
 ```
