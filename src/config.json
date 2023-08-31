@@ -16,22 +16,16 @@
                 "href": "/"
             },
             {
-                "label": "Habilitations",
-                "icon": "bi bi-patch-check-fill", 
+                "label": "Types",
+                "icon": "bi bi-gear-fill", 
                 "key": "types",
                 "href": "/types"
             },
             {
                 "label": "Personnels",
-                "icon": "bi bi-person-lines-fill", 
+                "icon": "bi bi-person-gear", 
                 "key": "personnels",
                 "href": "/personnels"
-            },
-            {
-                "label": "Suspensions",
-                "icon": "bi bi-pause-circle-fill", 
-                "key": "suspension",
-                "href": "/suspension"
             },
             {
                 "label": "Échéancier",
@@ -40,12 +34,11 @@
                 "href": "/echeancier"
             },
             {
-                "label": "Statistiques",
-                "icon": "bi bi-bar-chart-line-fill", 
-                "key": "statistiques",
-                "href": "/statistiques"
+                "label": "Suspensions",
+                "icon": "bi bi-pause-circle-fill", 
+                "key": "suspension",
+                "href": "/suspension"
             }
-            
         ]
     },
     "domains": {
@@ -54,7 +47,7 @@
         "test": "pebble.recipes"
     },
     "cfgMenu": {
-        "href": null
+        "href": "#config"
     },
     "cfgSlots": {
         "menu": false,
@@ -75,7 +68,7 @@
         },
         "dev": {
             "pas": true,
-            "authServer": "127.0.0.1:3333",
+            "authServer": "172.17.0.4:3333",
             "tls": false
         }
     },

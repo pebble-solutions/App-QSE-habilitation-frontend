@@ -86,8 +86,7 @@ export default{
                     type: this.veilleConfig.type,
                 })
                 .then((data) => {
-                console.log(data, 'retour data')
-
+                    console.log(data, 'retour data')
                     this.veille = data;
                     alert('la configuration "' + this.veille.label + '" a été modifiée');
 
