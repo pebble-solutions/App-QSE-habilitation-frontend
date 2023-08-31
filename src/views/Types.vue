@@ -2,11 +2,11 @@
     <div class="pb-3 bg-white">
 			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
         <div class="card custom-app-color text-white">
-            <h1>Liste des Habilitations</h1>
-            <h3>Retrouver ici toutes les informations regroupées dans une liste de toutes les habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
+            <h1>Type d'habilitations</h1>
+            <h3>Retrouver ici toutes les informations regroupées par type d'habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
         </div>
         <div class="bg-white text-center mt-5">
-        <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer une nouvelle Habilitation</button>
+        <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
     </div>
     </div>
 

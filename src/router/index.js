@@ -46,7 +46,17 @@ const routes = [
         path: 'edit',
         name: 'editConfig',
         component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfigEdit.vue')
-      }
+      },
+      {
+        path: 'veille/new',
+        name: 'newVeille',
+        component: () => import(/* webpackChunkName: "about" */ '../views/TypeVeilleNew.vue')
+      },
+      {
+        path: 'veille/edit/:idVeille',
+        name: 'editVeille',
+        component: () => import(/* webpackChunkName: "about" */ '../views/TypeVeilleEdit.vue')
+      },
     ]
   },
   {

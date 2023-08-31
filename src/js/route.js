@@ -3,7 +3,9 @@ export const ROUTES_NAMES = {
 	habilitation: ['types',
 				'newConfig',
 				'typeConfig',
-				'TeditConfig',
+				'editConfig',
+				'editVeille',
+				'newVeille'
 				],
 	operateur: ['personnels',
 				'ficheIndividuelleSuivi'],

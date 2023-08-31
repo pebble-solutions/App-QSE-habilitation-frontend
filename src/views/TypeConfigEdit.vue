@@ -77,6 +77,7 @@ export default {
         modifyConfig(){
             if (confirm ('Souhaitez vous modifier cette configuration?')) {
                 this.pending.type = true  
+                console.log(this.type, 'avant modif')
                 this.$app.api.patch('/v2/habilitation/type'+this.$route.params.id, {
                     label: this.type.nom,
                     dd: this.type.dd,
@@ -85,7 +86,11 @@ export default {
                    
                 })
                 .then((data) => {
-                    this.config = data;
+                console.log(data, 'retour data')
+
+                    this.type = data;
+                    alert('la configuration "' + data.label + '" a été modifiée');
+
 					this.$assets.getCollection("types").load();
                     this.$router.push('/types/'+this.$route.params.id);
                 })
@@ -98,6 +103,7 @@ export default {
 
             }
         },
+        
 
         deleteConfig(){
                 this.pending.type = true  

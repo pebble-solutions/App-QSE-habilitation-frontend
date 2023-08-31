@@ -32,6 +32,7 @@
                             <div class="d-flex justify-content-center align-items-center py-3">
                                 <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
                             </div>
+                            <span>{{ veilleConfig.nom }}</span><br>
                         <span>{{ isActive(veilleConfig.df) }}</span>
 
                             <div>Date début : <span class="fw-lighter" :class="{ 'text-secondary': !veilleConfig.dd }">{{ veilleConfig.dd ?
@@ -42,12 +43,13 @@
                             <div class="mb-2">Pas de veille : <span class="fw-lighter me-1">{{ veilleConfig.control_step }}</span>jours
                             </div>
                             <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
-                                <button class="btn btn-custom-primary w-100">Modifier</button>
+                                <button class="btn btn-custom-primary w-100" @click.prevent="$router.push($route.path + '/veille/edit/'+veilleConfig.id)">Modifier</button>
                             </div>
                         </div>
-                        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas pas de
-                            veille configurée pour ce type d'habilitation<button class="btn btn-outline-primary ms-2">Créer
-                                ?</button></AlertMessage>
+                        <AlertMessage v-else class="m-3" variant="warning" icon="bi-exclamation-square">
+                            Il n'y pas pas de veille configurée pour ce type d'habilitation
+                            <button class="btn btn-outline-primary ms-2" @click.prevent="$router.push($route.path + '/veille/new')">Configurer une veille</button>
+                        </AlertMessage>
                     </div>
                 </div>
             </div>
@@ -99,10 +101,13 @@ export default {
         isActive(df){
             const now = new Date();
             let end = new Date(df);
-            if(end<now){
-                return 'expirée';
+            if(!end){
+                return ''
             }
-            else return 'active';
+            else if(end<now){
+                return 'expiré';
+            }
+            else return 'actif';
 
 
 

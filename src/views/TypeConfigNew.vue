@@ -7,7 +7,7 @@
     @modal-hide="routeToParent()"
     :submit-btn="true"
     :cancel-btn="true"
-    class="fade-in-modal"
+    
     
     >
     <FormConfigType
@@ -52,7 +52,7 @@ export default {
             this.type = val;
         },
         /**
-         * crée une nouvelle  config d'habilitation via API
+         * crée une nouvelle config d'habilitation via API
          * 
          */
          createConfig(){
@@ -67,7 +67,7 @@ export default {
             .then((data) => {
                 this.type = data,
                 alert('type habilitation '+data.label+'/'+data.id+' crée'),
-				this.$assets.getCollection("types").load();
+                this.$assets.getCollection("types").load();
                 
             })
             .catch(this.$app.catchError)
