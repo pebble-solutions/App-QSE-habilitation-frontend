@@ -57,7 +57,6 @@ export default {
 
                      try {
                         for (const veilleHabilitation of veillesCollection.getCollection()) {
-                            console.log(veilleHabilitation)
                             let veille = veilleHabilitation;
                             veille.control_step = this.controlStepValue();
                             veille.tlc = "Characteristic";
@@ -65,7 +64,6 @@ export default {
 
                             await this.$app.api.patch('v2/controle/veille/' + veille.id, veille)
                             .then((data) => {
-                                console.log(data)
                                 veillesCollection.updateCollection([data]);
                             });
                         }
