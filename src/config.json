@@ -40,6 +40,12 @@
                 "href": "/echeancier"
             },
             {
+                "label": "Habilitations à programmer",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "programmer",
+                "href": "/programmer"
+            },
+            {
                 "label": "Suspensions",
                 "icon": "bi bi-pause-circle-fill", 
                 "key": "suspension",
