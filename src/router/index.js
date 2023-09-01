@@ -86,6 +86,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/FicheIndividuelle.vue'),
   },
   {
+    path:'/registre',
+    name: 'Registre',
+    meta: { transitionName: 'fade' }, 
+    component: () => import(/* webpackChunkName: "about" */ '../views/Registre.vue')
+  },
+  {
     path:'/echeancier',
     name: 'Echeancier',
     meta: { transitionName: 'fade' }, 

@@ -11,5 +11,6 @@ export const ROUTES_NAMES = {
 				'ficheIndividuelleSuivi'],
 	suspension: ['suspension'],
 	home: ['Home'],
-	echeancier: ['Echeancier']
+	echeancier: ['Echeancier'],
+	registre: ['registre'],
 };

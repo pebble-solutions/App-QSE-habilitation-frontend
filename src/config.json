@@ -28,6 +28,12 @@
                 "href": "/personnels"
             },
             {
+                "label": "Registre des habilitations",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "registre",
+                "href": "/registre"
+            },
+            {
                 "label": "Échéancier",
                 "icon": "bi bi-calendar2-check-fill", 
                 "key": "echeancier",
