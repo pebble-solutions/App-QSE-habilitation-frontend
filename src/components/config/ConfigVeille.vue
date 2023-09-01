@@ -53,23 +53,20 @@ export default {
             } else {
                 if (window.confirm("La modification de cette valeur impacte l'ensemble des veilles sur les habilitations sur cette structure. La valeur du pas de veille de toutes les habilitations sera des lors de "+ this.control_step.valeur+" "+this.control_step.periode+". Souhaitez-vous confirmer ?")) {
                     this.pending.config = true;
-                    const typesCollection = this.$assets.getCollection("types");
+                    const veillesCollection = this.$assets.getCollection("veilles");
 
                      try {
-                        for (const typeHabilitation of typesCollection.getCollection()) {
-                            await this.$app.api.get('v2/controle/veille/' + typeHabilitation.id)
-                            .then((data) => {
-                                if (data.length != 0){
-                                    let type = data[0];
-                                    type.control_step = this.controlStepValue();
-                                    type.tlc = "Characteristic";
-                                    type.tli = type.id;
+                        for (const veilleHabilitation of veillesCollection.getCollection()) {
+                            console.log(veilleHabilitation)
+                            let veille = veilleHabilitation;
+                            veille.control_step = this.controlStepValue();
+                            veille.tlc = "Characteristic";
+                            veille.tli = veille.objet_id;
 
-                                    this.$app.api.patch('v2/controle/veille/' + type.id, type)
-                                    .then((data) => {
-                                        typesCollection.updateCollection([data]);
-                                    });
-                                }
+                            await this.$app.api.patch('v2/controle/veille/' + veille.id, veille)
+                            .then((data) => {
+                                console.log(data)
+                                veillesCollection.updateCollection([data]);
                             });
                         }
                     } catch (error) {
