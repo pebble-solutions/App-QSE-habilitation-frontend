@@ -15,7 +15,10 @@ export default createStore({
 		personnels: [],
 		habilitations: [],
 		habilitationsTypes: [],
-		echeancier: [],
+		echeancier: null,
+		pending: {
+			habilitationsPersonnels: false,
+		},
 
 
 
@@ -59,7 +62,6 @@ export default createStore({
 		 * @param {Object} echeancier L'objet Login
 		 */
 		setEcheance(state, echeancier) {
-			console.log(echeancier, 'toto')
 			state.echeancier = echeancier
 		},
 
@@ -117,6 +119,14 @@ export default createStore({
 		 */
 		refreshHabilitationType(context, data) {
 			context.commit('setHabilitationType', data);
+		},
+		/**
+		 * charge dans le store une requete de stat 
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		setEcheance(context,data) {
+			context.commit('setEcheance', data)
 		},
 	},
 	modules: {

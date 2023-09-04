@@ -87,44 +87,27 @@ const routes = [
   },
   {
     path:'/registre',
-    name: 'Registre',
+    name: 'registre',
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Registre.vue')
   },
   {
     path:'/echeancier',
-    name: 'Echeancier',
+    name: 'echeancier',
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
   },
   {
     path:'/programmer',
-    name: 'Programmer',
+    name: 'programmer',
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmer.vue')
   },
   {
     path:'/statistiques',
-    name: 'Statistiques',
+    name: 'statistiques',
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Statistiques.vue')
-  },
-
-
-  {
-    path: '/element/:id',
-    name: 'Element',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Element.vue'),
-    children: [
-      {
-        path: 'properties',
-        component: () => import('../views/ElementProperties.vue')
-      },
-      {
-        path: 'informations',
-        component: () => import('../views/ElementInformations.vue')
-      }
-    ]
   }
 ]
 

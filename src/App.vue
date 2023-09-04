@@ -63,28 +63,30 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 					</div>
 				</AppMenuItem>
 			</AppMenu>
+			<AppMenu v-else-if="listMode === 'programmer'">
+				<HabilitationList />
+			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill"
-					v-for="type in listConsultation(types)" :key="type.id">{{ cleanTypeName(type.nom) }}</AppMenuItem>
+				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" v-for="type in listConsultation(types)" :key="type.id">{{ cleanTypeName(type.nom) }}</AppMenuItem>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'suspension'">
 				<!-- <button class="btn w-100 mx-1"
-:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
-@click="toggleShow(true)">
-Personnels
-</button>
-<button class="btn w-100 mx-1"
-:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
-@click="toggleShow(false)">
-Habilitations
-</button>
-<div class="text-center">
-<div class="spinner-border text-primary" role="status">
-<span class="visually-hidden">Loading...</span>
-</div>
-</div> -->
+						:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
+						@click="toggleShow(true)">
+						Personnels
+					</button>
+					<button class="btn w-100 mx-1"
+						:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
+						@click="toggleShow(false)">
+						Habilitations
+					</button>
+					<div class="text-center">
+						<div class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div> -->
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FilterFormEcheancier />
@@ -172,7 +174,7 @@ import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
 import UserImage from './components/pebble-ui/UserImage.vue'
 import Config from './components/config/Config.vue'
 import AppModal from './components/pebble-ui/AppModal.vue'
-
+import HabilitationList from './components/menuList/HabilitationList.vue'
 
 
 import CONFIG from "@/config.json"
@@ -441,7 +443,8 @@ export default {
 		FilterFormEcheancier,
 		UserImage,
 		Config,
-		AppModal
+		AppModal,
+		HabilitationList
 	},
 
 	mounted() {

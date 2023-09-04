@@ -26,7 +26,7 @@
                 <option v-for="(hab) in filteredHabilitationsTypes" :value="hab.id" :key="hab.id">{{hab.nom}}</option>
             </select>
 
-            <div class="alert alert-warning italic" role="alert" v-else>Aucune habilitation renseignée sur cette licences</div>
+            <div class="alert alert-warning italic" role="alert" v-else>Aucune habilitation renseignée sur cette structure</div>
         </div>
 
 
@@ -38,7 +38,7 @@
                 <option v-for="(agent) in filteredOperateurs" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
 
-            <div class="alert alert-warning italic" role="alert" v-else>Aucun personnel renseigné sur cette licences</div>
+            <div class="alert alert-warning italic" role="alert" v-else>Aucun personnel renseigné sur cette structure</div>
         </div>
 
         <div class="mb-3">
@@ -57,7 +57,7 @@
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.echeance"></span>
                 <i class="me-2 bi bi-calendar2-check" v-else></i>
-                Afficher
+                    Afficher
             </button>
         </div>
     </form>
