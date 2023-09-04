@@ -19,12 +19,14 @@
 
         <div class="mb-3">
             <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="habilitationsTypeSearchValue">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="habilitationsTypeSearchValue" v-if="filteredHabilitationsTypes.length">
 
-            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5">
+            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5" v-if="filteredHabilitationsTypes.length">
                 <option value="" selected>Toutes</option>
                 <option v-for="(hab) in filteredHabilitationsTypes" :value="hab.id" :key="hab.id">{{hab.nom}}</option>
             </select>
+
+            <div class="alert alert-warning italic" role="alert" v-else>Aucune habilitation renseignée sur cette licences</div>
         </div>
 
 
@@ -172,7 +174,7 @@ export default {
          * Charge les données des habilitations via un appel API
          */
         getHabilitations() {
-            this.allHabilitationsTypes = this.$assets.getCollection("habilitationsTypes").getCollection();
+            this.allHabilitationsTypes = this.$assets.getCollection("types").getCollection();
         },
 
         /**
