@@ -133,10 +133,10 @@ export default {
          * @returns {array}
          */
         filteredOperateurs() {
-            if(this.echeancier.operateurs.length == 0 || (this.echeancier.operateurs.length == 1 && this.echeancier.operateurs.includes(''))) {
+            if(this.echeancier.operateurs?.length == 0 || (this.echeancier.operateurs?.length == 1 && this.echeancier.operateurs?.includes(''))) {
                 return this.allOperateurs
             } else {
-                return this.allOperateurs.filter(item => this.echeancier.operateurs.includes(item.id))
+                return this.allOperateurs.filter(item => this.echeancier.operateurs?.includes(item.id))
             }
         },
 
