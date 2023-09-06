@@ -67,7 +67,7 @@
 <script>
 
 import { mapActions } from 'vuex';
-import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
+// import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
 
 export default {
 
@@ -189,9 +189,9 @@ export default {
         }
     },
 
-    components : {
-        PersonnelsFilter
-    },
+    // components : {
+    //     PersonnelsFilter
+    // },
 
     mounted() {
         this.getHabilitations();

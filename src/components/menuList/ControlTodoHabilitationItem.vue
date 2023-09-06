@@ -10,7 +10,6 @@
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
-            {{ habilitationPersonnel }}
             <div v-if="habilitationPersonnel.last_control_result">
                 <span class="d-flex align-items-center">
                     <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result }}</span>
@@ -181,10 +180,8 @@ export default {
     },
 
     mounted() {
-        console.log(this.habilitationPersonnel)
         let personnels = this.$assets.getCollection('personnels');
         let habilitationsCharacteristic = this.$assets.getCollection('habilitations');
-        console.log(habilitationsCharacteristic.getCollection())
         this.personnels = personnels;
         this.habilitationsCharacteristic = habilitationsCharacteristic;
 

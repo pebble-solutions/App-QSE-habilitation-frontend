@@ -15,5 +15,7 @@ export const ROUTES_NAMES = {
 	registre: ['registre'],
 	programmer: ['programmer',
 				'programmerHabilitationPersonnel',
-				'programmerHabilitationHab']
+				'programmerHabilitationPersonnelInfo',
+				'programmerHabilitationHab',
+				'programmerHabilitation']
 };
