@@ -13,5 +13,7 @@ export const ROUTES_NAMES = {
 	home: ['Home'],
 	echeancier: ['echeancier'],
 	registre: ['registre'],
-	programmer: ['programmer']
+	programmer: ['programmer',
+				'programmerHabilitationPersonnel',
+				'programmerHabilitationHab']
 };

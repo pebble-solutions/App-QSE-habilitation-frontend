@@ -52,7 +52,7 @@ export default {
          */
         isMoreAvailable() {
             let ln = this.habilitationsPersonnels.length;
-            return (ln && ln % this.collection.requestPayload.limit === 0 && !this.noMoreAvailable);
+            return (ln && ln % this.collection.requestPayload?.limit === 0 && !this.noMoreAvailable);
         },
 
         /**

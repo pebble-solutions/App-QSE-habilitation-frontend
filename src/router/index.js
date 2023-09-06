@@ -104,6 +104,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmer.vue')
   },
   {
+    path: '/habilitationPersonnel/:id',
+    name: 'programmerHabilitationPersonnel',
+    component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationPersonnelStatus.vue'),
+  },
+  {
+    path: '/habilitationHab/:id',
+    name: 'programmerHabilitationHab',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
+  },
+  {
     path:'/statistiques',
     name: 'statistiques',
     meta: { transitionName: 'fade' }, 
