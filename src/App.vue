@@ -189,7 +189,8 @@ export default {
 			pending: {
 				elements: true,
 				habilitations: false,
-				config: false
+				config: false,
+				formulaires: false,
 			},
 			isConnectedUser: false,
 			displaySearch: '',
@@ -222,7 +223,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshHabilitationType']),
+		...mapActions(['refreshHabilitationType', 'refreshFormulaires']),
 
 		toggleShow(showPersonnels) {
 			this.showPersonnels = showPersonnels;
@@ -286,7 +287,6 @@ export default {
 		},
 
 		handleItemSelection(item) {
-    console.log("Item selected:", item);
     this.currentIndex = this.idToIndexMap[item.id];
     this.currentItemId = item.id;
     this.$router.push(`/personnels/${this.currentItemId}`);
@@ -417,6 +417,19 @@ export default {
 					this.refreshHabilitationType(data);
 				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
+
+		/**
+		 *  Charge la liste des formulaires et les enregistre dans le store
+		 */
+
+		loadFormulaires() {
+			this.pending.formulaires = true
+			let route = 'data/GET/formulaire'
+			this.$app.apiGet(route)
+			.then((data) => {
+					this.refreshFormulaires(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.formulaires = false);
+		}
 		/**
 		 * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
 		 */
@@ -463,6 +476,7 @@ export default {
 					this.pending.elements = true;
 					try {
 						this.loadHabilitationType();
+						this.loadFormulaires();
 
 						const personnelsCollection = this.$assets.getCollection("personnels");
 						// this.$assets.getCollection("suspensions").load();
@@ -497,7 +511,6 @@ export default {
 				this.idToIndexMap = {};
     this.currentList.forEach((item, index) => {
         this.idToIndexMap[item.id] = index;
-        console.log(`Item ID ${item.id} has index ${index}`);
     });
 		},
 		);

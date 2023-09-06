@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-3 bg-white">
+    <div class="container pb-3 bg-white">
 			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
         <div class="card custom-app-color text-white">
             <h1>Type d'habilitations</h1>
@@ -7,6 +7,10 @@
         </div>
         <div class="bg-white text-center mt-5">
         <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
+    </div>
+    <div v-for="hab in habilitationsPersonnels" :key="hab.id">
+        {{ hab }}
+        <br>
     </div>
     </div>
 
@@ -17,9 +21,31 @@
 
 <script>
 import { RouterView } from 'vue-router';
+import { mapState } from 'vuex';
 
 export default {
-    components: { RouterView }
+
+    data(){
+        return{
+            veilleConfig : null,
+            pending: {
+                load:false
+            },
+
+        }
+    },
+    components: { RouterView },
+
+    computed: {
+        ...mapState(['habilitationsPersonnels','veilles', 'types'])
+    },
+
+    methods: {
+
+        
+        
+        
+    }
 }
 </script>
 

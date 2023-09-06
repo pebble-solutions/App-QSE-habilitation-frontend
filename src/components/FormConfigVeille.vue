@@ -1,7 +1,6 @@
 <template>
     <div>
         <div v-if="!pending.veille">
-            {{ configVeille }}
             <div class="row mb-2">
                     <label for="intitule" class="form-label">Nom</label>
                     <input class="form-control" name="intitule" id="intitule" type="text" v-model="veille.nom">
@@ -17,9 +16,13 @@
                     </div>
             </div>
             <div class="row mb-2">
-                <div class="col-6">
+                <div class="col">
                     <label for="formulaire" class="form-label">Formulaire associé</label>
-                    <input class="form-control" id ="formulaire_id" v-model="veille.formulaire_id">
+                    <select class="form-select" name="veille.formulaire_id" id="veilleFormulaire" v-model="veille.formulaire_id">
+                        <option :value="form.id" v-for="form in formulaires" :key="form.id">{{form.groupe}} {{ form.id }}</option>
+                    
+                    </select>
+                    <!-- <input class="form-control" id ="formulaire_id" v-model="veille.formulaire_id"> -->
                 </div>
             </div>
             <div class="row mb-2">
@@ -28,16 +31,23 @@
                     <input class="form-control" id ="pasDeVeille" type="number" v-model="veille.control_step">
                 </div>
             </div>
+           
         </div>
     </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 
 
 export default{
 
     props: {
         configVeille: Object,
+    },
+
+    computed: {
+        ...mapState(['formulaires']),
     },
 
     data(){
@@ -72,7 +82,8 @@ export default{
                 this.veille.formulaire_id = this.configVeille.formulaire_id}
             if (this.configVeille.control_step) {
                 this.veille.control_step = this.configVeille.control_step}
-        }
+        },
+        
         
     },
 

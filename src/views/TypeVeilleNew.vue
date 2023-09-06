@@ -38,6 +38,9 @@ export default{
                 formulaire_id: null,
                 control_step: null,
             },
+            pending: {
+                config: false,
+            }
     
 
         }
@@ -53,8 +56,8 @@ export default{
             this.veille = val;
         },
         createVeille(){
-            alert('cration config')
-            this.$app.apiPost('/v2/controle/veille', {
+            this.pending.config = true
+            this.$app.api.post('/v2/controle/veille', {
                 nom: this.veille.nom,
                 dd: this.veille.dd,
                 df: this.veille.df,
@@ -67,11 +70,16 @@ export default{
             .then((data) => {
                     console.log(data, 'retour data')
                     this.veille = data;
-                    alert('la configuration "' + this.veille.label + '" a été modifiée');
-
+                    alert('la configuration "' + this.veille.nom + '" a été créée');
 					this.$assets.getCollection("veilles").load();
                     this.$router.push('/types/'+this.$route.params.id);
-                }) 
+            }) 
+            .catch(this.$app.catchError)
+            .finally(() => {
+                this.pending.config = false;
+                this.$router.push('/types/'+this.$route.params.id);
+            });
+            this.pending.config = false
         },
          /**
          * Retourne a la vue précédente
@@ -79,6 +87,8 @@ export default{
          routeToParent() {
             this.$router.back()
         }
+
+        
     }
 }
 </script>

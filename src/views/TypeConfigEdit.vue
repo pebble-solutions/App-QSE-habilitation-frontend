@@ -29,8 +29,9 @@ export default {
         return {
             habConfig: {},
             pending:{
-                type: false
+                type:false,
             },
+            
             type: {
                 nom: null,
                 dd: null,
@@ -50,6 +51,7 @@ export default {
     },
         
     methods: {
+        
         updateType(payload) {
             // console.log(payload)
             this.type = payload;
@@ -71,14 +73,14 @@ export default {
 
        
         /**
-         * crée une nouvelle config d'habilitation
+         * modifie le type d'habilitation et retourne sur la vue du type
+         * d'habilitation concerné
          * 
          */
         modifyConfig(){
             if (confirm ('Souhaitez vous modifier cette configuration?')) {
                 this.pending.type = true  
-                console.log(this.type, 'avant modif')
-                this.$app.api.patch('/v2/habilitation/type'+this.$route.params.id, {
+                this.$app.api.patch('/v2/habilitation/type/'+this.$route.params.id, {
                     label: this.type.nom,
                     dd: this.type.dd,
                     df: this.type.df,
@@ -86,7 +88,6 @@ export default {
                    
                 })
                 .then((data) => {
-                console.log(data, 'retour data')
 
                     this.type = data;
                     alert('la configuration "' + data.label + '" a été modifiée');
@@ -104,31 +105,26 @@ export default {
             }
         },
         
-
+        /**
+         * supprime le type d'habilitation en fonction de l'id de la route
+         * et retourne sur la vue de la liste des types d'habilitation à jour
+         */
         deleteConfig(){
-                this.pending.type = true  
+                this.pending = true  
                 this.$app.api.delete('/v2/habilitation/type'+this.$route.params.id, {
-                    // label: this.type.nom,
-                    // dd: this.type.dd,
-                    // df: this.type.df,
-                    // expiration: this.type.duree,
-                   
                 })
                 .then((data) => {
                     alert('la configuration "' + data.label + '" a été supprimée');
 					this.$assets.getCollection("types").reset();
-                    
                     this.$assets.getCollection("types").load();
                     this.$router.push('/types');
 
                 })
                 .catch(this.$app.catchError)
                 .finally(() => {
-                    this.pending.type = false;
                     this.$router.push('/types/');
-
                 });
-                this.pending.type = false;
+                this.pending = false;
         },
         /**
          * Retourne a la vue précédente

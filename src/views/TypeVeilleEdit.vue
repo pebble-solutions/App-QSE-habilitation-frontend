@@ -5,9 +5,11 @@
         :title="'Modification de la configuration de la Veille #'+$route.params.idVeille"
         size="lg"
         @submit="modifyConfigVeille()"
+        @delete="deleteVeille()"
         @modal-hide="routeToParent()"
         :submit-btn="true"
         :cancel-btn="true"
+        :delete-btn="true"
         :pending="pending.config"
         >
         
@@ -74,7 +76,6 @@ export default{
         modifyConfigVeille() {
             if(confirm('Souhaitez-vous modifier la configuration de la veille?')) { 
                 this.pending.config = true
-                console.log(this.veille, 'veille')
                 this.$app.api.patch('v2/controle/veille/'+this.$route.params.idVeille, {
                     control_step: this.veille.control_step,
                     nom: this.veille.nom,
@@ -86,10 +87,8 @@ export default{
                     type: this.veilleConfig.type,
                 })
                 .then((data) => {
-                    console.log(data, 'retour data')
                     this.veille = data;
-                    alert('la configuration "' + this.veille.label + '" a été modifiée');
-
+                    alert('la configuration "' + this.veille.nom + '" a été modifiée');
 					this.$assets.getCollection("veilles").load();
                     this.$router.push('/types/'+this.$route.params.id);
                 })
@@ -102,6 +101,26 @@ export default{
             }
 
         },
+
+        deleteVeille() {
+            if(confirm('Souhaitez-vous supprimer cette veille?')) {
+                this.pending.config = true
+                this.$app.api.delete('v2/controle/veille/'+this.$route.params.idVeille)
+                .then(() => {
+                   
+                    alert('la configuration "' + this.veille.nom + '" a été supprimée');
+                    this.$assets.getCollection("veilles").load();
+                    this.$router.push('/types');
+                })
+                .catch(this.$app.catchError)
+                .finally(() => {
+                    this.pending.config = false;
+                    this.$router.push('/types');
+                });
+                this.pending.config = false;
+            } 
+
+        }
     },
 
     mounted(){
