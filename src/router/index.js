@@ -111,7 +111,7 @@ const routes = [
   {
     path: '/habilitationHab/:id',
     name: 'programmerHabilitationHab',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationByHab.vue'),
   },
   {
     path:'/statistiques',
