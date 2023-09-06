@@ -21,20 +21,25 @@
             <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="habilitationsTypeSearchValue">
 
-            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5">
+            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5" v-if="filteredHabilitationsTypes.length">
                 <option value="" selected>Toutes</option>
                 <option v-for="(hab) in filteredHabilitationsTypes" :value="hab.id" :key="hab.id">{{hab.nom}}</option>
             </select>
+
+            <div class="alert alert-warning italic" role="alert" v-else>Aucune habilitation renseignée sur cette structure ou avec cette recherche</div>
         </div>
 
 
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
+            <!-- <PersonnelsFilter/> -->
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="operateursSearchValue">
-            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5">
+            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5" v-if="filteredOperateurs.length">
                 <option value="" selected>Tous</option>
                 <option v-for="(agent) in filteredOperateurs" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
+
+            <div class="alert alert-warning italic" role="alert" v-else>Aucun personnel renseigné sur cette structure ou avec cette recherche</div>
         </div>
 
         <div class="mb-3">
@@ -53,7 +58,7 @@
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.echeance"></span>
                 <i class="me-2 bi bi-calendar2-check" v-else></i>
-                Afficher
+                    Afficher
             </button>
         </div>
     </form>
@@ -62,6 +67,7 @@
 <script>
 
 import { mapActions } from 'vuex';
+import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
 
 export default {
 
@@ -172,7 +178,7 @@ export default {
          * Charge les données des habilitations via un appel API
          */
         getHabilitations() {
-            this.allHabilitationsTypes = this.$assets.getCollection("habilitationsTypes").getCollection();
+            this.allHabilitationsTypes = this.$assets.getCollection("types").getCollection();
         },
 
         /**
@@ -181,6 +187,10 @@ export default {
         getOperateurs() {
             this.allOperateurs = this.$assets.getCollection("personnels").getCollection();
         }
+    },
+
+    components : {
+        PersonnelsFilter
     },
 
     mounted() {

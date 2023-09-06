@@ -11,7 +11,9 @@ export const ROUTES_NAMES = {
 				'ficheIndividuelleSuivi'],
 	suspension: ['suspension'],
 	home: ['Home'],
-	echeancier: ['Echeancier'],
+	echeancier: ['echeancier'],
 	registre: ['registre'],
-	programmer: ['programmer']
+	programmer: ['programmer',
+				'programmerHabilitationPersonnel',
+				'programmerHabilitationHab']
 };

@@ -13,7 +13,7 @@
                     v-model="control_step.valeur"
                     required
                 />
-                <select class="form-select" id="formPasDeVeille" aria-label="Select type periode" v-model="control_step.periode">
+                <select class="form-select" id="formPasDeVeille1" aria-label="Select type periode" v-model="control_step.periode">
                     <option selected>Mois</option>
                     <option>Jours</option>
                     <option>Années</option>
