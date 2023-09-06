@@ -12,6 +12,7 @@ export default createStore({
 		habilitationsPersonnels: [],
 		suspensions:[],
 		veilles: [],
+		formulaires: [],
 		personnels: [],
 		habilitations: [],
 		habilitationsTypes: [],
@@ -73,6 +74,15 @@ export default createStore({
 		},
 
 		/**
+		 * enregistre la liste des formulaires
+		 * @param	{Object}	state le state de vueX
+		 * @param	{Array}		formulaires	liste des fomulaires
+		 */
+		setFormulaires(state, formulaires) {
+			state.formulaires = formulaires
+		},
+
+		/**
 		 * Renseigne l'élément actif
 		 * 
 		 * @param {Object} state Le state de vueX
@@ -117,6 +127,14 @@ export default createStore({
 		 */
 		refreshHabilitationType(context, data) {
 			context.commit('setHabilitationType', data);
+		},
+		/**
+		 * met à jour la liste des formulaires
+		 * @param {Object} context 
+		 * @param {Array} data 
+		 */
+		refreshFormulaires(context, data) {
+			context.commit('setFormulaires', data);
 		},
 	},
 	modules: {

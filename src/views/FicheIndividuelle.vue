@@ -83,7 +83,6 @@ export default {
 
         returnName(id) {
             let personnel = this.personnels.find(e => e.id === id);
-            console.log(personnel, 'personnel')
             if (personnel) {
                 return personnel.cache_nom;
             } else {
@@ -113,7 +112,6 @@ export default {
                             this.listControlToDo = data;
                             if (this.listControlToDo) {
                                 let veille = this.listControlToDo.find((e) => e.personnel_id == this.hab.personnel_id)
-                                console.log(veille, 'veille')
                                 if (veille) {
                                     this.lastControl = veille.date_last
                                 }
@@ -131,7 +129,6 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        console.log('Old personnel_id:', this.personnel_id);
         if (to.params.id != this.personnel_id) {
             this.loadHabilitationFromPersonnel(to.params.id);
         }

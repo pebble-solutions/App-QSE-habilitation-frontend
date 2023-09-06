@@ -12,6 +12,7 @@
                 </div>
                 <progress-bar :dd="new Date(hab.dd)" :df="new Date(hab.df)"></progress-bar>
                 <!-- <hab-monitor :habId="hab.id" :displayAgent="true" :displayHab="false"></hab-monitor> -->
+                <!-- <progress-bar v-if="lastControl.date_last" :dd="new Date(lastControl.date_last)" :df="delay(lastControl.date_last)"></progress-bar> -->
                 
             </div>
         </div>
@@ -23,6 +24,7 @@
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import ProgressBar from './ProgressBar.vue';
 
@@ -37,9 +39,10 @@ props: {
         type:Number,
         required: true
     },
+   
 },
 
-components: { Spinner, ProgressBar}, //RouterLink, ProgressBar, 
+components: { Spinner, ProgressBar,  }, //RouterLink, ProgressBar, 
 
 computed: {
     ...mapState(['habilitationType','habilitationsPersonnels', 'personnels'])
@@ -51,8 +54,12 @@ data() {
             load: false,
         },
         listHab: null,
-        listControl: null,
+        listControl: [],
         listHabJoin: null,
+        lastControl: null,
+        noLastControl: null,
+        listControlToDo: null,
+        list: [],
 
     }
 
@@ -76,11 +83,11 @@ methods: {
         this.pending.load = true;
         let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
         this.listHab = listHabilitationPersonnels;
-        let assembler = new AssetsAssembler(listHabilitationPersonnels);
-        await assembler.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
-        let joinedListHab = assembler.getResult();
-        console.log(joinedListHab, 'join');
+        let assemblerPersonnel = new AssetsAssembler(listHabilitationPersonnels);
+        await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
+        let joinedListHab = assemblerPersonnel.getResult();
         this.listHabJoin = joinedListHab;
+        
         this.pending.load = false;
         return joinedListHab
     },
