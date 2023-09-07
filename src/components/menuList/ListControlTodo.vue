@@ -7,6 +7,7 @@
                 <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
             </app-menu-item>
         </template>
+
         <div class="alert alert-light mx-1 my-2" v-if="noResults">
             <i class="bi bi-file-x"></i> Aucun résultat, tentez d'étendre votre recherche
         </div>
@@ -20,7 +21,7 @@
             </button>
         </div>
     </template>
-</template>
+</template> 
 
 <script>
 import { mapState } from 'vuex';
@@ -98,4 +99,4 @@ export default {
     components: { LastControlFilterForm, AppMenuItem, ControlTodoHabilitationItem }
 }
 
-</script>
+</script>  

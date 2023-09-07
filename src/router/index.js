@@ -104,14 +104,24 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmer.vue')
   },
   {
-    path: '/habilitationPersonnel/:id',
+    path: '/habilitationPersonnel',
     name: 'programmerHabilitationPersonnel',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Programmer.vue'),
+  },
+  {
+    path: '/habilitationPersonnel/:id',
+    name: 'programmerHabilitationPersonnelInfo',
     component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationPersonnelStatus.vue'),
+  },
+  {
+    path: '/habilitation',
+    name: 'programmerHabilitation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Programmer.vue'),
   },
   {
     path: '/habilitationHab/:id',
     name: 'programmerHabilitationHab',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationByHab.vue'),
   },
   {
     path:'/statistiques',

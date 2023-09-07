@@ -4,7 +4,7 @@ import fr from 'date-and-time/locale/fr';
 /**
  * Retourne une classe CSS par rapport à une réponse S A M I
  * 
- * @param {string} reponse      S A M I
+ * @param {string|null} reponse   S A M I ou null
  * @param {object} dict         Le dictionnaire des classes CSS à utiliser
  * 
  * @return {string}

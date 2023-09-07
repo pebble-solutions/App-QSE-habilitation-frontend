@@ -14,9 +14,9 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import {dateFormat} from '../js/collecte';
-import VigilControl from '../components/VigilControl.vue';
-import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import {dateFormat} from '../../js/collecte';
+import VigilControl from '../../components/VigilControl.vue';
+import AlertMessage from '../../components/pebble-ui/AlertMessage.vue';
 
 // import ProgressBar from '../components/ProgressBar.vue';
 // import Spinner from '../components/pebble-ui/Spinner.vue';
@@ -34,35 +34,47 @@ export default {
             },
             listPersonnelHabilite : 'default',
             personnel:'',
-            listCollecte:''
+            listCollecte:'',
+            veilleConfig: null
         }
     },
 
     computed: {
-        ...mapState(['habilitationType', 'listActifs','veilleConfig']),
+        ...mapState(['types', 'listActifs', 'veilles']),
 
-        /* parcourt la list des types d'habilitation en fonction de l'id de la route
-         * et retourne le nom de l'habilitation
+        /**
+         * Parcour la liste des types d'habilitation en fonction de l'id de la route
+         * et retourne le nom du type de l'habilitation
+         *
+         * @returns {string} nom du type de l'habilitation
+         * 
          */
         filterhabilitationType() {
-            let habilitationType = this.habilitationType.find((e) => e.id  == this.$route.params.id);
-            return habilitationType.nom
+            let type = this.types.find((e) => e.id  == this.$route.params.id);
+            return type.nom
         },
 
         /**
-         * parcourt la list des configuraton de veille et retourne celle correspondant à  l'id de la route
+         * Parcour la liste des configuraton de veille 
+         * et retourne celle correspondant à  l'id de la route
+         * 
+         * @returns {object} Veille
          */
         findVeilleConfig() {
-            let veilleConfig = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
+            let veilleConfig = this.veilles?.find((v) => v.objet_id  == this.$route.params.id);
             return veilleConfig
         },
+
+        /**
+         * Parcour la liste des configuraton de veille 
+         * et retourne l'id du formulaire de la veille celle correspondant à l'id de la route
+         * 
+         * @returns {number} id du formulaire
+         */
         returnFormulaireId(){
-            let formulaire = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
+            let formulaire = this.veilles.find((f) => f.objet_id == this.$route.params.id);
             return formulaire.formulaire_id
-
         }
-
-        
     },
 
     methods: {
@@ -130,11 +142,13 @@ export default {
 
         },
 
-       
-
-    
-
-
+        /**
+         * Retourne le nom du personnel avec l'id entré en parametre grâce à une requete API
+         * 
+         * @param {number} id 
+         * 
+         * @returns {string} Nom du personnel
+         */
         returnName(id){
             let personnel = this.listActifs.find((e) => e.id == id);
             if(!personnel) {
@@ -157,12 +171,6 @@ export default {
             }
             
         }
-
-
-    },
-    
-    
-
-    
+    }
 }
 </script>

@@ -67,7 +67,6 @@
 <script>
 
 import { mapActions } from 'vuex';
-import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
 
 export default {
 
@@ -187,10 +186,6 @@ export default {
         getOperateurs() {
             this.allOperateurs = this.$assets.getCollection("personnels").getCollection();
         }
-    },
-
-    components : {
-        PersonnelsFilter
     },
 
     mounted() {

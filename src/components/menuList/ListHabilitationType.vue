@@ -1,6 +1,6 @@
 <template>
     
-    <template v-for="hab in habilitationType" :key="hab.id">
+    <template v-for="hab in types" :key="hab.id">
         <app-menu-item :href="'/habilitationHab/' + hab.id">
             {{ hab.nom }}
         </app-menu-item>
@@ -19,7 +19,7 @@ import AppMenuItem from '../pebble-ui/AppMenuItem.vue'
 export default {
     components: { AppMenuItem },
     computed: {
-        ...mapState(['habilitationType'])
+        ...mapState(['types'])
     }
 }
 
