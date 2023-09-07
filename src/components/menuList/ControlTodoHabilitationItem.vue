@@ -10,9 +10,10 @@
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
-            <div v-if="habilitationPersonnel.last_control_result">
+            <div v-if="habilitationPersonnel.last_control_date">
                 <span class="d-flex align-items-center">
-                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result }}</span>
+                    <span class="badge rounded-pill" :class="SAMIClassName" v-if="habilitationPersonnel.last_control_result">{{ habilitationPersonnel.last_control_result }}</span>
+                    <span class="badge rounded-pill text-bg-secondary" v-else>?</span>
                     <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
                 </span>
             </div>

@@ -381,7 +381,11 @@ export default {
 			});
 			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
-				apiRoute: 'v2/characteristic/personnel'
+				apiRoute: 'v2/characteristic/personnel',
+				requestPayload : {
+					last_control: 1,
+					limit: "aucune",
+				}
 			});
 			const suspensionsCollection = new AssetsCollection(this, {
 				assetName: 'suspensions',
