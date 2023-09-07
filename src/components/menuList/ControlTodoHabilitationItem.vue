@@ -57,6 +57,9 @@ export default {
     computed: {
         ...mapState(['pending']),
 
+        /**
+         * Retourne la classe Bootstrapt en front en fonction de la valeur SAMI du dernier controle
+         */
         SAMIClassName() {
             return classNameFromSAMI(this.habilitationPersonnel.last_control_result);
         },
@@ -87,6 +90,9 @@ export default {
 
     },
     watch: {
+        /**
+         * Observe l'object pending, si le pending est a false alors, la methode d'appel des noms des variables est appelée
+         */
         pending: {
             deep: true,
             handler(newValue) {
@@ -110,7 +116,10 @@ export default {
             const invariables = ['mois'];
             return qt > 1 && !invariables.includes(str) ? `${str}s` : str;
         },
-
+        
+        /**
+         * Initialise la valeur du nom du personnel dont l'id est egal au personnel_id de l'habilitation
+         */
         getName() {
             const personnel = this.personnels.getCollection().find(e => e.id == this.habilitationPersonnel.personnel_id);
             if (personnel != null) {
@@ -119,8 +128,13 @@ export default {
                 this.nomPersonnel = '?';
             }
         },
+
+        /**
+         * Initialise la valeur du nom de l'habilitation dont l'id est egal au characteristic_id de l'habilitation
+         */
         getHabilitionName() {
             const habilitation = this.habilitationsCharacteristic.getCollection().find(e => e.id == this.habilitationPersonnel.characteristic_id);
+            // console.log(habilitation)
             if (habilitation != null) { 
                 this.nomHabilitationType = habilitation.label;
             } else {
@@ -144,6 +158,10 @@ export default {
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             this.totalValue = Difference_In_Days;
         },
+
+        /**
+         * Initialise la variable badgeClass avec la valeur de la class bootstraps en fonction du temps qui c'est écoulé depuis le dernier controle
+         */
         buildBadgeClass() {
             const duration = Math.ceil((365 / 12) * 6); //6 mois
             const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
@@ -173,13 +191,14 @@ export default {
             }
 
             this.buildBadgeClass();
-        }
+        },
     },
     components: {
         UserImage
     },
 
     mounted() {
+
         let personnels = this.$assets.getCollection('personnels');
         let habilitationsCharacteristic = this.$assets.getCollection('habilitations');
         this.personnels = personnels;

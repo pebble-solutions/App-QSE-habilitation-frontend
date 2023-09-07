@@ -32,7 +32,9 @@
 
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
-            <!-- <PersonnelsFilter/> -->
+
+            <!-- Ajout de filtres -->
+
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="operateursSearchValue">
             <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5" v-if="filteredOperateurs.length">
                 <option value="" selected>Tous</option>
@@ -67,7 +69,6 @@
 <script>
 
 import { mapActions } from 'vuex';
-// import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
 
 export default {
 
@@ -188,10 +189,6 @@ export default {
             this.allOperateurs = this.$assets.getCollection("personnels").getCollection();
         }
     },
-
-    // components : {
-    //     PersonnelsFilter
-    // },
 
     mounted() {
         this.getHabilitations();

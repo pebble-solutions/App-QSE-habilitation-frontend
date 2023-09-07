@@ -2,11 +2,16 @@
     <template v-if="isReady">
         <last-control-filter-form />
 
-        <template v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id">
-            <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
-                <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
-            </app-menu-item>
-        </template>
+        <div v-if="!pending.personnels">
+            <template v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id">
+                <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
+                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
+                </app-menu-item>
+            </template>
+        </div>
+        <div class="mt-2 text-center" v-else>
+            <span class="spinner-border text-secondary spinner-border-lg"></span>
+        </div>
         <div class="alert alert-light mx-1 my-2" v-if="noResults">
             <i class="bi bi-file-x"></i> Aucun résultat, tentez d'étendre votre recherche
         </div>
@@ -88,7 +93,21 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
-        }
+        },
+
+        // getHabilitations(){
+        //     let query = {
+        //         id : 0,
+        //         personnel_id : 0,
+        //         habilitation_type_id : 0,
+        //         active : false,
+        //         structure : 3,
+        //     }
+        //     this.$app.apiGet('/v2/habilitation', query)
+        //     .then((data) => {
+        //         console.log(data);
+        //     }).catch(this.$app.catchError);
+        // }
     },
 
     mounted() {

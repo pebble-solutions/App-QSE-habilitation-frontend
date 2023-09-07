@@ -374,7 +374,10 @@ export default {
 			});
 			const personnelsCollection = new AssetsCollection(this, {
 				assetName: 'personnels',
-				apiRoute: 'v2/personnel'
+				apiRoute: 'v2/personnel',
+				requestPayload: {
+                    limit: "aucune"
+                }
 			});
 			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
