@@ -1,7 +1,6 @@
 <template>
     <div class="card bg-light" v-if="!pending.control">
       <div class="card-body">
-        
         <!-- Titre -->
         <div class="text-center mb-1">
           <strong v-if="displayAgent" class="me-2">{{returnName(persHab.personnel_id)}}</strong>
@@ -11,7 +10,7 @@
           <!-- Colonne 1 : Validité de l'habilitation -->
           <div class="col-lg-4 col-12">
             <div class="px-2 mb-3 mb-lg-0">
-              <div class="fw-bold col-12">Validité : 3 ans <span class="fw-lighter">#{{ persHab.id }}</span></div>
+              <div class="fw-bold col-12">Validité : 3 ans <span class="fw-lighter">#{{ persHab.id }}</span> veille {{ persHab.characteristic_id }} <span> </span> </div>
               <div class="col-12">{{ changeFormatDateLit(persHab.dd) }}
                 au {{ changeFormatDateLit(persHab.df) }}
               </div>
@@ -20,38 +19,38 @@
             </div>
           </div>
           <!-- Colonne 2 : Résultat des contrôles -->
+          
           <div class="col">
-            <div class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+            <div v-if="listControlDone" class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
               <button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
-              :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+              :class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
               :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
-              {{ kn.result_var }}
+              {{ kn.sami }}
             </button>
           </div>
         </div>
         
         <!-- Colonne 3 : caractéristique veille-->
         <div class="col-lg-4 col-12 px-2" >
-          <template v-if="persHab.veille">
-            <span>Veille <span class="fw-lighter"> #{{ persHab.veille.id }} </span> </span>
+          <template v-if="persHab.veille && findVeilleHab(persHab.id)">
+            <span class="fw-lighter me-2"> #{{ persHab.veille.id }} </span><span>Veille tous les <span class="fw-lighter">{{ persHab.veille.control_step }} </span>  jours</span>
             <div class="">
-              <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
+              <div class="col-12"></div>
+              <div>Dernier contrôle : {{changeFormatDateLit(habVeille.date_last) }}  </div>
               <!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
-              <div class="col-12">tous les {{ persHab.veille.control_step }} jours</div>
             </div>
             <!-- Composant ProgressBar -->
-            <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
+            <ProgressBar v-if="habVeille.date_last" :dd="new Date(habVeille.date_last)" :df="delay(habVeille.date_last, persHab.veille.control_step)"></ProgressBar>
             <div class="text-success" v-else> {{ noLastControl }}<i class="bi bi-check text-success"></i></div>
           </template>
           <div class="text-secondary d-flex align-items-center" v-else>
             <i class="bi bi-calendar2-x me-2"></i>
-            <em>Pas de veille configurée</em>
+            <em>Pas de veille sur cette habilitation</em>
           </div>
         </div>
         
       </div>
     </div>
-    <!-- info KN{{ info }} -->
   </div>
   </template>
   <script>
@@ -69,13 +68,10 @@
       displayAgent: Boolean,
       displayHab: Boolean,
       persHab: Object,
+      listVeille:Array,
     },
     computed: {
       ...mapState(['type', 'listActifs','personnels']),
-      
-      
-      
-      
       
     },
     data() {
@@ -83,15 +79,16 @@
         pending: {
           control: false
         },
-        listControlDone: [],
+        listControlDone: '',
         habilitationPerso: [],
         hab: '',
         resultat: '',
         lastControlDate: '',
-        listControlToDo: [],
         infosHab: [],
         lastControl:'',
         noLastControl: '',
+        listControlTodo: '',
+        habVeille: '',
       };
     },
     methods: {
@@ -109,10 +106,19 @@
         }
         else return 'personnel non trouvé'
       },
-      
-      
-      
-      
+
+      /**
+       * trouve la veille pour l'ahbilitation concernée
+       * 
+       */
+      findVeilleHab(id) {
+        if(this.listVeille) {
+          let VeilleHab = this.listVeille.find(e => e.habilitation_id == id);
+          this.habVeille = VeilleHab
+          return VeilleHab
+
+        }
+      },
      
       
       
@@ -121,15 +127,22 @@
       * return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
       * @param {date} date la date du dernier contôle réalise
       */
-      delay(date){
+      delay(date, pdv){
         let dd = new Date(date);
         
-        dd.setDate(dd.getDate()+180);
+        dd.setDate(dd.getDate()+pdv);
         
         return dd
-        
-        
       },
+
+      // loadControlVeille(id) {
+      //   this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 })
+      //   .then((data) =>{
+      //       this.listControlTodo = data,
+      //       console.log(data , 'veille en cours')
+      //   })
+      // },
+    
       loadCollecte(id) {
         this.pending.control = true;
         this.$app.apiGet('data/GET/collecte', {
@@ -141,6 +154,20 @@
         })
         .catch(this.$app.catchError).finally(() => this.pending.control = false);
       },
+      
+      loadinfosCollecte(id) {
+      this.pending.control = true
+      this.$app.apiGet('v2/collecte', {
+        habilitation_id: id,
+        kn2kn_info: 'OUI',
+        retard_info: 'OUI',
+        type: 'KN'
+      })
+        .then((data) => {
+          this.listControlDone = data;
+        })
+        .catch(this.$app.catchError).finally(() => this.pending.control = false);
+    },
      
      
       changeFormatDateLit(el) {
@@ -151,8 +178,9 @@
       },
     },
     mounted() {
-      this.loadCollecte(this.persHab.id);
-      // this.loadinfosHabMonitor(this.persHab.id)
+      // this.loadCollecte(this.persHab.id);
+      this.loadinfosCollecte(this.persHab.id)
+      // this.loadControlVeille(this.persHab.characteristic_id)
       
       // Initialisation des tooltips Bootstrap après le rendu du composant
       this.$nextTick(function () {

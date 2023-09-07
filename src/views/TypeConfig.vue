@@ -4,7 +4,7 @@
         <div class="d-flex justify-content-center align-items-center m-2 mb-4">
             <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
             <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid"
-                style="max-width: 500px; width: 100%;">
+            style="max-width: 500px; width: 100%;">
         </div>
         <div v-if="typeHab" class="card m-2 p-2 text-white text-center custom-app-color">
             <h4 class="">{{ typeHab.nom }}</h4>
@@ -54,9 +54,10 @@
             </div>
         </div>
         <RouterView></RouterView>
+        
         <div v-if="listHabVeille">
             <div v-for="pers in listHabVeille" :key="pers.id">
-                    <HabMonitorPersonnel :persHab="pers" :veilleConfig="veilleConfig" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
+                <HabMonitorPersonnel :persHab="pers" :veilleConfig="veilleConfig" :listVeille="list" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
             </div>
         </div>
      </div>
@@ -86,6 +87,8 @@ export default {
             },
             active: null,
             listHabVeille:[],
+            list: null,
+
         };
     },
     computed: {
@@ -138,15 +141,37 @@ export default {
 
         /**
          * récupère depuis le store la config de la veille en relation avec l'habilitation-type concernée
+         * et récupère les informations de veille
          * @param   {number}    id  id du type d'habilitation
          * @returns {Object}    config de la veille
          */
         findVeille(id) {
+        console.log(this.veilles)
             let veille = this.veilles.find(e => e.objet_id == id);
             if (veille) {
                 this.veilleConfig = veille;
+                console.log(veille.id, 'veille.id avant requete')
+                this.loadControlVeille(veille.id)
             }
         },
+
+        /**
+       * récupère les informations de la veille via requête api
+       * notamment les controles à réaliser
+       * @param {number} id de la veille
+       */
+      loadControlVeille(id) {
+        this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 })
+        .then((data) =>{
+            let list=data
+            this.list = list,
+            console.log(data , 'veille en cours')
+            console.log(list, 'list')
+        console.log(this.listControlToDo)
+        return list
+
+        })
+      },
 
         /**
          * formate la date
@@ -166,18 +191,18 @@ export default {
 
     async findHabilitationPersonnel(id) {
         this.pending.load = true;
+        this.findVeille(id);
         let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
         let assemblerPersonnel = new AssetsAssembler(listHabilitationPersonnels);
         await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
         let joinedListHab = assemblerPersonnel.getResult();
         this.listHabJoin = joinedListHab;
-
         let assemblerVeille = new AssetsAssembler(joinedListHab);
         await assemblerVeille.joinAsset(this.$assets.getCollection ("veilles"), 'characteristic_id', 'veille');
         let joinedVeille = assemblerVeille.getResult();
         this.listHabVeille = joinedVeille;
         this.pending.load = false;
-        return joinedListHab
+        return joinedVeille
     },
     
 
@@ -202,7 +227,7 @@ export default {
      */
     beforeMount() {
         this.findType(this.$route.params.id);
-        this.findVeille(this.$route.params.id);
+        // this.findVeille(this.$route.params.id);
         this.findHabilitationPersonnel(this.$route.params.id);
 
     },
