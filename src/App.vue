@@ -46,9 +46,8 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'operateur'">
-				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
-					<div
-						:class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
+				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in listPersonnel(personnels)" :key="personnel.id">
+					<div :class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
 						<div class="col-1">
 							<span>
 								<UserImage :name="personnel.cache_nom" :size="isActiveItem(personnel) ? 'xl' : ''" />
@@ -287,10 +286,10 @@ export default {
 		},
 
 		handleItemSelection(item) {
-    this.currentIndex = this.idToIndexMap[item.id];
-    this.currentItemId = item.id;
-    this.$router.push(`/personnels/${this.currentItemId}`);
-},
+			this.currentIndex = this.idToIndexMap[item.id];
+			this.currentItemId = item.id;
+			this.$router.push(`/personnels/${this.currentItemId}`);
+		},
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
@@ -349,6 +348,31 @@ export default {
 				}
 			}
 			return typeFiltred;
+
+		},
+
+		/**
+		 * retourne un tableau des personnels triés par ordre alpha
+		 * @param	{Array}	list liste du personnel
+		 * @return	{Array}	personnelFiltred liste du personnel trié
+		 */
+
+		listPersonnel(list){
+			let personnelFiltered = list;
+			personnelFiltered.sort((a,b) => {
+				const nameA = a.cache_nom.toUpperCase();
+				const nameB = b.cache_nom.toUpperCase();
+				if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                return 0;
+			});
+			return personnelFiltered
 
 		},
 

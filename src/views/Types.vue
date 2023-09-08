@@ -1,17 +1,34 @@
 <template>
-    <div class="container pb-3 bg-white">
+    <div class="container bg-white">
 			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
         <div class="card custom-app-color text-white">
             <h1>Type d'habilitations</h1>
             <h3>Retrouver ici toutes les informations regroupées par type d'habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
         </div>
-        <div class="bg-white text-center mt-5">
-        <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
-    </div>
-    <div v-for="hab in habilitationsPersonnels" :key="hab.id">
-        {{ hab }}
-        <br>
-    </div>
+        <div class="bg-white text-center my-4">
+            <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
+        </div>
+        <div class="row">
+            <div class="col">
+                
+                <div class="card  text-white text-center custom-app-color">
+                    <h4>Les types d'habilitation</h4>
+                    
+                    <div class="card" v-for="type in  types" :key="type.id">
+                        {{ type.nom }}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card  text-white text-center custom-app-color">
+                    <h4>Les veilles</h4>
+                    <div class="card" v-for="veille in  veilles" :key="veille.id">
+                        {{ veille.nom }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     
