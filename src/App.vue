@@ -386,6 +386,31 @@ export default {
 		},
 
 		/**
+		 * retourne un tableau des personnels triés par ordre alpha
+		 * @param	{Array}	list liste du personnel
+		 * @return	{Array}	personnelFiltred liste du personnel trié
+		 */
+
+		listPersonnel(list){
+			let personnelFiltered = list;
+			personnelFiltered.sort((a,b) => {
+				const nameA = a.cache_nom.toUpperCase();
+				const nameB = b.cache_nom.toUpperCase();
+				if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                return 0;
+			});
+			return personnelFiltered
+
+		},
+
+		/**
 		 * Initialise les collections de données au niveau du contrôleur d'assets
 		 */
 		initCollections() {

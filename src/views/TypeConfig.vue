@@ -8,7 +8,7 @@
         </div>
         <div v-if="typeHab" class="card m-2 p-2 text-white text-center custom-app-color">
             <h4 class="">{{ typeHab.nom }}</h4>
-            <div class="row g-2">
+            <div class="row g-2 mb-3">
                 <div class="col-12 col-md-6">
                     <div class="card p-2 d-flex flex-column h-100">
                         <div class="d-flex justify-content-center align-items-center py-3">
@@ -31,7 +31,7 @@
                             <div class="d-flex justify-content-center align-items-center py-3">
                                 <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
                             </div>
-                            <span>{{ veilleConfig.nom }}</span><br>
+                            <span>{{ veilleConfig.nom }} sur typr {{ veilleConfig.objet_id }}</span><br>
                             <span>Statut : {{ isActive(veilleConfig.df) }}</span>
 
                             <div>Date début : <span class="fw-lighter" :class="{ 'text-secondary': !veilleConfig.dd }">{{ veilleConfig.dd ?
@@ -52,14 +52,14 @@
                     </div>
                 </div>
             </div>
+            <div  v-if="listHabPersoType">
+                <div class="my-3" v-for="pers in listHabPersoType" :key="pers.id">
+                    <HabMonitorPersonnel :persHab="pers" :veilleConfig="veilleConfig" :listVeille="list" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
+                </div>
+            </div>
         </div>
         <RouterView></RouterView>
         
-        <div v-if="listHabVeille">
-            <div v-for="pers in listHabVeille" :key="pers.id">
-                <HabMonitorPersonnel :persHab="pers" :veilleConfig="veilleConfig" :listVeille="list" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
-            </div>
-        </div>
      </div>
      <Spinner v-else></Spinner> 
 </template>
@@ -86,7 +86,7 @@ export default {
                 load: false,
             },
             active: null,
-            listHabVeille:[],
+            listHabPersoType:[],
             list: null,
 
         };
@@ -146,32 +146,32 @@ export default {
          * @returns {Object}    config de la veille
          */
         findVeille(id) {
-        console.log(this.veilles)
             let veille = this.veilles.find(e => e.objet_id == id);
             if (veille) {
                 this.veilleConfig = veille;
-                console.log(veille.id, 'veille.id avant requete')
                 this.loadControlVeille(veille.id)
             }
+            else 
+            console.log(this.veilles, 'existe pas')
+            
         },
 
         /**
-       * récupère les informations de la veille via requête api
-       * notamment les controles à réaliser
-       * @param {number} id de la veille
-       */
-      loadControlVeille(id) {
-        this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 })
-        .then((data) =>{
-            let list=data
-            this.list = list,
-            console.log(data , 'veille en cours')
-            console.log(list, 'list')
-        console.log(this.listControlToDo)
-        return list
-
-        })
-      },
+         * récupère les informations de la veille via requête api
+         * notamment les controles à réaliser
+         * @param {number} id de la veille
+         */
+        loadControlVeille(id) {
+            this.pending.load = true
+            this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 })
+                .then((data) =>{
+                let list = data
+                this.list = list;
+                console.log(list, id, 'todo')
+                return list
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.load = false);
+        },
 
         /**
          * formate la date
@@ -183,13 +183,13 @@ export default {
 
        
         /**
-     * retourne la liste des habilitations personnelles en fonction de l'id veille fourni
-     * et récupère le nom des personnels par jointure avec la collection personnels
-     * @param {*} id 
-     * @returns {Array} liste des personnels habilités
-     */
+         * retourne la liste des habilitations personnelles en fonction de l'id type habilitation fourni
+         * et récupère le nom des personnels par jointure avec la collection personnels
+         * @param {*} id 
+         * @returns {Array} liste des personnels habilités
+         */
 
-    async findHabilitationPersonnel(id) {
+        async findHabilitationPersonnel(id) {
         this.pending.load = true;
         this.findVeille(id);
         let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
@@ -197,13 +197,14 @@ export default {
         await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
         let joinedListHab = assemblerPersonnel.getResult();
         this.listHabJoin = joinedListHab;
-        let assemblerVeille = new AssetsAssembler(joinedListHab);
-        await assemblerVeille.joinAsset(this.$assets.getCollection ("veilles"), 'characteristic_id', 'veille');
-        let joinedVeille = assemblerVeille.getResult();
-        this.listHabVeille = joinedVeille;
+        let assemblerType = new AssetsAssembler(joinedListHab);
+        await assemblerType.joinAsset(this.$assets.getCollection ("types"), 'characteristic_id', 'habilitationtype');
+        let joinedType = assemblerType.getResult();
+        this.listHabPersoType = joinedType;
+       
         this.pending.load = false;
-        return joinedVeille
-    },
+        return joinedType
+        },
     
 
     },
@@ -216,7 +217,7 @@ export default {
     beforeRouteUpdate(to) {
         if (to.params.id != this.typeHab.id) {
             this.findType(to.params.id);
-            this.findVeille(to.params.id)
+            // this.findVeille(to.params.id)
             this.findHabilitationPersonnel(to.params.id)
 
         }
