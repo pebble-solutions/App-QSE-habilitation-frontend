@@ -17,8 +17,10 @@ export default createStore({
 		habilitations: [],
 		habilitationsTypes: [],
 		echeancier: null,
+		personnelsFiltered:[],
 		pending: {
 			habilitationsPersonnels: false,
+			personnelsFiltered: true,
 		},
 
 

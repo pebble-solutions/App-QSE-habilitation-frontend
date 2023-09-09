@@ -45,7 +45,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 </template> -->
 
 		<template v-slot:list>
-			<AppMenu v-if="listMode === 'operateur'">
+			<AppMenu v-if="listMode === 'personnels'">
 				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
 					<div
 						:class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
@@ -90,6 +90,11 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FilterFormEcheancier />
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'operateur'">
+				<PersonnelList v-slot="personnelProps">
+					<FicheIndividuelleSuiviItem :agent="personnelProps.personnel" :stats="getStatsByAgent(personnelProps.personnel.id)" v-if="personnelProps"/>
+				</PersonnelList>
 			</AppMenu>
 			<AppMenu v-else>
 				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
@@ -175,7 +180,8 @@ import UserImage from './components/pebble-ui/UserImage.vue'
 import Config from './components/config/Config.vue'
 import AppModal from './components/pebble-ui/AppModal.vue'
 import HabilitationList from './components/menuList/HabilitationList.vue'
-
+import PersonnelList from "@/components/PersonnelList.vue";
+import FicheIndividuelleSuiviItem from "@/components/menuList/FicheIndividuelleSuiviItem.vue";
 
 import CONFIG from "@/config.json"
 
@@ -200,6 +206,7 @@ export default {
 			currentItemId: null,
 			idToIndexMap: {},
 			displayConfig: false,
+			characteristicPersonnelStats: [],
 		}
 	},
 
@@ -287,10 +294,10 @@ export default {
 		},
 
 		handleItemSelection(item) {
-    this.currentIndex = this.idToIndexMap[item.id];
-    this.currentItemId = item.id;
-    this.$router.push(`/personnels/${this.currentItemId}`);
-},
+			this.currentIndex = this.idToIndexMap[item.id];
+			this.currentItemId = item.id;
+			this.$router.push(`/personnels/${this.currentItemId}`);
+		},
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
@@ -308,6 +315,32 @@ export default {
 				}
 			}
 			return null;
+		},
+
+		/**
+		 * Retourn les states du personnel qui correspond a l'agent fournis en parametre
+		 *
+		 * @param {integer} personnelId l'id du personnel
+		 *
+		 * @return {array}
+		 */
+		getStatsByAgent(personnelId) {
+			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == personnelId);
+			return statsByAgent;
+		},
+
+		 /**
+		 * Charge les states de characteristic personnel par personnel
+		 */
+		loadCharacteristicPersonnelStats() {
+			this.pending.stats = true;
+
+			this.$app.apiGet('v2/characteristicPersonnel/stats')
+			.then((data) => {
+				this.characteristicPersonnelStats = data;
+			})
+			.catch(this.$app.catchError)
+			.finally(this.pending.stats = false);
 		},
 
 
@@ -399,6 +432,18 @@ export default {
 				assetName: 'habilitationsTypes',
 				apiRoute: 'v2/controle/habilitation/type'
 			});
+			const personnelsFilteredCollection = new AssetsCollection(this, {
+				name: "personnelsFiltered",
+				assetName: "personnelsFiltered",
+				apiRoute: "v2/personnel",
+				requestPayload: {
+					contratDdFilter: this.contratDdFilter,
+					contratDfFilter: this.contratDfFilter,
+					withContratFilter: this.withContratFilter,
+					withoutContratFilter: this.withoutContratFilter,
+					ordre: this.ordre
+				}
+			});
 
 
 			// typesCollection.reset();
@@ -411,6 +456,7 @@ export default {
 			this.$assets.addCollection("suspensions", suspensionsCollection);
 			this.$assets.addCollection("habilitations", habilitationsCollection);
 			this.$assets.addCollection("habilitationsTypes", habilitationsTypesCollection);
+			this.$assets.addCollection("personnelsFiltered", personnelsFilteredCollection);
 
 		},
 
@@ -464,7 +510,9 @@ export default {
 		UserImage,
 		Config,
 		AppModal,
-		HabilitationList
+		HabilitationList,
+		PersonnelList,
+		FicheIndividuelleSuiviItem
 	},
 
 	mounted() {
@@ -484,6 +532,7 @@ export default {
 					try {
 						this.loadHabilitationType();
 						this.loadFormulaires();
+						this.loadCharacteristicPersonnelStats();
 
 						const personnelsCollection = this.$assets.getCollection("personnels");
 						// this.$assets.getCollection("suspensions").load();
@@ -501,6 +550,7 @@ export default {
 						await this.$assets.getCollection("veilles").load();
 						await this.$assets.getCollection("personnels").load();
 						await this.$assets.getCollection("habilitationsPersonnels").load();
+						await this.$assets.getCollection("personnelsFiltered").load();
 
 						// Mettre à jour currentItemId en fonction des paramètres de l'URL
 						const currentItemIdFromURL = parseInt(this.$route.params.id);

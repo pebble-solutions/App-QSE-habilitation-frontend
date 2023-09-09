@@ -128,7 +128,31 @@ const routes = [
     name: 'statistiques',
     meta: { transitionName: 'fade' }, 
     component: () => import(/* webpackChunkName: "about" */ '../views/Statistiques.vue')
-  }
+  },
+  {
+    path: '/operateur',
+    name: 'operateur',
+    component: () => import("../views/Operateur.vue"),
+  },
+  {
+    path: '/operateur/:id',
+    name: 'habilitationByAgent',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
+    children: [
+      {
+        path: ':idHab',
+        name: 'controlHistory',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        children: [
+          {
+            path: ':idCollecte',
+            name: 'controlView',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+          }
+        ]
+      }
+    ]
+  },
 ]
 
 const router = createRouter({
