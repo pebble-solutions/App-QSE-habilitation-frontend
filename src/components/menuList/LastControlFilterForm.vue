@@ -38,75 +38,67 @@ export default {
                 { value: 183, label: "6 mois" }
             ],
             requestPayload: {
-                timeSelected: 91
+                timeSelected: 0
             },
             showFilterForm: false,
             additionalParams: [],
         }
     },
 
+    props: {
+        change: Boolean
+    },
+
+    emits: ['modif-change'],
+
+    watch: {
+        change(newValue){
+            if (newValue === false){
+                this.filter();
+            }
+        }
+    },
+
     computed: {
-        ...mapState(['pending', 'habilitationsTypes']),
+        ...mapState(['pending', 'types']),
     },
     components: { ControlForm },
     methods: {
         /**
-         * Lance la recherche
+         * Lance la recherche et tri la collection
          */
         async filter() {
             const collection = this.$assets.getCollection("habilitationsPersonnels");
 
-            // const habilitationsPersonnelsFilteredCollection = new AssetsCollection(this, {
-			// 	assetName: 'habilitationsPersonnels',
-			// 	apiRoute: 'v2/characteristic/personnel',
-			// 	requestPayload : {
-			// 		last_control: 1,
-			// 		limit: "aucune",
-			// 	}
-			// });
+            collection.reset();
+
+            for (const [key, value] of Object.entries(this.additionalParams)) {
+                collection.requestPayload[key] = value;
+            }
+            try {
+                await collection.load();
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
 
             const sortedCollection = collection.getCollection().sort((a, b) => {
-            const AdaysUntilRenewal = Math.trunc((new Date(a.df) - new Date()) / (1000 * 3600 * 24));
-            const BdaysUntilRenewal = Math.trunc((new Date(b.df) - new Date()) / (1000 * 3600 * 24));
+                const AdaysUntilRenewal = Math.trunc((new Date(a.df) - new Date()) / (1000 * 3600 * 24));
+                const BdaysUntilRenewal = Math.trunc((new Date(b.df) - new Date()) / (1000 * 3600 * 24));
 
-            // if (AdaysUntilRenewal < this.requestPayload.timeSelected && BdaysUntilRenewal >= this.requestPayload.timeSelected) {
-            //     return -1;
-            // }
-            // if (AdaysUntilRenewal >= this.requestPayload.timeSelected && BdaysUntilRenewal < this.requestPayload.timeSelected) {
-            //     return 1;
-            // }
-            // // Si AdaysUntilRenewal et BdaysUntilRenewal sont égaux, ils restent dans le même ordre.
-            // return 0;
+                return AdaysUntilRenewal - BdaysUntilRenewal;
+            });
 
+            const filteredCollection = sortedCollection.filter(item => {
+                const daysUntilRenewal = Math.trunc((new Date(item.df) - new Date()) / (1000 * 3600 * 24));
+                return daysUntilRenewal < this.requestPayload.timeSelected;
+            });
 
-            if (AdaysUntilRenewal < BdaysUntilRenewal) {
-                return -1;
-            }
-            if (AdaysUntilRenewal > BdaysUntilRenewal) {
-                return 1;
-            }
-            // Si AdaysUntilRenewal et BdaysUntilRenewal sont égaux, ils restent dans le même ordre.
-            return 0;
-        });
+            collection.updateCollection(filteredCollection);
 
-            collection.updateCollection(sortedCollection)
-            // collection.reset();
-            // collection.requestPayload = collection.requestPayload ?? {};
-
-            // if (this.requestPayload.hasOwnProperty("timeSelected")) {
-            //     collection.requestPayload.df = this.requestPayload.timeSelected;
-            // }
-
-            // for (const [key, value] of Object.entries(this.additionalParams)) {
-            //     collection.requestPayload[key] = value;
-            // }
-            // try {
-            //     await collection.load();
-            // }
-            // catch (e) {
-            //     this.$app.catchError(e);
-            // }
+            this.$emit('modif-change');
         },
+
         /**
          * Change la valeur de showFilterForm et la retourne
          */

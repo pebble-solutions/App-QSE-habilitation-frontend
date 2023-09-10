@@ -1,8 +1,9 @@
 <template>
     <template v-if="isReady">
-        <last-control-filter-form />
+        <last-control-filter-form 
+        :change="change" @modif-change="setChange()"/>
 
-        <template v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id">
+        <template v-for="habilitationPersonnel in collection.getCollection()" :key="habilitationPersonnel.id">
             <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
                 <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
             </app-menu-item>
@@ -29,17 +30,17 @@ import AppMenuItem from '../pebble-ui/AppMenuItem.vue';
 import ControlTodoHabilitationItem from './ControlTodoHabilitationItem.vue';
 import LastControlFilterForm from "./LastControlFilterForm.vue";
 
-
 export default {
     data() {
         return {
             collection: null,
-            noMoreAvailable: false
+            noMoreAvailable: false,
+            change: false,
         }
     },
 
     computed: {
-        ...mapState(['habilitationsPersonnels', 'pending']),
+        ...mapState(['pending']),
 
         /**
          * Contrôle si il peut exister plus de résultats sur le serveurs que
@@ -52,7 +53,7 @@ export default {
          * @return {bool}
          */
         isMoreAvailable() {
-            let ln = this.habilitationsPersonnels.length;
+            let ln = this.collection.getCollection().length;
             return (ln && ln % this.collection.requestPayload?.limit === 0 && !this.noMoreAvailable);
         },
 
@@ -71,7 +72,7 @@ export default {
          * @return {boolean}
          */
         noResults() {
-            return !this.pending.habilitationsPersonnels && !this.habilitationsPersonnels?.length ? true : false;
+            return !this.pending.habilitationsPersonnels && !this.collection?.getCollection().length ? true : false;
         }
     },
 
@@ -89,6 +90,13 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
+        },
+
+        setChange(){
+            console.log(this.collection.getCollection().length)
+            this.collection.load();
+            console.log(this.collection.getCollection().length)
+            this.change = true;
         }
     },
 

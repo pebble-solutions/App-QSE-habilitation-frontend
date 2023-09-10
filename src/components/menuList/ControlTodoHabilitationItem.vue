@@ -6,7 +6,7 @@
         <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
             <div class="d-flex align-items-center">
                 <span class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</span>
-                <strong v-if="!pending.habilitationsCharacteristic">{{ nomHabilitationType }}</strong>
+                <strong>{{ nomHabilitationType }}</strong>
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
@@ -27,8 +27,8 @@ export default {
     data() {
         return {
             personnels: null,
-            habilitationsCharacteristic: null,
             nomPersonnel: '',
+            typesCollection: null,
             nomHabilitationType: '',
             daysUntilRenewal: 0,
             badgeClass: '',
@@ -49,9 +49,6 @@ export default {
             handler(newValue) {
                 if (!newValue.personnels) {
                     this.getName();
-                }
-                if (!newValue.habilitationsCharacteristic) {
-                    this.getHabilitionName();
                 }
             },
         },
@@ -84,10 +81,9 @@ export default {
          * Initialise la valeur du nom de l'habilitation dont l'id est egal au characteristic_id de l'habilitation
          */
         getHabilitionName() {
-            const habilitation = this.habilitationsCharacteristic.getCollection().find(e => e.id == this.habilitationPersonnel.characteristic_id);
-            // console.log(habilitation)
+            const habilitation = this.typesCollection.getCollection().find(e => e.id == this.habilitationPersonnel.characteristic_id);
             if (habilitation != null) { 
-                this.nomHabilitationType = habilitation.label;
+                this.nomHabilitationType = habilitation.nom;
             } else {
                 this.nomHabilitationType = '?';
             }
@@ -119,9 +115,8 @@ export default {
             if (!this.pending.personnels) {
                 this.getName();
             }
-            if (!this.pending.habilitationsCharacteristic) {
-                this.getHabilitionName();
-            }
+            
+            this.getHabilitionName();
 
             this.buildBadgeClass();
         },
@@ -133,7 +128,7 @@ export default {
     mounted() {
 
         this.personnels = this.$assets.getCollection('personnels');
-        this.habilitationsCharacteristic = this.$assets.getCollection('habilitations');
+        this.typesCollection = this.$assets.getCollection('types');
 
         this.initFromCollections();
     },
