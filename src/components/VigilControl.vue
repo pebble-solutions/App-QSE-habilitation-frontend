@@ -1,44 +1,42 @@
 <template>
         <spinner v-if="pending.control"></spinner>
         <template v-else>
-            <div class="list-group" v-if="listControl.length">
-                <div class="list-group-item" v-for="control in listControl" :key="control.id">
+            <div class="list-group" v-if="listHabilitationPersonnel.length">
+                <div class="list-group-item" v-for="control in listHabilitationPersonnel" :key="control.id">
                     <div class="row align-items-center">
         
                         <div class="col-3">
                             {{returnName(control)}}
-                            <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
                         </div>
                         <div class="col">
-                            <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)" label="contrôle"></progress-bar>
+                            <progress-bar :dd="new Date(control.dd)" :df="delay(control.df)" label="contrôle"></progress-bar>
             
                         </div>
+                        <div class="col-1"></div>
                         <div class="col-auto text-end">
                             <router-link :to="'/habilitationHab/'+this.$route.params.id+'/new/'+control.habilitation_id+'/'+idForm+'/'+control.personnel_id" v-slot="{navigate, href}">
                                 <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-plus" ></i>
+                                    <i class="bi bi-arrow-clockwise" ></i>
                                     <span class="d-none d-md-inline ms-1">
-                                        Programmer
+                                        Renouveler
                                     </span>
                                 </a>
                             </router-link>
-                            <!-- <small>{{control}}</small>   -->
                         </div>
                     </div>
                 </div>
             </div>
-            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message>
+            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à habilité pour cette habilitation</alert-message>
 
         </template>
 
 
 </template>
 <script>
-import { mapState } from 'vuex';
+
 import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
-import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 
@@ -54,44 +52,32 @@ export default{
         },
     },
 
-    components: {ProgressBar, AlertMessage, Spinner}, //RouterLink
-
-    computed: {
-        ...mapState(['habilitationType','listActifs','veilleConfig'])
-    },
+    components: {ProgressBar, AlertMessage, Spinner},
 
     data() {
         return {
             pending: {
                 control: false,
             },
-            listControl:[],
+            listHabilitationPersonnel:[],
+            listPersonnel: []
         }
 
     },
     watch: {
         idVeille() {
-            this.loadControlTodo();
+            this.loadHabilitation();
         }
     },
 
     methods: {
         /**
-         * charge les contrôles à réaliser pour l'id veille renseignée via l'API
+         * Charge les données du store et initialise la liste des habilitationsPersonnel en fonction de l'id du type
          */
-        loadControlTodo() {
-            this.pending.control = true;
-
-            this.$app.apiGet('v2/controle/veille/'+this.idVeille+'/todo', {CSP_min: 50, CSP_max: 600})
-            .then(async (data) => {
-                let assembler = new AssetsAssembler(data);
-                await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
-                this.listControl = assembler.getResult();
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.control = false);
-
+        loadHabilitation(){
+            const hab = this.$assets.getCollection("habilitationsPersonnels").getCollection();
+            this.listHabilitationPersonnel = hab.filter(item => item.characteristic_id == this.$route.params.id);
         },
-
          /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021
@@ -109,10 +95,11 @@ export default{
          * @return {string}
          */
         returnName(control){
-            if (!control.personnel) {
+            let personnel = this.listPersonnel.find(item => item.id == control.personnel_id)
+            if (!personnel) {
                 return control.personnel_id ? `Personnel non trouvé ${control.personnel_id}` : `Personnel non défini`; 
             }
-            return control.personnel.cache_nom;
+            return personnel.cache_nom;
         },
 
         
@@ -126,14 +113,13 @@ export default{
             dd.setDate(dd.getDate()+180);
             
             return dd
-            
-
         }
 
     },
 
     mounted(){
-        this.loadControlTodo();
+        this.loadHabilitation();
+        this.listPersonnel = this.$assets.getCollection("personnels").getCollection();
     }
 }
 

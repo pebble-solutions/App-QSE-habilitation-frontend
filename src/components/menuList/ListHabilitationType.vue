@@ -6,7 +6,7 @@
         </app-menu-item>
     </template>
 
-    <div class="alert alert-info m-2" v-if="!habilitationType?.length">
+    <div class="alert alert-info m-2" v-if="!types?.length">
         Il n'y a pas de type d'habilitation enregistré
     </div>
 
