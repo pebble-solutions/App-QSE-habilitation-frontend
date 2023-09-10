@@ -6,7 +6,7 @@
                 <span class="me-3 fw-lighter"># {{ IdType }} </span>
                 {{ filterhabilitationType}}
             </h2>
-            <vigil-control :idVeille="IdType" :listHabilitationPersonnel="listHabilitationPersonnel" ></vigil-control>
+            <vigil-control :idType="IdType" :listHabilitationPersonnel="listHabilitationPersonnel" ></vigil-control>
         </template>
         <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas d'habilitation sur ce type d'habilitation</alert-message>
         <router-view></router-view>
@@ -15,7 +15,6 @@
 <script>
 
 import { mapState } from 'vuex';
-import {dateFormat} from '../../js/collecte';
 import VigilControl from '../../components/VigilControl.vue';
 import AlertMessage from '../../components/pebble-ui/AlertMessage.vue';
 
@@ -61,7 +60,7 @@ export default {
          * @returns {number} id
          */
         IdType() {
-            return this.$route.params.id
+            return parseInt(this.$route.params.id)
         }
     },
 

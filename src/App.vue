@@ -159,7 +159,6 @@ import { ROUTES_NAMES } from './js/route';
 import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
 import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
 import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
-import UserImage from './components/pebble-ui/UserImage.vue'
 import Config from './components/config/Config.vue'
 import AppModal from './components/pebble-ui/AppModal.vue'
 import HabilitationList from './components/menuList/HabilitationList.vue'
@@ -505,7 +504,6 @@ export default {
 		itemHabilitationSuspension,
 		itemPersonnelSuspension,
 		FilterFormEcheancier,
-		UserImage,
 		Config,
 		AppModal,
 		HabilitationList,

@@ -16,15 +16,11 @@
                 <i class="bi bi-search" v-else></i>
             </button>
         </div>
-        <!-- <div>
-            <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm" :habilitationsTypes="habilitationsTypes"></ControlForm>
-        </div> -->
     </form>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import ControlForm from './ControlForm.vue';
 
 export default {
 
@@ -55,7 +51,6 @@ export default {
     computed: {
         ...mapState(['pending', 'types']),
     },
-    components: { ControlForm },
     methods: {
         /**
          * Lance la recherche et tri la collection
