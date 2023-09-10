@@ -1,25 +1,23 @@
 <template>
     
     <div class="container py-2 px-2">
-        <template v-if="findVeilleConfig">
+        <template v-if="listHabilitationPersonnel">
             <h2 class="mb-3">
-                <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
-                Veille {{ filterhabilitationType}}
+                <span class="me-3 fw-lighter"># {{ IdType }} </span>
+                {{ filterhabilitationType}}
             </h2>
-            <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
+            <vigil-control :idVeille="IdType" :listHabilitationPersonnel="listHabilitationPersonnel" ></vigil-control>
         </template>
-        <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
+        <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas d'habilitation sur ce type d'habilitation</alert-message>
         <router-view></router-view>
     </div>
 </template>
 <script>
+
 import { mapState } from 'vuex';
 import {dateFormat} from '../../js/collecte';
 import VigilControl from '../../components/VigilControl.vue';
 import AlertMessage from '../../components/pebble-ui/AlertMessage.vue';
-
-// import ProgressBar from '../components/ProgressBar.vue';
-// import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
     components: { AlertMessage, VigilControl}, //ProgressBar, Spinner
@@ -32,15 +30,18 @@ export default {
                 habilitation: false,
                 agent:false,
             },
-            listPersonnelHabilite : 'default',
-            personnel:'',
-            listCollecte:'',
-            veilleConfig: null
+            listHabilitationPersonnel: []
+        }
+    },
+
+    watch: {
+        IdType() {
+            this.loadHabilitation();
         }
     },
 
     computed: {
-        ...mapState(['types', 'listActifs', 'veilles']),
+        ...mapState(['types', 'listActifs']),
 
         /**
          * Parcour la liste des types d'habilitation en fonction de l'id de la route
@@ -55,122 +56,27 @@ export default {
         },
 
         /**
-         * Parcour la liste des configuraton de veille 
-         * et retourne celle correspondant à  l'id de la route
+         * Retourne  l'id de la route
          * 
-         * @returns {object} Veille
+         * @returns {number} id
          */
-        findVeilleConfig() {
-            let veilleConfig = this.veilles?.find((v) => v.objet_id  == this.$route.params.id);
-            return veilleConfig
-        },
-
-        /**
-         * Parcour la liste des configuraton de veille 
-         * et retourne l'id du formulaire de la veille celle correspondant à l'id de la route
-         * 
-         * @returns {number} id du formulaire
-         */
-        returnFormulaireId(){
-            let formulaire = this.veilles.find((f) => f.objet_id == this.$route.params.id);
-            return formulaire.formulaire_id
+        IdType() {
+            return this.$route.params.id
         }
     },
 
     methods: {
-        /**
-         * charge le personnel habilité en fonction du type d'habilitation renseigné
-         * et 
-         * t
-         * @param   {number}    id  l'id du type d'habilitation
+          /**
+         * Charge les données du store et initialise la liste des habilitationsPersonnel en fonction de l'id du type
          */
-        
-        loadPersonelByHab(id) {
-            this.pending.habilitation = true;
-            
-            this.$app.apiGet('v2/controle/habilitation', {
-                habilitation_type_id: id,
-            })
-            .then((data) =>{
-                this.listPersonnelHabilite = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
-
-        },
-         /**
-         * Envoie une requête pour charger la liste des collectes 
-         * en fonction de l'id fourni
-         * @param {Number} id du 
-         */
-         loadCollecte(id) {
-            this.pending.agent =true;
-            this.$app.apiGet('data/GET/collecte', {
-                tli : id,
-                done: 'OUI'
-            })
-            .then((data) => {
-                this.listCollecte = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-        },
-
-        
-         /**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * @param {string} date 
-		 */
-
-		changeFormatDateLit(el) {
-			return dateFormat(el);
-		},
-
-        /**
-         * charge les contrôles à réaliser pour l'id veille renseignée via l'API
-         * 
-         * @param   {number}    id  l'id de la veille
-         * 
-         */
-         loadControlTodo(id) {
-            this.pending.control = true;
-
-            this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 50, CSP_max: 600})
-            .then((data) =>{
-                this.listControl = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.control = false);
-
-        },
-
-        /**
-         * Retourne le nom du personnel avec l'id entré en parametre grâce à une requete API
-         * 
-         * @param {number} id 
-         * 
-         * @returns {string} Nom du personnel
-         */
-        returnName(id){
-            let personnel = this.listActifs.find((e) => e.id == id);
-            if(!personnel) {
-                this.pending.agent = true;
-                this.$app.apiGet('structurePersonnel/GET/'+id, {
-                    environnement: 'private',
-                    // personne: id,
-                })
-                .then((data) =>{
-                    let personnel = data;
-                    let fullName = personnel.cache_nom;
-                    return fullName;
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-
-                // return 'ce personnel n\'est pas dans la liste'
-            }
-            else {
-                return personnel.cache_nom
-            }
-            
+         loadHabilitation(){
+            const hab = this.$assets.getCollection("habilitationsPersonnels").getCollection();
+            this.listHabilitationPersonnel = hab.filter(item => item.characteristic_id == this.$route.params.id);
         }
+    },
+
+    mounted(){
+        this.loadHabilitation();
     }
 }
 </script>

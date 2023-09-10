@@ -9,12 +9,12 @@
                             {{returnName(control)}}
                         </div>
                         <div class="col">
-                            <progress-bar :dd="new Date(control.dd)" :df="delay(control.df)" label="contrôle"></progress-bar>
+                            <progress-bar :dd="new Date(control.dd)" :df="new Date(control.df)" label="contrôle"></progress-bar>
             
                         </div>
                         <div class="col-1"></div>
                         <div class="col-auto text-end">
-                            <router-link :to="'/habilitationHab/'+this.$route.params.id+'/new/'+control.habilitation_id+'/'+idForm+'/'+control.personnel_id" v-slot="{navigate, href}">
+                            <router-link :to="'/habilitationHab/'+this.$route.params.id+'/renouveler'" v-slot="{navigate, href}">
                                 <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
                                     <i class="bi bi-arrow-clockwise" ></i>
                                     <span class="d-none d-md-inline ms-1">
@@ -34,7 +34,6 @@
 </template>
 <script>
 
-import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
@@ -42,12 +41,12 @@ import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default{
     props: {
-        idVeille:{
+        idType:{
             type: Number,
             required: true
         },
-        idForm: {
-            type:Number,
+        listHabilitationPersonnel: {
+            type:Array,
             required: true
         },
     },
@@ -59,25 +58,12 @@ export default{
             pending: {
                 control: false,
             },
-            listHabilitationPersonnel:[],
             listPersonnel: []
         }
 
     },
-    watch: {
-        idVeille() {
-            this.loadHabilitation();
-        }
-    },
 
     methods: {
-        /**
-         * Charge les données du store et initialise la liste des habilitationsPersonnel en fonction de l'id du type
-         */
-        loadHabilitation(){
-            const hab = this.$assets.getCollection("habilitationsPersonnels").getCollection();
-            this.listHabilitationPersonnel = hab.filter(item => item.characteristic_id == this.$route.params.id);
-        },
          /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021
@@ -100,25 +86,11 @@ export default{
                 return control.personnel_id ? `Personnel non trouvé ${control.personnel_id}` : `Personnel non défini`; 
             }
             return personnel.cache_nom;
-        },
-
-        
-        /**
-         * return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
-         * @param {date} date la date du dernier contôle réalise
-         */
-        delay(date){
-            let dd = new Date(date);
-
-            dd.setDate(dd.getDate()+180);
-            
-            return dd
         }
 
     },
 
     mounted(){
-        this.loadHabilitation();
         this.listPersonnel = this.$assets.getCollection("personnels").getCollection();
     }
 }
