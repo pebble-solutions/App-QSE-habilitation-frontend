@@ -1,13 +1,15 @@
 <template>
     <template v-if="isReady">
         <last-control-filter-form 
-        :change="change" @modif-change="setChange()"/>
+        :change="change" @modif-change="setChange($event)"/>
 
-        <template v-for="habilitationPersonnel in collection.getCollection()" :key="habilitationPersonnel.id">
-            <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
-                <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
-            </app-menu-item>
-        </template>
+        <div v-if="!pending.habilitationPersonnel">
+            <template v-for="habilitationPersonnel in collection.getCollection()" :key="habilitationPersonnel.id">
+                <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
+                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
+                </app-menu-item>
+            </template>
+        </div>
 
         <div class="alert alert-light mx-1 my-2" v-if="noResults">
             <i class="bi bi-file-x"></i> Aucun résultat, tentez d'étendre votre recherche
@@ -35,7 +37,7 @@ export default {
         return {
             collection: null,
             noMoreAvailable: false,
-            change: false,
+            change: null,
         }
     },
 
@@ -92,16 +94,17 @@ export default {
             }
         },
 
-        setChange(){
-            console.log(this.collection.getCollection().length)
-            this.collection.load();
-            console.log(this.collection.getCollection().length)
+        setChange(payload){
+            this.collection.reset();
+            this.collection.updateCollection(payload)
             this.change = true;
+            this.pending.habilitationsPersonnels = false;
         }
     },
 
     mounted() {
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
+        this.change = false;
     },
 
     components: { LastControlFilterForm, AppMenuItem, ControlTodoHabilitationItem }

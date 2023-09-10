@@ -31,14 +31,15 @@ export default {
     data() {
         return {
             selectTimeOptions: [
-                { value: 0, label: "Tous" },
+                { value: -1, label: "Tous" },
+                { value: 0, label: "Expirées" },
                 { value: 7, label: "1 semaine" },
                 { value: 30, label: "1 mois" },
                 { value: 91, label: "3 mois" },
                 { value: 183, label: "6 mois" }
             ],
             requestPayload: {
-                timeSelected: 0
+                timeSelected: -1
             },
             showFilterForm: false,
             additionalParams: [],
@@ -51,14 +52,6 @@ export default {
 
     emits: ['modif-change'],
 
-    watch: {
-        change(newValue){
-            if (newValue === false){
-                this.filter();
-            }
-        }
-    },
-
     computed: {
         ...mapState(['pending', 'types']),
     },
@@ -68,6 +61,7 @@ export default {
          * Lance la recherche et tri la collection
          */
         async filter() {
+            this.pending.habilitationsPersonnels = true;
             const collection = this.$assets.getCollection("habilitationsPersonnels");
 
             collection.reset();
@@ -89,14 +83,24 @@ export default {
                 return AdaysUntilRenewal - BdaysUntilRenewal;
             });
 
-            const filteredCollection = sortedCollection.filter(item => {
-                const daysUntilRenewal = Math.trunc((new Date(item.df) - new Date()) / (1000 * 3600 * 24));
-                return daysUntilRenewal < this.requestPayload.timeSelected;
-            });
+            let filteredCollection = sortedCollection;
+
+            if (this.requestPayload.timeSelected !== -1) {
+                if (this.requestPayload.timeSelected !== 0) {
+                    filteredCollection = sortedCollection.filter(item => {
+                        const daysUntilRenewal = Math.trunc((new Date(item.df) - new Date()) / (1000 * 3600 * 24));
+                        return daysUntilRenewal < this.requestPayload.timeSelected && daysUntilRenewal > 0;
+                    });
+                } else {
+                    filteredCollection = sortedCollection.filter(item => {
+                        const daysUntilRenewal = Math.trunc((new Date(item.df) - new Date()) / (1000 * 3600 * 24));
+                        return daysUntilRenewal < this.requestPayload.timeSelected;
+                    });
+                }
+            }
 
             collection.updateCollection(filteredCollection);
-
-            this.$emit('modif-change');
+            this.$emit('modif-change', filteredCollection);
         },
 
         /**
@@ -114,6 +118,12 @@ export default {
             this.showFilterForm = false;
             this.filter();
         },
+    },
+
+    mounted(){
+        if (this.change == false){
+            this.filter();
+        }
     }
 }
 
