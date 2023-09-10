@@ -5,7 +5,8 @@
 		</div>
         <div class="card custom-app-color text-white">
             <h1>Liste du personnel</h1>
-            <h3>Retrouver ici toutes les habilitations selon une liste du personnel. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
+            <!-- <h3>Retrouver ici toutes les habilitations selon une liste du personnel. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3> -->
+            <h3>Page remplacée par le FIS</h3>
         </div>
     </div>
 </template>

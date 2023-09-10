@@ -19,7 +19,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'personnels'">
-				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
+				<!-- <AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
 					<div :class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
 						<div class="col-1">
 							<span>
@@ -33,7 +33,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 							<span class="fw-lighter"># {{ personnel.id }}</span>
 						</div>
 					</div>
-				</AppMenuItem>
+				</AppMenuItem> -->
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmer'">
 				<HabilitationList />
@@ -246,6 +246,11 @@ export default {
 				this.$router.push(this.getItemLink(this.currentList[currentIndex + 1]));
 			}
 		},
+
+		isActiveItem(item) {
+			return this.openedElement && this.openedElement.id === item.id;
+		},
+
 		handleArrowKeyNavigation(event) {
 			// Vérifier si l'utilisateur appuie sur les touches haut ou bas
 			if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
