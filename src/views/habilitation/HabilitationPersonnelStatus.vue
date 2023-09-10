@@ -1,23 +1,65 @@
 <template>
-    <div class="container">
-        <div class="card" v-if="isReady">
+    <div class="container" v-if="isReady">
+        <div class="card mt-2">
             <div class="card-body">
                 <ControlTodoHabilitationItem :habilitation-personnel="habilitationPersonnel"></ControlTodoHabilitationItem>
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-body" v-if="isExpire">
+                <span>
+                    <strong>A expiré le : </strong>
+                    {{ dateFormat(habilitationPersonnel.df) }}
+                </span>
+            </div>
+            <div class="card-body" v-else>
+                <span>
+                    <strong>Date de debut : </strong>
+                    {{ dateFormat(habilitationPersonnel.dd) }}
+                </span>
+                <br/>
+                <span>
+                    <strong>Expire le : </strong>
+                    {{ dateFormat(habilitationPersonnel.df) }}
+                </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
 import ControlTodoHabilitationItem from '../../components/menuList/ControlTodoHabilitationItem.vue';
+import { getDisplayFormatedDate } from '../../js/date'
+
 export default {
+
     data() {
         return {
             collection: null,
             habilitationPersonnel: null
         };
     },
+
+    computed: {
+        /**
+         * Retourne true si les données du composant sont prètes à être affichées
+         *
+         * @return {boolean}
+         */
+        isReady() {
+            return this.collection && this.habilitationPersonnel ? true : false;
+        },
+
+        isExpire(){
+            let diffDate = new Date(this.habilitationPersonnel.df).getTime() - new Date().getTime();
+            if (diffDate > 0 ) return false
+            else return true
+        }
+    },
+
     methods: {
+
         /**
          * Récupère l'habilitation personnel dans data
          *
@@ -31,25 +73,30 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
-        }
-    },
-    computed: {
+        },
+
         /**
-         * Retourne vrais si les données du composant sont prètes à être affichées
-         *
-         * @return {boolean}
+         * Retourne la date au format 01 fev. 2023
+         * 
+         * @param {string} date 
+         * 
+         * @return {string} date formatée
          */
-        isReady() {
-            return this.collection && this.habilitationPersonnel ? true : false;
+         dateFormat(date) {
+            return getDisplayFormatedDate(date)
         }
+
     },
+
     beforeRouteUpdate(to) {
         this.getHabilitationPersonnel(to.params.id);
     },
+
     mounted() {
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
         this.getHabilitationPersonnel();
     },
+
     components: { ControlTodoHabilitationItem }
 }
 </script>
