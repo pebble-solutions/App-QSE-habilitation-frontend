@@ -2,34 +2,7 @@
 	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user" @config-menu="displayConfig = true">
 
 		<template v-slot:header>
-			<div class="mx-2 d-flex align-items-center" v-if="openedElement">
-				<router-link to="/" custom v-slot="{ navigate, href }">
-					<a class="btn btn-dark me-2" :href="href" @click="navigate">
-						<i class="bi bi-arrow-left"></i>
-					</a>
-				</router-link>
-				<router-link :to="'/element/' + openedElement.id + '/properties'" custom v-slot="{ navigate, href }">
-					<a class="btn btn-dark me-2" :href="href" @click="navigate">
-						<i class="bi bi-file-earmark me-1"></i>
-						{{ openedElement.name }}
-					</a>
-				</router-link>
-
-				<div class="dropdown">
-					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown"
-						aria-expanded="false">
-						Fichier
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="fileDdMenu">
-						<li>
-							<router-link :to="'/element/' + openedElement.id + '/informations'" custom
-								v-slot="{ navigate, href }">
-								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
-							</router-link>
-						</li>
-					</ul>
-				</div>
-			</div>
+			
 		</template>
 
 
@@ -47,8 +20,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'personnels'">
 				<AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
-					<div
-						:class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
+					<div :class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
 						<div class="col-1">
 							<span>
 								<UserImage :name="personnel.cache_nom" :size="isActiveItem(personnel) ? 'xl' : ''" />
@@ -68,7 +40,19 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-				<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" v-for="type in listConsultation(types)" :key="type.id">{{ cleanTypeName(type.nom) }}</AppMenuItem>
+				<div v-if="!pending.habilitations">
+					<AppMenuItem 
+						:href="'/types/' + type.id" 
+						icon="bi bi-patch-check-fill" 
+						:key="type.id"
+						v-for="type in listConsultation(types)">
+						{{ cleanTypeName(type.nom) }}
+					</AppMenuItem>
+				</div>
+				<div v-else>
+					<span class="spinner-border spinner-border" role="status" aria-hidden="true"></span>
+        			Chargement...
+				</div>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'suspension'">
@@ -193,10 +177,9 @@ export default {
 			cfgMenu: CONFIG.cfgMenu,
 			cfgSlots: CONFIG.cfgSlots,
 			pending: {
-				elements: true,
 				habilitations: false,
 				config: false,
-				formulaires: false,
+				formulaires: false
 			},
 			isConnectedUser: false,
 			displaySearch: '',
@@ -211,7 +194,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement', 'habilitationType', 'types', 'personnels']),
+		...mapState(['habilitationType', 'types', 'personnels']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -244,10 +227,6 @@ export default {
 				// Adjust the route for habilitations if needed
 				return `/suspensions/habilitation/${item.id}`;
 			}
-		},
-
-		isActiveItem(item) {
-			return this.openedElement && this.openedElement.id === item.id;
 		},
 
 		cleanTypeName(name) {
@@ -329,7 +308,7 @@ export default {
 			return statsByAgent;
 		},
 
-		 /**
+		/**
 		 * Charge les states de characteristic personnel par personnel
 		 */
 		loadCharacteristicPersonnelStats() {
@@ -414,12 +393,6 @@ export default {
 		 * Initialise les collections de données au niveau du contrôleur d'assets
 		 */
 		initCollections() {
-			const elementsCollection = new AssetsCollection(this, {
-				assetName: 'elements',
-				apiRoute: 'v2/sample'
-			});
-
-			elementsCollection.reset();
 
 			const typesCollection = new AssetsCollection(this, {
 				assetName: 'types',
@@ -470,10 +443,6 @@ export default {
 				}
 			});
 
-
-			// typesCollection.reset();
-
-			this.$assets.addCollection("elements", elementsCollection);
 			this.$assets.addCollection("types", typesCollection);
 			this.$assets.addCollection("veilles", veillesCollection);
 			this.$assets.addCollection("personnels", personnelsCollection);
@@ -549,11 +518,10 @@ export default {
 
 				this.$store.dispatch('switchStructure', structureId);
 
-				this.$router.push('/');
 				if (this.isConnectedUser) {
 					this.initCollections();
 
-					this.pending.elements = true;
+					this.pending.habilitations = true;
 					try {
 						this.loadHabilitationType();
 						this.loadFormulaires();
@@ -570,7 +538,7 @@ export default {
 						this.$assets.getCollection("habilitations").load({
 							personnel_id: ids.join(',')
 						});
-						await this.$assets.getCollection("elements").load();
+						
 						await this.$assets.getCollection("types").load();
 						await this.$assets.getCollection("veilles").load();
 						await this.$assets.getCollection("personnels").load();
@@ -587,7 +555,7 @@ export default {
 						this.$app.catchError(e);
 					}
 					finally {
-						this.pending.elements = false;
+						this.pending.habilitations = false;
 					}
 				}
 				this.idToIndexMap = {};
@@ -596,6 +564,8 @@ export default {
     });
 		},
 		);
+
+		this.$router.push('/types');
 	},
 
 

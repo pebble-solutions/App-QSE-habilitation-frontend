@@ -7,7 +7,6 @@ export default createStore({
 		login: null,
 		elements: [],
 		types: [],
-		openedElement: null,
 		habilitationType: [],
 		habilitationsPersonnels: [],
 		suspensions:[],
@@ -84,16 +83,6 @@ export default createStore({
 		 */
 		setFormulaires(state, formulaires) {
 			state.formulaires = formulaires
-		},
-
-		/**
-		 * Renseigne l'élément actif
-		 * 
-		 * @param {Object} state Le state de vueX
-		 * @param {Integer} element L'élément à charger
-		 */
-		openedElement(state, element) {
-			state.openedElement = element;
 		}
 	},
 	actions: {
