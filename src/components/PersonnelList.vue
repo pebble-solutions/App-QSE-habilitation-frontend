@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import PersonnelsFilter from "@/components/filter/PersonnelsFilter.vue";
+import PersonnelsFilter from "./filter/PersonnelsFilter.vue";
 import AppSearchBar from "@/components/pebble-ui/AppSearchBar.vue";
 import AppMenuItem from "@/components/pebble-ui/AppMenuItem.vue";
 import Spinner from "@/components/pebble-ui/Spinner.vue";

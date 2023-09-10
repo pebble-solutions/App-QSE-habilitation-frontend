@@ -71,7 +71,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 						</div>
 					</div> -->
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'echeancier'">
+			<AppMenu v-else-if="listMode === 'echeancier' || listMode === 'registre'">
 				<FilterFormEcheancier />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'operateur'">
