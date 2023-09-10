@@ -41,17 +41,16 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
 				<div v-if="!pending.habilitations">
-					<AppMenuItem 
-						:href="'/types/' + type.id" 
-						icon="bi bi-patch-check-fill" 
-						:key="type.id"
-						v-for="type in listConsultation(types)">
-						{{ cleanTypeName(type.nom) }}
-					</AppMenuItem>
+					<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" :key="type.id" v-for="type in listConsultation(types)"> {{ cleanTypeName(type.nom) }} </AppMenuItem>
+					
+					<div class="alert alert-warning italic" role="alert" v-if="listConsultation(types).length == 0 && types.length == 0">Aucune habilitation renseignée sur cette structure</div>
+					<div class="alert alert-warning italic" role="alert" v-else-if="listConsultation(types).length == 0 && displaySearch">Aucune habilitation renseignée avec cette recherche</div>
+
 				</div>
-				<div v-else>
-					<span class="spinner-border spinner-border" role="status" aria-hidden="true"></span>
-        			Chargement...
+				<div class="text-center" v-else>
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
 				</div>
 			</AppMenu>
 
