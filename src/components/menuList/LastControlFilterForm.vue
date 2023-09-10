@@ -1,8 +1,8 @@
 <template>
     <form method="get" @submit.prevent="filter()" class="m-1">
         <div class="input-group">
-            <select name="last_control_limit" id="last_control_limit" class="form-select"
-                v-model="requestPayload.last_control_limit">
+            <select name="timeSelected" id="timeSelected" class="form-select"
+                v-model="requestPayload.timeSelected">
                 <option v-for="option in selectTimeOptions" :key="option.value" :value="option.value">{{ option.label }}
                 </option>
             </select>
@@ -16,9 +16,9 @@
                 <i class="bi bi-search" v-else></i>
             </button>
         </div>
-        <div>
+        <!-- <div>
             <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm" :habilitationsTypes="habilitationsTypes"></ControlForm>
-        </div>
+        </div> -->
     </form>
 </template>
 
@@ -38,7 +38,7 @@ export default {
                 { value: 183, label: "6 mois" }
             ],
             requestPayload: {
-                last_control_limit: 91
+                timeSelected: 91
             },
             showFilterForm: false,
             additionalParams: [],
@@ -55,19 +55,57 @@ export default {
          */
         async filter() {
             const collection = this.$assets.getCollection("habilitationsPersonnels");
-            collection.reset();
-            collection.requestPayload = collection.requestPayload ?? {};
-            collection.requestPayload.last_control_limit = this.requestPayload.last_control_limit;
-            collection.requestPayload.last_control = 1;
-            for (const [key, value] of Object.entries(this.additionalParams)) {
-                collection.requestPayload[key] = value;
+
+            // const habilitationsPersonnelsFilteredCollection = new AssetsCollection(this, {
+			// 	assetName: 'habilitationsPersonnels',
+			// 	apiRoute: 'v2/characteristic/personnel',
+			// 	requestPayload : {
+			// 		last_control: 1,
+			// 		limit: "aucune",
+			// 	}
+			// });
+
+            const sortedCollection = collection.getCollection().sort((a, b) => {
+            const AdaysUntilRenewal = Math.trunc((new Date(a.df) - new Date()) / (1000 * 3600 * 24));
+            const BdaysUntilRenewal = Math.trunc((new Date(b.df) - new Date()) / (1000 * 3600 * 24));
+
+            // if (AdaysUntilRenewal < this.requestPayload.timeSelected && BdaysUntilRenewal >= this.requestPayload.timeSelected) {
+            //     return -1;
+            // }
+            // if (AdaysUntilRenewal >= this.requestPayload.timeSelected && BdaysUntilRenewal < this.requestPayload.timeSelected) {
+            //     return 1;
+            // }
+            // // Si AdaysUntilRenewal et BdaysUntilRenewal sont égaux, ils restent dans le même ordre.
+            // return 0;
+
+
+            if (AdaysUntilRenewal < BdaysUntilRenewal) {
+                return -1;
             }
-            try {
-                await collection.load();
+            if (AdaysUntilRenewal > BdaysUntilRenewal) {
+                return 1;
             }
-            catch (e) {
-                this.$app.catchError(e);
-            }
+            // Si AdaysUntilRenewal et BdaysUntilRenewal sont égaux, ils restent dans le même ordre.
+            return 0;
+        });
+
+            collection.updateCollection(sortedCollection)
+            // collection.reset();
+            // collection.requestPayload = collection.requestPayload ?? {};
+
+            // if (this.requestPayload.hasOwnProperty("timeSelected")) {
+            //     collection.requestPayload.df = this.requestPayload.timeSelected;
+            // }
+
+            // for (const [key, value] of Object.entries(this.additionalParams)) {
+            //     collection.requestPayload[key] = value;
+            // }
+            // try {
+            //     await collection.load();
+            // }
+            // catch (e) {
+            //     this.$app.catchError(e);
+            // }
         },
         /**
          * Change la valeur de showFilterForm et la retourne

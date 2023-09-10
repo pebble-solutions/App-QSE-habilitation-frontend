@@ -10,26 +10,11 @@
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
-            <div v-if="habilitationPersonnel.last_control_date">
-                <span class="d-flex align-items-center">
-                    <span class="badge rounded-pill" :class="SAMIClassName" v-if="habilitationPersonnel.last_control_result">{{ habilitationPersonnel.last_control_result }}</span>
-                    <span class="badge rounded-pill text-bg-secondary" v-else>?</span>
-                    <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
-                </span>
-            </div>
-            <span class="badge border border-danger text-bg-light text-danger rounded-pill" v-else>
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <span class="ms-1">Non contrôlé</span>
-            </span>
-
             <span :class="badgeClass" class="badge border text-bg-light rounded-pill">
                 <i class="bi bi-hourglass"></i>
-                <span class="ms-1" v-if="daysUntilControl >= 0">À contrôler dans {{ daysUntilControl }} jours</span>
-                <span v-else>Contrôle expiré depuis {{ -1 * daysUntilControl }} jours</span>
+                <span class="ms-1" v-if="daysUntilRenewal >= 0">Expire dans {{ daysUntilRenewal }} jours</span>
+                <span v-else>Habilitation expiré depuis {{ -1 * daysUntilRenewal }} jours</span>
             </span>
-            <!--<StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>-->
-
-
         </div>
     </div>
 </template>
@@ -37,8 +22,7 @@
 <script>
 import { mapState } from 'vuex';
 import UserImage from '../pebble-ui/UserImage.vue'
-//import StackedBar from '../pebble-ui/charts/StackedBar.vue'
-import { classNameFromSAMI } from '../../js/collecte';
+
 export default {
     data() {
         return {
@@ -46,9 +30,7 @@ export default {
             habilitationsCharacteristic: null,
             nomPersonnel: '',
             nomHabilitationType: '',
-            bars: [],
-            totalValue: 0,
-            daysUntilControl: 0,
+            daysUntilRenewal: 0,
             badgeClass: '',
         }
     },
@@ -57,38 +39,6 @@ export default {
     },
     computed: {
         ...mapState(['pending']),
-
-        /**
-         * Retourne la classe Bootstrapt en front en fonction de la valeur SAMI du dernier controle
-         */
-        SAMIClassName() {
-            return classNameFromSAMI(this.habilitationPersonnel.last_control_result);
-        },
-
-        /**
-         * Retourne le nombre de jours passés depuis le dernier contrôle au format
-         * X ans X mois X jours
-         */
-        yearsMonthsDays() {
-            const totalMonths = Math.ceil(this.habilitationPersonnel.last_control_days / (365 / 12));
-
-            const values = {
-                an: Math.trunc(totalMonths / 12),
-                mois: totalMonths % 12,
-                jour: Math.ceil(this.habilitationPersonnel.last_control_days % (365 / 12))
-            };
-
-            let phrase = [];
-
-            for (const key in values) {
-                if (values[key]) {
-                    phrase.push(values[key]+ " " + this.plural(key, values[key]));
-                }
-            }
-
-            return phrase.join(" ");
-        },
-
     },
     watch: {
         /**
@@ -143,46 +93,28 @@ export default {
             }
         },
 
-        computeStackedBar() {
-            this.bars = [
-                {
-                    color: 'success',
-                    value: this.habilitationPersonnel.last_control_days
-                }];
-
-            const date1 = new Date(this.habilitationPersonnel.dd);
-            const date2 = new Date(this.habilitationPersonnel.df);
-            // To calculate the time difference of two dates
-            var Difference_In_Time = date2.getTime() - date1.getTime();
-
-            // To calculate the no. of days between two dates
-            var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-            this.totalValue = Difference_In_Days;
-        },
-
         /**
-         * Initialise la variable badgeClass avec la valeur de la class bootstraps en fonction du temps qui c'est écoulé depuis le dernier controle
+         * Initialise la variable badgeClass avec la valeur de la class bootstraps en fonction du temps avant la fin de l'habilitation
          */
         buildBadgeClass() {
-            const duration = Math.ceil((365 / 12) * 6); //6 mois
-            const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
-            if (daysUntilControl > 30) {
+
+            const daysUntilRenewal = Math.trunc( (new Date(this.habilitationPersonnel.df) - new Date) / (1000 * 3600 * 24));
+            if (daysUntilRenewal > 30) {
                 this.badgeClass = 'border-success text-success';
-            } else if (daysUntilControl > 15 && daysUntilControl <= 30) {
+            } else if (daysUntilRenewal > 15 && daysUntilRenewal <= 30) {
                 this.badgeClass = 'border-primary text-primary';
-            } else if (daysUntilControl >= 0 && daysUntilControl <= 15) {
+            } else if (daysUntilRenewal >= 0 && daysUntilRenewal <= 15) {
                 this.badgeClass = 'border-warning text-warning';
-            } else if (daysUntilControl < 0) {
+            } else if (daysUntilRenewal < 0) {
                 this.badgeClass = 'border-danger text-danger';
             }
-            this.daysUntilControl = daysUntilControl;
+            this.daysUntilRenewal = daysUntilRenewal;
         },
 
         /**
          * Récupère les informations liées aux collections
          */
         initFromCollections() {
-            this.computeStackedBar();
 
             if (!this.pending.personnels) {
                 this.getName();
@@ -200,10 +132,8 @@ export default {
 
     mounted() {
 
-        let personnels = this.$assets.getCollection('personnels');
-        let habilitationsCharacteristic = this.$assets.getCollection('habilitations');
-        this.personnels = personnels;
-        this.habilitationsCharacteristic = habilitationsCharacteristic;
+        this.personnels = this.$assets.getCollection('personnels');
+        this.habilitationsCharacteristic = this.$assets.getCollection('habilitations');
 
         this.initFromCollections();
     },

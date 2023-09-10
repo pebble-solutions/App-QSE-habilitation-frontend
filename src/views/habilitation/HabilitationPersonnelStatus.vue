@@ -48,7 +48,6 @@ export default {
     },
     mounted() {
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
-        console.log(this.collection.getCollection())
         this.getHabilitationPersonnel();
     },
     components: { ControlTodoHabilitationItem }
