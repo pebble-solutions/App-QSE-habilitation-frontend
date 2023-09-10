@@ -19,9 +19,7 @@ import VigilControl from '../../components/VigilControl.vue';
 import AlertMessage from '../../components/pebble-ui/AlertMessage.vue';
 
 export default {
-    components: { AlertMessage, VigilControl}, //ProgressBar, Spinner
-    
-
+    components: { AlertMessage, VigilControl},
 
     data() {
         return {

@@ -6,11 +6,20 @@
             </div>
         </div>
         <div class="card mt-2">
-            <div class="card-body" v-if="isExpire">
+            <div class="card-body d-flex align-items-center justify-content-between" v-if="isExpire">
                 <span>
                     <strong>A expiré le : </strong>
                     {{ dateFormat(habilitationPersonnel.df) }}
                 </span>
+
+                <div class="text-end">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-clockwise" ></i>
+                        <span class="d-none d-md-inline ms-1">
+                            Renouveler
+                        </span>
+                    </button>
+                </div>
             </div>
             <div class="card-body" v-else>
                 <span>

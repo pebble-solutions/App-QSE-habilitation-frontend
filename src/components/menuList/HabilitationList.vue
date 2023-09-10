@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
 import ListMode from './ListMode.vue'
 import ListControlTodo from './ListControlTodo.vue';
 import ListHabilitationType from './ListHabilitationType.vue';
