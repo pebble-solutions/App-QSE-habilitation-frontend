@@ -2,7 +2,7 @@
     <div class="container" v-if="isReady">
         <div class="card mt-2">
             <div class="card-body">
-                <ControlTodoHabilitationItem :habilitation-personnel="habilitationPersonnel"></ControlTodoHabilitationItem>
+                <ControlTodoHabilitationItem :habilitation-personnel="habilitationPersonnel" :titre="true"></ControlTodoHabilitationItem>
             </div>
         </div>
         <div class="card mt-2">

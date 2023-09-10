@@ -6,7 +6,7 @@
         <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
             <div class="d-flex align-items-center">
                 <span class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</span>
-                <strong>{{ nomHabilitationType }}</strong>
+                <strong v-if="titre">{{ nomHabilitationType }}</strong>
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
@@ -35,6 +35,7 @@ export default {
         }
     },
     props: {
+        titre: Boolean,
         habilitationPersonnel: Object
     },
     computed: {

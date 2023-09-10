@@ -6,7 +6,7 @@
         <div v-if="!pending.habilitationPersonnel">
             <template v-for="habilitationPersonnel in collection.getCollection()" :key="habilitationPersonnel.id">
                 <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
-                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
+                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :titre="false"/>
                 </app-menu-item>
             </template>
         </div>
