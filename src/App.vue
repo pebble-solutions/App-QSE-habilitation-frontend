@@ -442,7 +442,8 @@ export default {
 					contratDfFilter: this.contratDfFilter,
 					withContratFilter: this.withContratFilter,
 					withoutContratFilter: this.withoutContratFilter,
-					ordre: this.ordre
+					ordre: this.ordre,
+					limit: "aucune"
 				}
 			});
 

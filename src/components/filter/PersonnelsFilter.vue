@@ -1,6 +1,6 @@
 <template>
     <div class="px-2">
-        <div class="btn-group w-100 mb-2">
+        <div class="btn-group w-100 mb-2" v-if="croissant">
             <button type="button" class="btn btn-outline-custom dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi" :class="classIcon"></i>
                 {{ searchOrdre }}
@@ -81,7 +81,8 @@ export default {
             default: true
         },
         withoutContrat: Boolean,
-        ordre: String
+        ordre: String,
+        croissant : Boolean
     },
 
     data() {
@@ -100,7 +101,6 @@ export default {
             if ('croissant' == this.searchOrdre) {
                 return 'bi-arrow-up';
             }
-
             return 'bi-arrow-down';
         }
     },

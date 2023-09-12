@@ -16,10 +16,21 @@
                 <i class="bi bi-search" v-else></i>
             </button>
         </div>
+        <div class="mt-2" v-if="showFilterForm">
+            <PersonnelsFilter 
+                v-model:contratDd="contratDdFilter" 
+                v-model:contratDf="requestPayloadContrat.contratDfFilter" 
+                v-model:withContrat="requestPayloadContrat.withContratFilter" 
+                v-model:withoutContrat="requestPayloadContrat.withoutContratFilter"
+                :croissant="false">
+            </PersonnelsFilter>
+        </div>
     </form>
 </template>
 
 <script>
+
+import PersonnelsFilter from '../filter/PersonnelsFilter.vue';
 import { mapState } from 'vuex';
 
 export default {
@@ -39,6 +50,15 @@ export default {
             },
             showFilterForm: false,
             additionalParams: [],
+
+            requestPayloadContrat: {
+                searchContratDd: null,
+                searchContratDf: null,
+                searchWithContrat: true,
+                searchWithoutContrat: false,
+                searchAllContrat: false,
+            }
+
         }
     },
 
@@ -51,11 +71,13 @@ export default {
     computed: {
         ...mapState(['pending', 'types']),
     },
+    components: {PersonnelsFilter},
     methods: {
         /**
          * Lance la recherche et tri la collection
          */
         async filter() {
+            this.search();
             this.pending.habilitationsPersonnels = true;
             const collection = this.$assets.getCollection("habilitationsPersonnels");
 
@@ -113,6 +135,21 @@ export default {
             this.showFilterForm = false;
             this.filter();
         },
+
+        /**
+		 * Active Le filtre sur le personnel pour retourner les données en fonction des parametre choisis dans le filtre
+		 */
+		async search() {
+			this.$assets.getCollection("personnelsFiltered").reset();
+			await this.$assets.getCollection("personnelsFiltered").load(
+				{
+					contratDd: this.contratDdFilter,
+					contratDf: this.contratDfFilter,
+					withContrat: this.withContratFilter ? 1 : 0,
+					withoutContrat: this.withoutContratFilter ? 1 : 0,
+				}
+			);
+		},
     },
 
     mounted(){

@@ -4,7 +4,7 @@
         :change="change" @modif-change="setChange($event)"/>
 
         <div v-if="!pending.habilitationPersonnel">
-            <template v-for="habilitationPersonnel in collection.getCollection()" :key="habilitationPersonnel.id">
+            <template v-for="habilitationPersonnel in habilittionWithPersonnel()" :key="habilitationPersonnel.id">
                 <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
                     <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :titre="false"/>
                 </app-menu-item>
@@ -38,11 +38,20 @@ export default {
             collection: null,
             noMoreAvailable: false,
             change: null,
+            personnels : null
+        }
+    },
+
+    watch: {
+        personnelFiltered(){
+            this.personnels.reset();
+            this.personnels = this.$assets.getCollection("personnelsFiltered");
+
         }
     },
 
     computed: {
-        ...mapState(['pending']),
+        ...mapState(['pending', 'personnelsFiltered']),
 
         /**
          * Contrôle si il peut exister plus de résultats sur le serveurs que
@@ -94,15 +103,42 @@ export default {
             }
         },
 
+        /**
+         * Modifie la collection d'habilitationPersonnel
+         * 
+         * @param {Array} payload Tableau d'habilitationPersonnel
+         */
         setChange(payload){
             this.collection.reset();
             this.collection.updateCollection(payload)
             this.change = true;
             this.pending.habilitationsPersonnels = false;
+        },
+
+        /**
+         * Retourne un tableau d'habilitationPersonnel en fonction de la liste de personnel selectionée
+         * 
+         * @returns {Array}
+         */
+        habilittionWithPersonnel(){
+            if (this.collection && this.personnels){
+                let returnTabHabilitationPersonnel = [];
+                for(let habilitation of this.collection.getCollection()){
+                    for(let personnel of this.personnels.getCollection()){
+                        if (habilitation.personnel_id == personnel.id){
+                            returnTabHabilitationPersonnel.push(habilitation)
+                        }
+                    }
+                }
+        
+                return returnTabHabilitationPersonnel;
+            }
+            return [];
         }
     },
 
     mounted() {
+        this.personnels = this.$assets.getCollection("personnelsFiltered");
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
         this.change = false;
     },
