@@ -58,21 +58,6 @@ export default {
         }
     },
 
-    watch:{
-        contratDdFilter(){
-            console.log("dd")
-        },
-        contratDfFilter(){
-            console.log("df")
-        },
-        withContratFilter(){
-            console.log("Avec")
-        },  
-        withoutContratFilter(){
-            console.log("Sans")
-        },
-    },
-
     props: {
         change: Boolean
     },

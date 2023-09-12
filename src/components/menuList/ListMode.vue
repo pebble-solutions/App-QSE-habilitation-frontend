@@ -53,7 +53,7 @@ export default {
             const action = this.actions[newVal];
 
             if (action) {
-                this.$router.push(action.route);
+                this.$router.push("/"+action.route);
             }
             this.$emit("view-change", action)
         }

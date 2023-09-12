@@ -42,17 +42,8 @@ export default {
         }
     },
 
-    watch: {
-        personnelFiltered(){
-            console.log("OUI")
-            this.personnels.reset();
-            this.personnels = this.$assets.getCollection("personnelsFiltered");
-
-        }
-    },
-
     computed: {
-        ...mapState(['pending', 'personnelsFiltered']),
+        ...mapState(['pending']),
 
         /**
          * Contrôle si il peut exister plus de résultats sur le serveurs que
@@ -113,9 +104,7 @@ export default {
             this.collection.reset();
             this.collection.updateCollection(payload);
 
-            console.log(this.personnels.getCollection().length)
             this.personnels = this.$assets.getCollection("personnelsFiltered");
-            console.log(this.personnels.getCollection().length)
 
             this.change = true;
             this.pending.habilitationsPersonnels = false;
