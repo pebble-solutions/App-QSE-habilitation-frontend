@@ -53,8 +53,9 @@
                 </div>
             </div>
             <div  v-if="listHabPersoType">
-                <div class="my-3" v-for="pers in listHabPersoType" :key="pers.id">
-                    <HabMonitorPersonnel :persHab="pers" :veilleConfig="veilleConfig" :listVeille="list" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
+                <div class="my-3" v-for="personnelHabilitation in listHabPersoType" :key="personnelHabilitation.id">
+                    <!-- {{ personnelHabilitation }} -->
+                    <HabMonitorPersonnel :personnelHabilitation="personnelHabilitation" :veilleConfig="veilleConfig" :veille="getVeilleByHabilitationId(personnelHabilitation.id)" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
                 </div>
             </div>
         </div>
@@ -87,7 +88,7 @@ export default {
             },
             active: null,
             listHabPersoType:[],
-            list: null,
+            listVeille: null,
 
         };
     },
@@ -145,11 +146,11 @@ export default {
          * @param   {number}    id  id du type d'habilitation
          * @returns {Object}    config de la veille
          */
-        findVeille(id) {
+        async findVeille(id) {
             let veille = this.veilles.find(e => e.objet_id == id);
             if (veille) {
                 this.veilleConfig = veille;
-                this.loadControlVeille(veille.id)
+                await this.loadControlVeille(veille.id)
             }
             else 
             console.log(this.veilles, 'existe pas')
@@ -161,16 +162,18 @@ export default {
          * notamment les controles à réaliser
          * @param {number} id de la veille
          */
-        loadControlVeille(id) {
+        async loadControlVeille(id) {
             this.pending.load = true
-            this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 })
-                .then((data) =>{
-                let list = data
-                this.list = list;
-                console.log(list, id, 'todo')
-                return list
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.load = false);
+            try {
+                this.listVeille = await this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 });
+            }
+            catch (e) {
+                this.$app.catchError(e)
+            }
+            finally {
+                this.pending.load = false
+            }
+            
         },
 
         /**
@@ -190,21 +193,27 @@ export default {
          */
 
         async findHabilitationPersonnel(id) {
-        this.pending.load = true;
-        this.findVeille(id);
-        let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
-        let assemblerPersonnel = new AssetsAssembler(listHabilitationPersonnels);
-        await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
-        let joinedListHab = assemblerPersonnel.getResult();
-        this.listHabJoin = joinedListHab;
-        let assemblerType = new AssetsAssembler(joinedListHab);
-        await assemblerType.joinAsset(this.$assets.getCollection ("types"), 'characteristic_id', 'habilitationtype');
-        let joinedType = assemblerType.getResult();
-        this.listHabPersoType = joinedType;
-       
-        this.pending.load = false;
-        return joinedType
+            this.pending.load = true;
+            let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
+            let assemblerPersonnel = new AssetsAssembler(listHabilitationPersonnels);
+            await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
+            let joinedListHab = assemblerPersonnel.getResult();
+            this.listHabJoin = joinedListHab;
+            let assemblerType = new AssetsAssembler(joinedListHab);
+            await assemblerType.joinAsset(this.$assets.getCollection ("types"), 'characteristic_id', 'habilitationtype');
+            let joinedType = assemblerType.getResult();
+            await this.findVeille(id);
+            this.listHabPersoType = joinedType;
+        
+            this.pending.load = false;
+            return joinedType
+        
         },
+
+        getVeilleByHabilitationId(habilitationId) {
+            return this.listVeille.find(e => e.habilitation_id == habilitationId)
+
+        }
     
 
     },
@@ -226,7 +235,7 @@ export default {
     /**
      * charge les config du type d'habilitation et de la veille
      */
-    beforeMount() {
+    mounted() {
         this.findType(this.$route.params.id);
         // this.findVeille(this.$route.params.id);
         this.findHabilitationPersonnel(this.$route.params.id);
