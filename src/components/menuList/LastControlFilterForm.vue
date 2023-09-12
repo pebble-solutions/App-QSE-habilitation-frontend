@@ -19,9 +19,9 @@
         <div class="mt-2" v-if="showFilterForm">
             <PersonnelsFilter 
                 v-model:contratDd="contratDdFilter" 
-                v-model:contratDf="requestPayloadContrat.contratDfFilter" 
-                v-model:withContrat="requestPayloadContrat.withContratFilter" 
-                v-model:withoutContrat="requestPayloadContrat.withoutContratFilter"
+                v-model:contratDf="contratDfFilter" 
+                v-model:withContrat="withContratFilter" 
+                v-model:withoutContrat="withoutContratFilter"
                 :croissant="false">
             </PersonnelsFilter>
         </div>
@@ -51,15 +51,26 @@ export default {
             showFilterForm: false,
             additionalParams: [],
 
-            requestPayloadContrat: {
-                searchContratDd: null,
-                searchContratDf: null,
-                searchWithContrat: true,
-                searchWithoutContrat: false,
-                searchAllContrat: false,
-            }
-
+            contratDdFilter: null,
+            contratDfFilter: null,
+            withContratFilter: true,
+            withoutContratFilter: false,
         }
+    },
+
+    watch:{
+        contratDdFilter(){
+            console.log("dd")
+        },
+        contratDfFilter(){
+            console.log("df")
+        },
+        withContratFilter(){
+            console.log("Avec")
+        },  
+        withoutContratFilter(){
+            console.log("Sans")
+        },
     },
 
     props: {

@@ -82,7 +82,10 @@ export default {
         },
         withoutContrat: Boolean,
         ordre: String,
-        croissant : Boolean
+        croissant : {
+            type: Boolean,
+            default: true
+        },
     },
 
     data() {

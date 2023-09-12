@@ -3,7 +3,7 @@
         <last-control-filter-form 
         :change="change" @modif-change="setChange($event)"/>
 
-        <div v-if="!pending.habilitationPersonnel">
+        <div v-if="!pending.habilitationPersonnel && change">
             <template v-for="habilitationPersonnel in habilittionWithPersonnel()" :key="habilitationPersonnel.id">
                 <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
                     <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :titre="false"/>
@@ -18,7 +18,7 @@
         <div class="d-grid my-2" v-if="pending.habilitationsPersonnels || isMoreAvailable">
             <button class="btn btn-outline-secondary" :disabled="pending.habilitationsPersonnels"
                 @click.prevent="loadMore()">
-                <span v-if="pending.habilitationsPersonnels"><span class="spinner-border spinner-border-sm"></span>
+                <span v-if="pending.habilitationsPersonnels && !change"><span class="spinner-border spinner-border-sm"></span>
                     Chargement...</span>
                 <span v-else>Charger +</span>
             </button>
@@ -44,6 +44,7 @@ export default {
 
     watch: {
         personnelFiltered(){
+            console.log("OUI")
             this.personnels.reset();
             this.personnels = this.$assets.getCollection("personnelsFiltered");
 
@@ -110,7 +111,12 @@ export default {
          */
         setChange(payload){
             this.collection.reset();
-            this.collection.updateCollection(payload)
+            this.collection.updateCollection(payload);
+
+            console.log(this.personnels.getCollection().length)
+            this.personnels = this.$assets.getCollection("personnelsFiltered");
+            console.log(this.personnels.getCollection().length)
+
             this.change = true;
             this.pending.habilitationsPersonnels = false;
         },
@@ -121,17 +127,9 @@ export default {
          * @returns {Array}
          */
         habilittionWithPersonnel(){
-            if (this.collection && this.personnels){
-                let returnTabHabilitationPersonnel = [];
-                for(let habilitation of this.collection.getCollection()){
-                    for(let personnel of this.personnels.getCollection()){
-                        if (habilitation.personnel_id == personnel.id){
-                            returnTabHabilitationPersonnel.push(habilitation)
-                        }
-                    }
-                }
-        
-                return returnTabHabilitationPersonnel;
+            if (this.collection && this.personnels) {
+                const personnelIds = new Set(this.personnels.getCollection().map(personnel => personnel.id));
+                return this.collection.getCollection().filter(habilitation => personnelIds.has(habilitation.personnel_id));
             }
             return [];
         }
