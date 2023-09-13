@@ -16,17 +16,14 @@
 				<!-- Colonne 1 : Validité de l'habilitation -->
 				<div class="col-lg-4 col-12">
 					<div class="px-2 mb-3 mb-lg-0">
-						<div class="fw-bold col-12">Validité : 3 ans <span class="fw-lighter">#{{ personnelHabilitation.id }}</span> veille {{ personnelHabilitation.characteristic_id }} <span> </span> </div>
-						<div class="col-12">{{ changeFormatDateLit(personnelHabilitation.dd) }}
-							au {{ changeFormatDateLit(personnelHabilitation.df) }}
-						</div>
+						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">#{{ personnelHabilitation.id }}</span> </div>
+						<div class="col-12">du {{ changeFormatDateLit(personnelHabilitation.dd) }} au {{ changeFormatDateLit(personnelHabilitation.df) }}</div>
 						<!-- Composant ProgressBar -->
 						<ProgressBar :dd="new Date(personnelHabilitation.dd)  " :df="new Date(personnelHabilitation.df)"></ProgressBar>
 					</div>
 				</div>
 
 				<!-- Colonne 2 : Résultat des contrôles -->
-				
 				<div class="col">
 					<div>
 						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
@@ -35,13 +32,6 @@
 					<div v-if="controles"  class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
 						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
 						
-						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
-						{{ kn.sami }}
-						</button>
-					</div>
-					<div v-if="listControlDone" class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
-						<button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
 						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
 						{{ kn.sami }}
@@ -60,7 +50,6 @@
 					</div>  
 					<!-- Composant ProgressBar -->
 					<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
-					<div class="text-success" v-else> {{ noLastControl }}<i class="bi bi-check text-success"></i></div>
 				</template>
 				<div class="text-secondary d-flex align-items-center" v-else>
 					<i class="bi bi-calendar2-x me-2"></i>
@@ -104,19 +93,10 @@ export default {
 			pending: {
 				control: false
 			},
-			listControlDone: '',
-			habilitationPerso: [],
-			hab: '',
-			resultat: '',
-			lastControlDate: '',
-			infosHab: [],
-			lastControl:'',
-			noLastControl: '',
-			listControlTodo: '',
-			
 		};
 	},
 	methods: {
+
 		/**
 		* retourne le nom du personnel
 		* 
@@ -134,32 +114,15 @@ export default {
 	
 				
 		/**
-		* return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
+		* return la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle
 		* @param {date} date la date du dernier contôle réalise
+		* @param	{number}	pasdeveille pas de veille de la veille concernée
 		*/
 		delay(date, pdv){
 			let dd = new Date(date);
-			
 			dd.setDate(dd.getDate()+pdv);
-			
 			return dd
 		},
-		
-		
-		async loadinfosCollecte(id) {
-			this.pending.control = true
-			this.$app.apiGet('v2/collecte', {
-				habilitation_id: id,
-				kn2kn_info: 'OUI',
-				retard_info: 'OUI',
-				type: 'KN'
-			})
-			.then((data) => {
-				this.listControlDone = data;
-			})
-			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-		},
-		
 		
 		changeFormatDateLit(el) {
 			return dateFormat(el);
@@ -169,7 +132,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.loadinfosCollecte(this.personnelHabilitation.id)
 		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
 		this.$nextTick(function () {

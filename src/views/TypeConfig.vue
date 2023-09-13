@@ -1,5 +1,5 @@
 <template>
-    <div class="container pt-4" v-if="!pending.load">
+    <div class="container pt-4">
         <!-- Image avec hauteur max de 200px et marge de 4 -->
         <div class="d-flex justify-content-center align-items-center m-2 mb-4">
             <!-- Image avec largeur max de 500px, prenant la largeur totale avec marges -->
@@ -53,17 +53,25 @@
                     </div>
                 </div>
             </div>
-            <div  v-if="listHabPersoType">
+            <div  v-if="!pending.load && !pending.control && !pending.veille && listHabPersoType">
                 <div class="my-3" v-for="personnelHabilitation in listHabPersoType" :key="personnelHabilitation.id">
                     <!-- {{ personnelHabilitation }} -->
-                    <HabMonitorPersonnel :personnelHabilitation="personnelHabilitation" :veilleConfig="veilleConfig" :veille="getVeilleByHabilitationId(personnelHabilitation.id)" :controles="getControlesByHabilitationId(personnelHabilitation.id)" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
+                    <HabMonitorPersonnel 
+                    :personnelHabilitation="personnelHabilitation"
+                    :veilleConfig="veilleConfig" 
+                    :veille="getVeilleByHabilitationId(personnelHabilitation.id)"
+                    :controles="getControlesByHabilitationId(personnelHabilitation.id)"
+                    :displayHab="true" 
+                    :displayAgent="true">
+                    </HabMonitorPersonnel>
                 </div>
             </div>
+            <Spinner v-else-if="pending.load || pending.control || pending.veille && !listHabPersoType"></Spinner>
+            <div v-else>Pas d'ahbilitation</div>
         </div>
         <RouterView></RouterView>
         
      </div>
-     <Spinner v-else></Spinner> 
 </template>
 
 
@@ -86,6 +94,8 @@ export default {
             veilleConfig: null,
             pending: {
                 load: false,
+                veille:false,
+                control:false
             },
             active: null,
             listHabPersoType:[],
@@ -155,7 +165,7 @@ export default {
                 await this.loadControlVeille(veille.id)
             }
             else 
-            console.log(this.veilles, 'existe pas')
+            this.veilleConfig = null;
             
         },
 
@@ -165,7 +175,7 @@ export default {
          * @param {number} id de la veille
          */
         async loadControlVeille(id) {
-            this.pending.load = true
+            this.pending.veille = true
             try {
                 this.listVeille = await this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 });
             }
@@ -173,7 +183,7 @@ export default {
                 this.$app.catchError(e)
             }
             finally {
-                this.pending.load = false
+                this.pending.veille = false
             }
             
         },
@@ -189,14 +199,18 @@ export default {
        
         /**
          * retourne la liste des habilitations personnelles en fonction de l'id type habilitation fourni
-         * infos personnels et types d'habilitation joints par jointure avec la collection personnels
+         * infos personnels et types d'habilitation joints
+         * 
          * retourne la config de la veille associée et la liste des contrôles de veille
+         * retourne la liste des controles réalisés pour les habilitations des personnels concernés
+         * 
          * @param {*} id 
          * @returns {Array} liste des personnels habilités
          */
 
         async findHabilitationPersonnel(id) {
             this.pending.load = true;
+            this.listControles= [];
             let listHabilitationPersonnels = this.habilitationsPersonnels.filter(e => e.characteristic_id == id);
             let assemblerPersonnel = new AssetsAssembler(listHabilitationPersonnels);
             await assemblerPersonnel.joinAsset(this.$assets.getCollection("personnels"), 'personnel_id', 'personnel');
@@ -207,26 +221,22 @@ export default {
             let joinedType = assemblerType.getResult();
             await this.findVeille(id);
             this.listHabPersoType = joinedType;
-
-            // for (const habilitationPersonnel in this.listHabPersoType) {
-            //     console.log(this.listHabPersoType, 'list')
-            //     console.log(habilitationPersonnel.id, 'habperso')
-            //     await this.loadinfosCollecte(habilitationPersonnel.id);
-            // }
             this.listHabPersoType.forEach((habilitationPersonnel) => {
                  this.loadinfosCollecte(habilitationPersonnel.id);
-                
-            }
-            )
-            
+            });
             this.pending.load = false;
             return joinedType
         
         },
 
+        /**
+         * recherche via une requete la liste des collectes réalisées en fonction de l'id de l'habilitation du personnel fourni
+         * enregiste le résultat et l'id dans le tableau listControles
+         * @param {number} id id de l'habilitation du personnel
+         */
+
         async loadinfosCollecte(id) {
 			this.pending.control = true;
-            console.log(id, 'idhabilitation perso')
 			this.$app.apiGet('v2/collecte', {
                 habilitation_id: id,
 				kn2kn_info: 'OUI',
@@ -235,15 +245,10 @@ export default {
 			})
 			.then((data) => {
                 let control = data
-                console.log(control, 'control')
-                let controles = {
-                    
-                };
+                let controles = {};
                 controles.id = id;
-                controles.control =control
-                console.log(controles, ' controles')
+                controles.control = control;
                 this.listControles.push(controles);
-                console.log(this.listControles,'listControles')
 			})
 			.catch(this.$app.catchError).finally(() => this.pending.control = false);
 		},
@@ -257,6 +262,11 @@ export default {
             return this.listVeille.find(e => e.habilitation_id == habilitationId)
 
         },
+        /**
+         * retourne un tableau contenant les collectes réalisées dans le cadre de l'habilition du personnel
+         * @param {number} habilitationId l'id de l'habilitation du personnel
+         * @returns {array} listes des controles coancenrant l'habilitation
+         */
         getControlesByHabilitationId(habilitationId) {
             return this.listControles.find(e => e.id == habilitationId)
 
@@ -274,7 +284,6 @@ export default {
     beforeRouteUpdate(to) {
         if (to.params.id != this.typeHab.id) {
             this.findType(to.params.id);
-            // this.findVeille(to.params.id)
             this.findHabilitationPersonnel(to.params.id)
 
         }
@@ -285,7 +294,6 @@ export default {
      */
     mounted() {
         this.findType(this.$route.params.id);
-        // this.findVeille(this.$route.params.id);
         this.findHabilitationPersonnel(this.$route.params.id);
 
     },
