@@ -40,8 +40,8 @@ export class WeeksGrid {
     /**
      * Retourne la position de la colonne depuis la gauche en fonction du numéro de la colonne
      * 
-     * @param {number} n Le numéro de la colonne
-     * @param {number} coef Un coeficient multiplicateur pour tracer la grille (défaut 1)
+     * @param {number} n        Le numéro de la colonne
+     * @param {number} coef     Un coeficient multiplicateur pour tracer la grille (défaut 1)
      * @param {string} sx       Suffixe à ajouter à l'unité (ex : px)
      * 
      * @return {string}

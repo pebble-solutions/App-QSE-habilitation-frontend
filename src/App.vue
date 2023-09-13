@@ -436,15 +436,7 @@ export default {
 			const personnelsFilteredCollection = new AssetsCollection(this, {
 				name: "personnelsFiltered",
 				assetName: "personnelsFiltered",
-				apiRoute: "v2/personnel",
-				requestPayload: {
-					contratDdFilter: this.contratDdFilter,
-					contratDfFilter: this.contratDfFilter,
-					withContratFilter: this.withContratFilter,
-					withoutContratFilter: this.withoutContratFilter,
-					ordre: this.ordre,
-					limit: "aucune"
-				}
+				apiRoute: "v2/personnel"
 			});
 
 			this.$assets.addCollection("types", typesCollection);
@@ -546,7 +538,11 @@ export default {
 						await this.$assets.getCollection("veilles").load();
 						await this.$assets.getCollection("personnels").load();
 						await this.$assets.getCollection("habilitationsPersonnels").load();
-						await this.$assets.getCollection("personnelsFiltered").load();
+						await this.$assets.getCollection("personnelsFiltered").load({
+							withContratFilter: 1,
+							ordre: "croissant",
+							limit: "aucune"
+						});
 
 						// Mettre à jour currentItemId en fonction des paramètres de l'URL
 						const currentItemIdFromURL = parseInt(this.$route.params.id);

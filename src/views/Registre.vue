@@ -12,10 +12,7 @@
                 <div  v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
                     <HabilitationGroup
                         :operateurs="filteredOperateurs"
-                        :periode="periode"
                         :habilitationType="habilitationType"
-                        :controls="filteredKns(habilitationType.id, 'habilitation')"
-                        :contrats="contrats"
                         :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)"
                     />
 
@@ -23,17 +20,11 @@
             </div>
     
             <template v-else>
-                <template v-for="personnel in filteredOperateurs" :key="personnel.id">
-                    <PersonnelGroup 
-                        :personnel="personnel" 
-                        :controls="filteredKns(personnel.id, 'personnel')" 
-                        :periode="periode" 
-                        :habilitationsTypes="filteredHabilitationsTypes"
-                        :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
-                        :contrats="contrats"
-                        v-if="getHabilitationByPersonnelId(personnel.id)?.length"
-                    />
-                </template>
+                <PersonnelGroup 
+                    :personnels="filteredOperateurs" 
+                    :habilitationsTypes="filteredHabilitationsTypes"
+                    :habilitationsPersonnel="habilitationsPersonnel"
+                />
             </template>
         </template>
     </div>
@@ -44,7 +35,7 @@
 		</div>
         <div class="card custom-app-color text-white">
             <h1>Regitre des habilitations</h1>
-            <h3>Retrouver ici le reguistre de toutes les habilitations selon une liste du personnel et des habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de gauche!</h3>
+            <h3>Retrouver ici le registre de toutes les habilitations selon une liste du personnel et des habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de gauche!</h3>
         </div>
     </div>
 
@@ -83,8 +74,8 @@
 
 <script>
 
-import HabilitationGroup from '../components/echeancier/HabilitationGroup.vue'
-import PersonnelGroup from '../components/echeancier/PersonnelGroup.vue';
+import HabilitationGroup from '../components/registre/HabilitationGroup.vue'
+import PersonnelGroup from '../components/registre/PersonnelGroup.vue';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -94,16 +85,10 @@ export default {
             allHabilitationsTypes: [],
             allOperateurs: [],
             habilitationsPersonnel: [],
-            periode: [],
-            kns: [],
-            contrats: [],
             pending: {
                 habilitationsTypes: false,
                 habilitationsPersonnel: false,
-                collectes: false,
-                contrats: false,
                 personnels: false,
-                periode: false
             }
 		}
 	},
@@ -119,10 +104,7 @@ export default {
         echeancier:{
             handler(newValue){
                 if(newValue.dd && newValue.df){
-                    this.getPeriode();
-                    this.getKn();
                     this.getHabilitationsPersonnel();
-                    this.getContrats();
                 }
             },
             deep:true,
@@ -164,7 +146,7 @@ export default {
          * @return {bool}
          */
         isPending() {
-            return (this.pending.habilitationsTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
+            return ( this.pending.personnelsFiltered || this.pending.habilitationsPersonnel) ? true : false;
         }
     },
 
@@ -225,30 +207,9 @@ export default {
         getHabilitationsPersonnel() {
             if (this.echeancier) {
                 this.pending.habilitationsPersonnel = true;
-
-                let query = {
-                    personnel_id : this.echeancier.operateurs.join(","),
-                    characteristic_id : this.echeancier.habilitation.join(","),
-                    dd_active : this.echeancier.dd,
-                    df_active : this.echeancier.df
-                }
-
-                this.$app.api.get('/v2/characteristic/personnel', query)
-                .then(data => {
-                    this.habilitationsPersonnel = data;
-                }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
+                this.habilitationsPersonnel = this.$assets.getCollection("habilitationsPersonnels").getCollection();
+                this.pending.habilitationsPersonnel = false;
             }
-        },
-
-        /**
-         * Retourne la liste des habilitation pour un personnel
-         * 
-         * @param {number} personnelId ID du personnel à tester
-         * 
-         * @return {array}
-         */
-        getHabilitationByPersonnelId(personnelId) {
-            return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
         },
 
         /**
@@ -267,32 +228,14 @@ export default {
          */
         getAllOperateurs() {
             return this.loadCollection({
-                pending: "personnels",
-                name: "personnels",
+                pending: "personnelsFiltered",
+                name: "personnelsFiltered",
                 payload: {
                     limit: "aucune"
                 },
                 outputData: "allOperateurs"
             });
         },
-
-        /**
-         * Charges tout les contrats 
-         */
-        getContrats() {
-            this.pending.contrats = true;
-
-            this.$app.api.get("/v2/contrat", {
-                pdd: this.echeancier.dd,
-                pdf: this.echeancier.df,
-                structure__personnel_id: this.echeancier.operateurs.join(","),
-                limit: "aucune"
-            })
-            .then(data => {
-                this.contrats = data
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.contrats = false);
-        }
 
     },
 
@@ -301,6 +244,7 @@ export default {
     },
 
     mounted() {
+        this.setEcheance(null)
         this.getAllHabilitations();
         this.getAllOperateurs();
     }
