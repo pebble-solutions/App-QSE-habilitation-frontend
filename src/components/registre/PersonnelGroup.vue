@@ -36,8 +36,9 @@ export default {
 
     data() {
 		return {
-			// size : 100,
+			// size : 50,
             size : 50,
+            row: 50,
             firstColumnWidth: 200,
             grid: null
 		}
@@ -102,7 +103,7 @@ export default {
         initGrid() {
             this.grid = new WeeksGrid({
                 columnWidth: this.size,
-                rowHeight: this.size,
+                rowHeight: this.row,
                 firstColumnWidth: this.firstColumnWidth,
                 rows: this.usedHabilitationsTypes.length + 1
             });

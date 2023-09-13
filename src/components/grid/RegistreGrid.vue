@@ -17,11 +17,8 @@
                     :style="{ left:getLeftPosition(cols.indexOf(col)+1, 'px'), width: columnWidthPx }" 
                     style="top: 0px" 
                     v-for="col in cols" 
-                    :key="col.id"
-                    >
-                    <!-- {{ col }} -->
-                    <!-- {{ cols.indexOf(col) }} -->
-                    
+                    :key="col.id" >
+
                     <UserImage :name="col.cache_nom" v-if="personnels.length"/>
 
                     <!-- <div v-if="personnels.length">
@@ -147,14 +144,9 @@ export default {
          * @return {string|number}
          */
         getLeftPosition(n, sx, coef) {
+            console.log(this.grid.getLeftPosition(n, sx, coef))
+            console.log(this.columnWidthPx)
             return this.grid.getLeftPosition(n, sx, coef);
-        }
-    },
-
-    mounted(){
-        for(let col of this.cols){
-            console.log(col)
-            console.log(this.cols.indexOf(col))
         }
     }
 }

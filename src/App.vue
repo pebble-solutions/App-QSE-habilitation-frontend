@@ -71,8 +71,11 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 						</div>
 					</div> -->
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'echeancier' || listMode === 'registre'">
+			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FilterFormEcheancier />
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'registre'">
+				<FilterFormRegistre />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'operateur'">
 				<PersonnelList v-slot="personnelProps">
@@ -164,6 +167,7 @@ import AppModal from './components/pebble-ui/AppModal.vue'
 import HabilitationList from './components/menuList/HabilitationList.vue'
 import PersonnelList from "@/components/PersonnelList.vue";
 import FicheIndividuelleSuiviItem from "@/components/menuList/FicheIndividuelleSuiviItem.vue";
+import FilterFormRegistre from './components/registre/FilterForm.vue'
 
 import CONFIG from "@/config.json"
 
@@ -501,7 +505,8 @@ export default {
 		AppModal,
 		HabilitationList,
 		PersonnelList,
-		FicheIndividuelleSuiviItem
+		FicheIndividuelleSuiviItem,
+		FilterFormRegistre
 	},
 
 	mounted() {

@@ -46,10 +46,10 @@
 
             <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="priorite" id="switchOperateurs" autocomplete="off" v-model="requete.priorite" :value="false">
-                <label class="btn btn-outline-secondary" for="switchOperateurs">Par habilitations</label>
+                <label class="btn btn-outline-secondary" for="switchOperateurs">Par opérateurs</label>
 
                 <input type="radio" class="btn-check" name="priorite" id="switchHabilitation" autocomplete="off" v-model="requete.priorite" :value="true">
-                <label class="btn btn-outline-secondary" for="switchHabilitation">Par opérateurs</label>
+                <label class="btn btn-outline-secondary" for="switchHabilitation">Par habilitations</label>
             </div>
         </div>
         
@@ -187,7 +187,12 @@ export default {
         }
     },
 
+    unmounted() {
+        this.setEcheance(null)
+    },
+
     mounted() {
+        this.setEcheance(null)
         this.getHabilitations();
         this.getOperateurs();
     }

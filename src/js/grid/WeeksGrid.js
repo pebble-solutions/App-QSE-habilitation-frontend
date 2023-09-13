@@ -130,6 +130,7 @@ export class WeeksGrid {
      */
     getTableHeight(sx) {
         const height = (this.rows) * this.rowHeight;
+        console.log(this.rows, this.rowHeight, height)
         return sx ? `${height}px` : height;
     }
 }
