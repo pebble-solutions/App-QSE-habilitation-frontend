@@ -11,7 +11,7 @@
                         <div class="card-body">
                             <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
                             <ul class="custom-ul">
-                                <li class="d-flex justify-content-between align-items-center bg-success rounded text-white px-3 py-2 mb-2"
+                                <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
                                     v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
                                     {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                                 </li>
