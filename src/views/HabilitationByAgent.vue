@@ -1,20 +1,5 @@
 <template>
-    {{ suspensions }}
-
     <SuspensionsPersonnelInformations></SuspensionsPersonnelInformations>
-
-    <h3 class="mx-2">Liste des habilitations</h3>
-    <div class="card" v-for="hab in habilitationFromPerso" :key="hab.id">
-        <HabMonitorPersonnel :personnelHabilitation="hab" :displayHab="true" :displayAgent="false"></HabMonitorPersonnel>
-    </div>
-
-
-
-
-
-
-
-
     <div class="container py-2 px-2">
         <Spinner v-if="pending.agent"></Spinner>
 
@@ -67,10 +52,9 @@ import { dateFormat } from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations.vue';
-import HabMonitorPersonnel from '../components/HabMonitorPersonnel.vue';
 
 export default {
-    components: { Spinner, ProgressBar, AlertMessage, HabMonitorPersonnel, SuspensionsPersonnelInformations }, //VigilControl
+    components: { Spinner, ProgressBar, AlertMessage, SuspensionsPersonnelInformations }, //VigilControl
 
     data() {
         return {
