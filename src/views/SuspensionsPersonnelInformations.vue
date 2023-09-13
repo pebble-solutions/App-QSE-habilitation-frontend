@@ -2,16 +2,49 @@
     <div class="container py-2">
         <div class="card bg-custom mt-4">
             <div class="card-body">
-                <h3 class="card-title text-center text-white mb-3">Personnel suspendu :</h3>
-                <div>
-                    <p class="text-center text-secondary" v-if="isNoSuspendedPersonnel">Aucun personnel suspendu pour cette habilitation.</p>
-                    <ul v-else class="custom-ul">
-                        <li v-for="(suspension, index) in getSuspensions" :key="index">
-                            <div class="d-flex justify-content-between align-items-center bg-secondary rounded text-white px-3 py-2 mb-2 text-center text-white">
-                                {{ getPersonnelName(suspension) }}
-                            </div>
-                        </li>
-                    </ul>
+                <h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
+                        class="text-secondary">#{{
+                            $route.params.id }}</span></h2>
+
+                <div class="row row px-3 mt-4">
+                    <div class="card col-md-6 mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
+                            <ul class="custom-ul">
+                                <li class="d-flex justify-content-between align-items-center bg-success rounded text-white px-3 py-2 mb-2"
+                                    v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+                                    {{ getHabilitationTypeName(hab.habilitation_type_id) }}
+                                </li>
+                            </ul>
+                            <p v-if="getNonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
+                                autre
+                                habilitation</p>
+                        </div>
+                    </div>
+                    <div class="card col-md-6 mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
+                            <ul class="custom-ul">
+                                <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
+                                    v-for="hab in getSuspendedHabilitations" :key="hab.id">
+                                    <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
+                                    <span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-3">Toutes les habilitations</h3>
+                        <div class="card" v-for="hab in habilitationFromPerso" :key="hab.id">
+                            <HabMonitorPersonnel :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
+                            </HabMonitorPersonnel>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,52 +53,53 @@
 
 <script>
 import { mapState } from 'vuex';
-
-/**
- * @typedef {Object} Suspension
- * @property {number} habilitation_id - L'ID de l'habilitation.
- */
-
-/**
- * @typedef {Object} Personnel
- * @property {number} id - L'ID du personnel.
- * @property {string} cache_nom - Le nom du personnel.
- */
-
-/**
- * @typedef {Object} Habilitation
- * @property {number} id - L'ID de l'habilitation.
- * @property {number} personnel_id - L'ID du personnel associé.
- */
+import HabMonitorPersonnel from '../components/HabMonitorPersonnel.vue';
+import { dateFormat } from '../js/collecte';
 
 export default {
+    components: { HabMonitorPersonnel },
+    data() {
+        return {
+            pending: {
+                agent: false,
+            },
+            habilitationFromPerso: '',
+            listControlDone: ''
+        };
+    },
     computed: {
-        ...mapState(['suspensions', 'personnels', 'habilitations']),
+
+        ...mapState(['habilitationType', 'personnelsFiltered', 'suspensions', 'personnels', 'habilitations', 'types',]),
 
         /**
-         * Récupère le nom du personnel associé à la suspension.
-         * @param {Suspension} suspension - La suspension en cours.
-         * 
-         * @returns {string} Le nom du personnel ou une chaîne vide.
+         * retourne les informations du personnel depuis l'id passé dans l'url
          */
-        getPersonnelName() {
-            return suspension => {
-                const habilitation = this.habilitations.find(hab => hab.id === suspension.habilitation_id);
-                if (habilitation && habilitation.id === parseInt(this.$route.params.id)) {
-                    const personnel = this.personnels.find(personnel => personnel.id === habilitation.personnel_id);
-                    return personnel ? personnel.cache_nom : '';
-                }
-                return '';
-            };
+        currentPersonnel() {
+            return this.personnelsFiltered.find((e) => e.id == this.$route.params.id);
         },
 
         /**
-         * Récupère la liste des suspensions pour l'habilitation en cours.
-         * 
-         * @returns {Suspension[]} La liste des suspensions.
+         * Retourne l'objet personnel correspondant à l'ID de l'URL.
+         * @return {Object} L'objet personnel correspondant à l'ID.
+         */
+        personnel() {
+            return this.personnels.find(el => el.id == this.$route.params.id);
+        },
+
+        /**
+         * Retourne les habilitations associées à ce personnel.
+         * @return {Array} Les habilitations du personnel.
+         */
+        habilitationPersonnel() {
+            return this.habilitations.filter(el => el.personnel_id == this.$route.params.id);
+        },
+
+        /**
+         * Retourne les suspensions associées aux habilitations du personnel.
+         * @return {Array} Les suspensions du personnel.
          */
         getSuspensions() {
-            return this.habilitations.reduce((suspensions, hab) => {
+            return this.habilitationPersonnel.reduce((suspensions, hab) => {
                 const suspension = this.suspensions.find(el => el.habilitation_id === hab.id);
                 if (suspension) {
                     suspensions.push(suspension);
@@ -75,18 +109,127 @@ export default {
         },
 
         /**
-         * Vérifie s'il n'y a aucun personnel suspendu pour l'habilitation en cours.
-         * 
-         * @returns {boolean} True si aucun personnel suspendu, sinon False.
+         * Retourne les habilitations non suspendues du personnel.
+         * @return {Array} Les habilitations non suspendues du personnel.
          */
-        isNoSuspendedPersonnel() {
-            const currentHabilitationId = parseInt(this.$route.params.id);
-            const suspendedHabilitations = this.getSuspensions.map(suspension => suspension.habilitation_id);
+        getNonSuspendedHabilitations() {
+            return this.habilitationPersonnel.filter(hab => {
+                // Trouver toutes les suspensions pour cette habilitation
+                const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
 
-            return suspendedHabilitations.length === 0 || suspendedHabilitations.every(id => id !== currentHabilitationId);
+                // Vérifier si cette habilitation n'est pas suspendue ou si elle a une suspension dont la df est différente de null
+                return suspensionsForThisHab.length === 0 || suspensionsForThisHab.some(sus => sus.df !== null);
+            });
         },
+
+
+        /**
+         * Retourne les habilitations suspendues du personnel.
+         * @return {Array} Les habilitations suspendues du personnel.
+         */
+        getSuspendedHabilitations() {
+            return this.habilitationPersonnel.filter(hab => this.getSuspensions.some(sus => sus.habilitation_id === hab.id && sus.df == null));
+        },
+
+        /**
+         * Retourne le nom du type d'habilitation.
+         * @param {number} habilitationTypeId - L'ID du type d'habilitation.
+         * @return {string} Le nom du type d'habilitation.
+         */
+        getHabilitationTypeName() {
+            return habilitationTypeId => {
+                const habilitationType = this.types.find(type => type.id === habilitationTypeId);
+                return habilitationType ? habilitationType.nom : '';
+            };
+        },
+
+        /**
+         * Retourne la date de suspension au format localisé.
+         * @param {number} habilitationId - L'ID de l'habilitation.
+         * @return {string} La date de suspension au format localisé.
+         */
+        getSuspensionDate() {
+            return habilitationId => {
+                const suspension = this.suspensions.find(sus => sus.habilitation_id === habilitationId);
+                return suspension ? suspension.dd : '';
+            };
+        },
+
+        /**
+         * Formate la date en utilisant les options de format.
+         * @param {string} date - La date à formater.
+         * @return {string} La date formatée.
+         */
+        formatSuspensionDate() {
+            return date => {
+                if (date) {
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    return new Date(date).toLocaleDateString('fr-FR', options);
+                }
+                return '';
+            };
+        }
     },
-   
+    methods: {
+
+        /**
+         * Envoie une requête pour charger la liste des habilitation d'un personnel
+         * en fonction de l'id fourni
+         * @param {Number} id du personnel 
+         */
+        loadHabilitationFromPersonnel(id) {
+            this.pending.agent = true;
+            this.$app.apiGet('v2/controle/habilitation', {
+                personnel_id: id,
+            })
+                .then((data) => {
+                    this.habilitationFromPerso = data;
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
+        },
+
+
+
+
+
+        /**
+         * retourne le nom de l'habilitation en fonction de l'id fourni
+         */
+        returnNameHab(id) {
+            let hab = this.habilitationType.find((e) => e.id == id);
+
+            return hab.nom
+
+
+        },
+        /**
+        * Modifie le format de la date entrée en paramètre et la retourne 
+        * sous le format 01 févr. 2021
+        * @param {string} date 
+        */
+
+        changeFormatDateLit(el) {
+            return dateFormat(el);
+        },
+
+
+    },
+    /**
+    * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
+    */
+    beforeRouteUpdate(to) {
+        if (to.params.id != this.personnel_id) {
+            this.loadHabilitationFromPersonnel(to.params.id);
+
+        }
+    },
+
+    beforeMount() {
+        /**
+         * charge la list des habilitations du personnel concerné
+         */
+        this.loadHabilitationFromPersonnel(this.$route.params.id);
+    }
 };
 </script>
 
@@ -94,7 +237,6 @@ export default {
 .custom-ul {
     padding-left: 0;
     list-style: none;
-    display: contents;
 }
 
 .bg-custom {
