@@ -31,7 +31,7 @@
 					</div>
 					<div v-if="controles"  class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
 						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
-						
+						@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
 						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
 						{{ kn.sami }}
@@ -61,6 +61,7 @@
 		</div>
 	</div>
 </div>
+<RouterView></RouterView>
 </template>
 <script>
 import { Tooltip } from 'bootstrap';

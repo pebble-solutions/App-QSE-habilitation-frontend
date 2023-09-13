@@ -8,26 +8,19 @@
         <div class="bg-white text-center my-4">
             <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
         </div>
-        <div class="row">
-            <div class="col">
-                
-                <div class="card  text-white text-center custom-app-color">
-                    <h4>Les types d'habilitation</h4>
-                    
-                    <div class="card" v-for="type in  types" :key="type.id">
-                        {{ type.nom }}
+        <div class="card  text-white text-center custom-app-color">
+            <h4>Les veilles</h4>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                <div class="col" v-for="veille in  veilles" :key="veille.id">
+                    <div class="card" >
+                        <div># {{ veille.id }} {{ veille.nom }}</div>
+                        <div>sur {{ veille.type }} #{{ veille.objet_id }}</div>
+                        <div>formulaire {{ veille.formulaire_id }}</div>
+                        <div>pas de veille:{{ veille.control_step }} jours</div>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card  text-white text-center custom-app-color">
-                    <h4>Les veilles</h4>
-                    <div class="card" v-for="veille in  veilles" :key="veille.id">
-                        {{ veille.nom }}
-                    </div>
-                </div>
 
-            </div>
         </div>
     </div>
 
