@@ -6,6 +6,7 @@
             <img src="../assets/Habilitations.png" alt="habilitations" class="img-fluid"
             style="max-width: 500px; width: 100%;">
         </div>
+        
         <div v-if="typeHab" class="card m-2 p-2 text-white text-center custom-app-color">
             <h4 class="">{{ typeHab.nom }}</h4>
             <div class="row g-2 mb-3">
@@ -31,14 +32,14 @@
                             <div class="d-flex justify-content-center align-items-center py-3">
                                 <h5>Configuration de la VEILLE <span class="fw-lighter">#{{ veilleConfig.id }}</span> </h5>
                             </div>
-                            <span>{{ veilleConfig.nom }} sur typr {{ veilleConfig.objet_id }}</span><br>
+                            <span>{{ veilleConfig.nom }} sur le type {{ veilleConfig.objet_id }}</span><br>
                             <span>Statut : {{ isActive(veilleConfig.df) }}</span>
 
                             <div>Date début : <span class="fw-lighter" :class="{ 'text-secondary': !veilleConfig.dd }">{{ veilleConfig.dd ?
                                 formatDate(veilleConfig.dd) : 'Date Inconnue' }}</span></div>
                             <div>Date fin : <span class="fw-lighter" :class="{ 'text-secondary': !veilleConfig.df }">{{ veilleConfig.df ?
                                 formatDate(veilleConfig.df) : 'Date Inconnue' }}</span></div>
-                            <div>Formulaire associé : <span class="fw-lighter">{{ findNameFormulaire(veilleConfig.formulaire_id) }}</span> </div>
+                            <div>Formulaire associé : <span class="fw-lighter">{{ findNameFormulaire(veilleConfig.formulaire_id) }} {{ veilleConfig.formulaire_id }}</span> </div>
                             <div class="mb-2">Pas de veille : <span class="fw-lighter me-1">{{ veilleConfig.control_step }}</span>jours
                             </div>
                             <div class="mt-auto"> <!-- Ajout de la marge de 2 -->
@@ -55,7 +56,7 @@
             <div  v-if="listHabPersoType">
                 <div class="my-3" v-for="personnelHabilitation in listHabPersoType" :key="personnelHabilitation.id">
                     <!-- {{ personnelHabilitation }} -->
-                    <HabMonitorPersonnel :personnelHabilitation="personnelHabilitation" :veilleConfig="veilleConfig" :veille="getVeilleByHabilitationId(personnelHabilitation.id)" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
+                    <HabMonitorPersonnel :personnelHabilitation="personnelHabilitation" :veilleConfig="veilleConfig" :veille="getVeilleByHabilitationId(personnelHabilitation.id)" :controles="getControlesByHabilitationId(personnelHabilitation.id)" :displayHab="true" :displayAgent="true"></HabMonitorPersonnel>
                 </div>
             </div>
         </div>
@@ -89,6 +90,7 @@ export default {
             active: null,
             listHabPersoType:[],
             listVeille: null,
+            listControles: [],
 
         };
     },
@@ -187,7 +189,8 @@ export default {
        
         /**
          * retourne la liste des habilitations personnelles en fonction de l'id type habilitation fourni
-         * et récupère le nom des personnels par jointure avec la collection personnels
+         * infos personnels et types d'habilitation joints par jointure avec la collection personnels
+         * retourne la config de la veille associée et la liste des contrôles de veille
          * @param {*} id 
          * @returns {Array} liste des personnels habilités
          */
@@ -204,16 +207,61 @@ export default {
             let joinedType = assemblerType.getResult();
             await this.findVeille(id);
             this.listHabPersoType = joinedType;
-        
+
+            // for (const habilitationPersonnel in this.listHabPersoType) {
+            //     console.log(this.listHabPersoType, 'list')
+            //     console.log(habilitationPersonnel.id, 'habperso')
+            //     await this.loadinfosCollecte(habilitationPersonnel.id);
+            // }
+            this.listHabPersoType.forEach((habilitationPersonnel) => {
+                 this.loadinfosCollecte(habilitationPersonnel.id);
+                
+            }
+            )
+            
             this.pending.load = false;
             return joinedType
         
         },
 
+        async loadinfosCollecte(id) {
+			this.pending.control = true;
+            console.log(id, 'idhabilitation perso')
+			this.$app.apiGet('v2/collecte', {
+                habilitation_id: id,
+				kn2kn_info: 'OUI',
+				retard_info: 'OUI',
+				type: 'KN'
+			})
+			.then((data) => {
+                let control = data
+                console.log(control, 'control')
+                let controles = {
+                    
+                };
+                controles.id = id;
+                controles.control =control
+                console.log(controles, ' controles')
+                this.listControles.push(controles);
+                console.log(this.listControles,'listControles')
+			})
+			.catch(this.$app.catchError).finally(() => this.pending.control = false);
+		},
+
+        /**
+         * Retourne l'objet contenant les informations de la veille pour l'habilitation du personnel concerné
+         * @param {number} habilitationId l'id de l'habilitation du personnel
+         * @returns {object} veille l'objet content les information et notamment la date du dernier contrôle
+         */
         getVeilleByHabilitationId(habilitationId) {
             return this.listVeille.find(e => e.habilitation_id == habilitationId)
 
-        }
+        },
+        getControlesByHabilitationId(habilitationId) {
+            return this.listControles.find(e => e.id == habilitationId)
+
+        },
+
     
 
     },

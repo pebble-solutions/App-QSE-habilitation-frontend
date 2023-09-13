@@ -1,10 +1,10 @@
 <template>
 	<div class="card bg-light" v-if="!pending.control">
-		list de la veille{{ veille }}
+		<!-- veille{{ veille }}
 		<br><br>
 		detail habilitation{{ personnelHabilitation }}
 		<br><br>
-		config veille{{ veilleConfig }}
+		config veille{{ veilleConfig }} -->
 		
 		<div class="card-body">
 			<!-- Titre -->
@@ -32,14 +32,22 @@
 						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 						<span v-else>Pas de contrôle enregistré</span>
 					</div>
+					<div v-if="controles"  class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
+						
+						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+						{{ kn.sami }}
+						</button>
+					</div>
 					<div v-if="listControlDone" class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
 						<button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
 						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
 						{{ kn.sami }}
-					</button>
+						</button>
+					</div>
 				</div>
-			</div>
 			
 			<!-- Colonne 3 : caractéristique veille-->
 			<div class="col-lg-4 col-12 px-2" >
@@ -56,7 +64,7 @@
 				</template>
 				<div class="text-secondary d-flex align-items-center" v-else>
 					<i class="bi bi-calendar2-x me-2"></i>
-					<em>Pas de veille pour cette  habilitation</em>
+					<em>Pas de contrôle enregistré pour cette veille</em>
 				</div>
 			</div>
 			
@@ -82,6 +90,7 @@ export default {
 		displayHab: Boolean,
 		personnelHabilitation: Object,
 		veille: Object,
+		controles: Object,
 	},
 	computed: {
 		...mapState(['types', 'listActifs','personnels']),
@@ -149,7 +158,6 @@ export default {
 				this.listControlDone = data;
 			})
 			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-			await this.findVeilleHab(id);
 		},
 		
 		
@@ -161,7 +169,7 @@ export default {
 		},
 	},
 	mounted() {
-		// this.loadinfosCollecte(this.personnelHabilitation.id)
+		this.loadinfosCollecte(this.personnelHabilitation.id)
 		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
 		this.$nextTick(function () {
