@@ -1,4 +1,8 @@
 <template>
+    <SuspensionsPersonnelInformations
+        :suspensions="getSuspensions"
+        :getPersonnelName="getPersonnelName"
+    ></SuspensionsPersonnelInformations>
     <div class="container py-2 px-2">
         <Spinner v-if="pending.agent"></Spinner>
 
@@ -46,9 +50,10 @@ import Spinner from '../components/pebble-ui/Spinner.vue';
 import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations.vue';
 
 export default{
-    components: {Spinner, ProgressBar, AlertMessage }, //VigilControl
+    components: {Spinner, ProgressBar, AlertMessage, SuspensionsPersonnelInformations}, //VigilControl
 
     data() {
         return {
