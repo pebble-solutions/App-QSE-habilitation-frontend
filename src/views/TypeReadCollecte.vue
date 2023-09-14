@@ -4,12 +4,14 @@
      size="lg"
      @modal-hide="routeToParent()"
      :pending="pending.collecte">
+        <!-- <HabMonitorPersonnel></HabMonitorPersonnel> -->
         <ConsultationCollecteResume :collecte="collecte"></ConsultationCollecteResume>
     </AppModal>
     
 </template>
 <script>
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+// import HabMonitorPersonnel from '../components/HabMonitorPersonnel.vue';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 
 export default {

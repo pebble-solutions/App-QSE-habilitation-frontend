@@ -2,7 +2,7 @@
 	<div class="card bg-light" v-if="!pending.control">
 		<!-- veille{{ veille }}
 		<br><br>
-		detail habilitation{{ personnelHabilitation }}
+		detail habilitation{{ personnelHabilitation.personnel.dsortie}}
 		<br><br>
 		config veille{{ veilleConfig }} -->
 		
@@ -10,6 +10,7 @@
 			<!-- Titre -->
 			<div class="text-center mb-1">
 				<strong v-if="displayAgent" class="me-2">{{returnName(personnelHabilitation.personnel_id)}}</strong>
+				<!-- <span v-if="personnelHabilitation.personnel.dsortie">date sortie le {{ changeFormatDateLit(personnelHabilitation.personnel.dsortie) }}</span> -->
 				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
 			</div>
 			<div class="row">
@@ -29,11 +30,11 @@
 						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 						<span v-else>Pas de contrôle enregistré</span>
 					</div>
-					<div v-if="controles"  class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+					<div v-if="controles"  class="d-flex  flex-wrap align-items-center justify-content-start px-2">
 						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
 						@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+ ' du '+changeFormatDateLit(kn.date_done) ">
 						{{ kn.sami }}
 						</button>
 					</div>

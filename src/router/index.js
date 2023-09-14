@@ -41,7 +41,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfig.vue'),
     children: [
-      
       {
         path: 'edit',
         name: 'editConfig',
@@ -63,7 +62,6 @@ const routes = [
         name: 'readCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/TypeReadCollecte.vue')
       }
-      
     ]
   },
   {
