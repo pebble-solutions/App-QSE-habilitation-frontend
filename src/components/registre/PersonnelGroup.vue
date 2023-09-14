@@ -38,7 +38,6 @@ export default {
 		return {
 			// size : 50,
             size : 50,
-            row: 50,
             firstColumnWidth: 200,
             grid: null
 		}

@@ -21,10 +21,10 @@
 </style>
 
 <script>
-import { diffDate } from '../../js/date';
+// import { diffDate } from '../../js/date';
 import UserImage from '../pebble-ui/UserImage.vue';
 import { WeeksGrid } from '../../js/grid/WeeksGrid';
-import { getSelfDateEnd, getSelfDateStart } from '../../js/contrat';
+// import { getSelfDateEnd, getSelfDateStart } from '../../js/contrat';
 
 export default {
     components: { UserImage },

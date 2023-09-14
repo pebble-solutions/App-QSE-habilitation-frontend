@@ -1,5 +1,4 @@
 <template>
-    
 
     <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
 
@@ -14,7 +13,7 @@
                     <strong>{{ headerLabel }}</strong>
                 </div>
                 <div class="position-absolute text-center" 
-                    :style="{ left:getLeftPosition(cols.indexOf(col)+1, 'px'), width: columnWidthPx }" 
+                    :style="{ left:callGetLeftPosition(col, 'px'), width: columnWidthPx }"
                     style="top: 0px" 
                     v-for="col in cols" 
                     :key="col.id" >
@@ -49,16 +48,19 @@ import UserImage from '../pebble-ui/UserImage.vue';
 
 export default {
     props: {
-        grid: WeeksGrid,
+        grid: {
+            type: WeeksGrid, // Assurez-vous que WeeksGrid est bien un objet si c'est le cas
+            required: true
+        },
         headerLabel: String,
-        personnels : {
+        personnels: {
             type: Array,
-            default: []
+            default: () => []
         },
-        types : {
+        types: {
             type: Array,
-            default: []
-        },
+            default: () => []
+        }
     },
 
     components: {UserImage},
@@ -144,9 +146,12 @@ export default {
          * @return {string|number}
          */
         getLeftPosition(n, sx, coef) {
-            console.log(this.grid.getLeftPosition(n, sx, coef))
-            console.log(this.columnWidthPx)
             return this.grid.getLeftPosition(n, sx, coef);
+        },
+
+        callGetLeftPosition(item, sx, coef){
+            let n = this.cols.indexOf(item);
+            return this.grid.getLeftPosition(n,sx,coef)
         }
     }
 }
