@@ -10,16 +10,46 @@
         "logos": null,
         "appMenu": [
             {
-                "label": "Accueil",
-                "icon": "bi bi-house",
-                "key": "home",
-                "href": "/"
+                "label": "Types",
+                "icon": "bi bi-gear-fill", 
+                "key": "types",
+                "href": "/types"
             },
             {
-                "label": "À propos",
-                "icon": "bi bi-info-square",
-                "key": "about",
-                "href": "/about"
+                "label": "Suspensions",
+                "icon": "bi bi-pause-circle-fill", 
+                "key": "suspension",
+                "href": "/suspension"
+            },
+            {
+                "label": "Personnels",
+                "icon": "bi bi-person-gear", 
+                "key": "personnels",
+                "href": "/personnels"
+            },
+            {
+                "label": "Échéancier",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "echeancier",
+                "href": "/echeancier"
+            },
+            {
+                "label": "Habilitations à programmer",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "programmer",
+                "href": "/programmer"
+            },
+            {
+                "label": "Fiche individuelle de suivi",
+                "icon": "bi bi-person-check-fill",
+                "key": "operateur",
+                "href": "/operateur"
+            },
+            {
+                "label": "Registre des habilitations",
+                "icon": "bi bi-calendar2-check-fill", 
+                "key": "registre",
+                "href": "/registre"
             }
         ]
     },
@@ -29,7 +59,7 @@
         "test": "pebble.recipes"
     },
     "cfgMenu": {
-        "href": null
+        "href": "#config"
     },
     "cfgSlots": {
         "menu": true,

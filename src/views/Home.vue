@@ -1,10 +1,10 @@
 <template>
-	<div class="py-2" v-if="$store.state.login">
+	<div class=" container py-2 bg-white" v-if="$store.state.login">
 		<div>
-			<img src="@/assets/pebble-dev.png" alt="Pebble Dev" class="logo w-100">
+			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
 		</div>
-		<h1 class="text-center">Bienvenue dans votre nouvelle application</h1>
-		<hr>
+		<h1 class="text-center mb-5">Bienvenue dans votre nouvelle application</h1>
+<!-- 		
 		
 		<form class="card my-4" method="post" @submit.prevent="recordNew()" v-if="tmpElement">
 			<div class="card-body">
@@ -45,15 +45,17 @@
 			<li>Configurez la base de votre application dans /src/config.json</li>
 			<li>Ne modifiez pas les sous-modules (/src/components/pebble-ui, /src/js/app). Ceux-ci se mettent à jour via pebbleapp.</li>
 			<li>Développez vos vues dans /src/views et vos composants d'interface dans /src/components</li>
-		</ol>
+		</ol> -->
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .logo {
-	max-width:360px;
+	max-width: 800px;
 	display:block;
-	margin:20px auto;
+	margin: 100px auto;
+	margin-left: 20px auto;
+	margin-right: 20px auto;
 }
 </style>
 

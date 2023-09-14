@@ -7,8 +7,23 @@ export default createStore({
 		login: null,
 		elements: [],
 		types: [],
-		suspensions: [],
-		openedElement: null
+		habilitationType: [],
+		habilitationsPersonnels: [],
+		suspensions:[],
+		veilles: [],
+		formulaires: [],
+		personnels: [],
+		habilitations: [],
+		habilitationsTypes: [],
+		echeancier: null,
+		personnelsFiltered:[],
+		pending: {
+			habilitationsPersonnels: false,
+			personnelsFiltered: true,
+		},
+
+
+
 	},
 	getters: {
 		activeStructure(state) {
@@ -42,15 +57,32 @@ export default createStore({
 		setStructureId(state, structureId) {
 			state.activeStructureId = structureId;
 		},
+		
+		/**
+		 * Enregistre l'echeance dans le store
+		 * @param {Object} state Le state de l'instance vueX
+		 * @param {Object} echeancier L'objet Login
+		 */
+		setEcheance(state, echeancier) {
+			state.echeancier = echeancier
+		},
 
 		/**
-		 * Renseigne l'élément actif
-		 * 
-		 * @param {Object} state Le state de vueX
-		 * @param {Integer} element L'élément à charger
+		 * Enregistre les types d'habilitations
+		 * @param	{Object}	state le state de VueX
+		 * @param	{Array}		habilitations	Liste des type d'habilitations
 		 */
-		openedElement(state, element) {
-			state.openedElement = element;
+		setHabilitationType(state, habilitationType) {
+			state.habilitationType = habilitationType;
+		},
+
+		/**
+		 * enregistre la liste des formulaires
+		 * @param	{Object}	state le state de vueX
+		 * @param	{Array}		formulaires	liste des fomulaires
+		 */
+		setFormulaires(state, formulaires) {
+			state.formulaires = formulaires
 		}
 	},
 	actions: {
@@ -80,7 +112,31 @@ export default createStore({
 		 */
 		switchStructure(context, payload) {
 			context.commit('setStructureId', payload);
-		}
+		},
+		/**
+		 * met à jour la liste des types d'habilitation
+		 * @param {Object} context l'instance de VueX
+		 * @param {Array} data liste des types d'habilitations
+		 */
+		refreshHabilitationType(context, data) {
+			context.commit('setHabilitationType', data);
+		},
+		/**
+		 * charge dans le store une requete de stat 
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		setEcheance(context,data) {
+			context.commit('setEcheance', data)
+		},
+		/**
+		 * met à jour la liste des formulaires
+		 * @param {Object} context 
+		 * @param {Array} data 
+		 */
+		refreshFormulaires(context, data) {
+			context.commit('setFormulaires', data);
+		},
 	},
 	modules: {
 	}
