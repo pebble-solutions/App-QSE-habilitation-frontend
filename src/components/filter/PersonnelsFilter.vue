@@ -1,8 +1,8 @@
 <template>
     <div class="px-2">
-        <div class="btn-group w-100 mb-2" v-if="croissant">
+        <div class="btn-group w-100 mb-2"  v-if="croissant">
             <button type="button" class="btn btn-outline-custom dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi" :class="classIcon"></i>
+                <i class="bi" :class="classIconOrder"></i>
                 {{ searchOrdre }}
             </button>
 
@@ -33,22 +33,11 @@
                     <input type="date" class="form-control" id="dateFinDone" v-model="searchContratDf">
                 </div>
         
-                <div class="input-group">
-                    <input type="checkbox" class="btn-check" id="btn-check-with-contrat" v-model="searchWithContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom rounded-start checkboxBtnSize" for="btn-check-with-contrat" @click.prevent="updateVal('searchWithContrat')">
-                        Avec {{ searchWithContrat }}
-                    </label>
-        
-                    <input type="checkbox" class="btn-check" id="btn-check-without-contrat" v-model="searchWithoutContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom checkboxBtnSize" for="btn-check-without-contrat" @click.prevent="updateVal('searchWithoutContrat')">
-                        Sans {{ searchWithoutContrat }}
-                    </label>
-        
-                    <input type="checkbox" class="btn-check" id="btn-check-all-contrat" v-model="searchAllContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom rounded-end checkboxBtnSize" for="btn-check-all-contrat" @click.prevent="updateVal('searchAllContrat')">
-                        Tous {{ searchAllContrat }}
-                    </label>
-                </div>
+                <div class="btn-group w-100" role="group" aria-label="toggle contrat button">
+					<button v-for="(oButton, i) in toggleButtonsContrat" :key="'toggleContratButton-'+i" class="btn radioBtnSize" :class="displayToggleButtonsContrat(oButton.value)" @click.prevent="updateToggleButtonContrat(oButton)">
+						{{ oButton.label }}
+					</button>
+				</div>
             </div>
         </div>
     </div>
@@ -56,7 +45,7 @@
 
 <style>
 
-.checkboxBtnSize {
+.radioBtnSize {
     width: 33.33%
 }
 
@@ -85,87 +74,123 @@ export default {
         croissant : {
             type: Boolean,
             default: true
-        },
+        }
     },
 
     data() {
         return {
             searchContratDd: null,
             searchContratDf: null,
-            searchWithContrat: true,
-            searchWithoutContrat: false,
-            searchAllContrat: false,
-            searchOrdre: "croissant"
+            searchOrdre: "croissant",
+
+			toggleButtonsContrat: [
+				{ label: "Avec", value: true, events: ['update:withContrat'] },
+				{ label: "Sans", value: false, events: ['update:withoutContrat'] },
+				{ label: "Tous", value: false, events: ['update:withContrat', 'update:withoutContrat'] }
+			]
         }
     },
 
+	emits: ['update:contratDd', 'update:contratDf', 'update:withContrat', 'update:withoutContrat', 'update:ordre'],
+
     computed: {
-        classIcon() {
+		/**
+	     * Retourne le type d'icon de bootstrap en fonction de l'ordre choisie
+	     *
+	     * @returns {string}
+	     */
+        classIconOrder() {
             if ('croissant' == this.searchOrdre) {
                 return 'bi-arrow-up';
             }
+
             return 'bi-arrow-down';
         }
     },
 
-    emits: ['update:contratDd', 'update:contratDf', 'update:withContrat', 'update:withoutContrat', 'update:ordre'],
+	methods: {
+		/**
+		 * Met à jour les informations sur le toggleButtonsContrat et l'envoi a l'élement parents vie un emit
+		 *
+		 * @param   {object}    objectButton
+		 */
+		updateToggleButtonContrat(objectButton)
+		{
+			this.toggleButtonsContrat.forEach((oButton) => {
+				if (objectButton === oButton) {
+					oButton.value = true;
+					this.sendEventToggleButtonsContrat(oButton);
+				} else {
+					oButton.value = false;
+					this.sendEventToggleButtonsContrat(oButton);
+				}
+			});
+		},
 
+		/**
+		 * Affichage CSS des buttons de toggleButtonsContrat en fonction de la sélection
+		 *
+		 * @param   {boolean}   buttonValue
+		 *
+		 * @returns {string}
+		 */
+		displayToggleButtonsContrat(buttonValue)
+		{
+			if (buttonValue) {
+				return 'btn-custom';
+			} else {
+				return 'btn-outline-custom';
+			}
+		},
 
-    watch: {
-        searchWithContrat(newVal) {
-            this.$emit('update:withContrat', newVal);
-        },
+		/**
+		 * Envoi les events au component parent
+		 *
+		 * @param {object} oButton
+		 *
+		 * @emits update:withContrat
+		 * @emits update:withoutContrat
+		 */
+		sendEventToggleButtonsContrat(oButton) {
+			let emitValue = true;
 
-        searchWithoutContrat(newVal) {
-            this.$emit('update:withoutContrat', newVal);
-        },
+			if ("Tous" === oButton.label) {
+				if (oButton.value) {
+					emitValue = false;
+				}
+			} else {
+				emitValue = oButton.value;
+			}
 
-        searchAllContrat(newVal) {
-            if (newVal) {
-                this.$emit('update:withContrat', false);
-                this.$emit('update:withoutContrat', false);
-            }
-        },
-
-        searchOrdre(newVal) {
-            this.$emit('update:ordre', newVal);
-        }
-    },
-
-    methods: {
-        updateVal(filterLabel) {
-            this[filterLabel] = !this[filterLabel];
-
-            if (filterLabel === 'searchAllContrat') {
-                if (this.searchAllContrat) {
-                    this.searchWithContrat = false;
-                    this.searchWithoutContrat = false;
-                } else {
-                    this.searchWithContrat = true;
-                }
-            } else {
-                if (this.searchWithContrat && this.searchWithoutContrat) {
-                    this.searchAllContrat = true;
-                    this.searchWithContrat = false;
-                    this.searchWithoutContrat = false;
-                } else {
-                    this.searchAllContrat = false;
-                }
-            }
-
-        }
-    },
+			if ("Tous" !== oButton.label || "Tous" === oButton.label && !emitValue) {
+				oButton.events.forEach((emit) => {
+					this.$emit(emit, emitValue);
+				});
+			}
+		}
+	},
 
     mounted() {
-        this.searchContratDd = this.contratDd;
-        this.searchContratDf = this.contratDf;
-        this.searchOrdre = this.ordre;
-        this.searchWithContrat = this.withContrat;
-        this.searchWithoutContrat = this.withoutContrat;
+		this.searchContratDd = this.contratDd;
+		this.searchContratDf = this.contratDf;
 
-        if (!this.withContrat && !this.withoutContrat) {
-            this.searchAllContrat = true;
-        }
+		this.toggleButtonsContrat.forEach((oButton) => {
+			switch (oButton.label) {
+				case "Avec":
+					oButton.value = this.withContrat;
+					break;
+
+				case "Sans":
+					oButton.value = this.withoutContrat;
+					break;
+
+				case "Tous":
+					if (!this.withContrat && !this.withoutContrat) {
+						oButton.value = true;
+					}
+					break
+			}
+		});
     },
 };
 

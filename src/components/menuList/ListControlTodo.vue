@@ -105,6 +105,7 @@ export default {
             this.collection.updateCollection(payload);
 
             this.personnels = this.$assets.getCollection("personnelsFiltered");
+            console.log(this.personnels.getCollection().length)
 
             this.change = true;
             this.pending.habilitationsPersonnels = false;
