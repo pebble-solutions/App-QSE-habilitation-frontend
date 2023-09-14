@@ -165,8 +165,6 @@ import HabilitationList from './components/menuList/HabilitationList.vue'
 import PersonnelList from "@/components/PersonnelList.vue";
 import FicheIndividuelleSuiviItem from "@/components/menuList/FicheIndividuelleSuiviItem.vue";
 
-import { getAuth } from '@firebase/auth';
-
 import CONFIG from "@/config.json"
 
 export default {
