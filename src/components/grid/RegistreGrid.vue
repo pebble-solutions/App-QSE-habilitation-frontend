@@ -4,8 +4,8 @@
 
         <div class="table-grid" :style="{width : tableWidthPx}">
             <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2) }"></div>
-            <div class="table-col border border-secondary" :style="{ left: grid.secondColumnWidth + 'px' }">OUI</div>
-            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }">OUI</div>
+            <div class="table-col border border-secondary" :style="{ left: grid.secondColumnWidth + 'px' }"></div>
+            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -14,19 +14,19 @@
                     <strong>{{ headerLabel }}</strong>
                 </div>
                     <div class="position-absolute text-center" 
-                    :style="{ left:getLeftPosition(cols.indexOf(col), 'px'), width: columnWidthPx }"
-                    style="top: 0px" 
-                    v-for="col in cols" 
-                    :key="col.id" >
+                        :style="{ left:getLeftPosition(cols.indexOf(col), 'px'), width: columnWidthPx }"
+                        style="top: 0px" 
+                        v-for="col in cols" 
+                        :key="col.id" >
 
-                    <div v-if="personnels.length">
-                        <div class="d-flex align-items-center">
-                            <div class="me-1">
-                                <UserImage :name="col.cache_nom" />
+                        <div class="mx-1" v-if="personnels.length">
+                            <div class="d-flex align-items-center">
+                                <div class="me-1">
+                                    <UserImage :name="col.cache_nom" />
+                                </div>
+                                <h5 class="fs-5">{{ col.cache_nom }}</h5>
                             </div>
-                            <h5 class="fs-5">{{ col.cache_nom }}</h5>
                         </div>
-                    </div>
 
                 </div>
             </div>

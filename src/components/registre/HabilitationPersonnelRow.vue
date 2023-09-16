@@ -12,7 +12,6 @@
                 </span>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -50,7 +49,7 @@ export default {
         displayRowLabel() {
             const maxlen = this.useUserImage ? 18 : 25;
             let label = this.rowLabel.replace(/^Habilitation\s*:\s*/, "");
-            label = this.rowLabel.replace(/^!/, "");
+            label = label.replace(/^!/, "");
 
             if (label.length > maxlen) {
                 label = label.substring(0, maxlen - 1) + "...";
