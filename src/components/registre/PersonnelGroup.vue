@@ -39,6 +39,7 @@ export default {
             size : 150,
             firstColumnWidth: 200,
             secondColumnWidth: 200,
+            row: 50,
             grid: null
 		}
 	},

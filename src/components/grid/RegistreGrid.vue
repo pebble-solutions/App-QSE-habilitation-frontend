@@ -4,7 +4,8 @@
 
         <div class="table-grid" :style="{width : tableWidthPx}">
             <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2) }"></div>
-            <div v-for="n in gridCols" class="table-col border border-primary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }"></div>
+            <div class="table-col border border-secondary" :style="{ left: grid.secondColumnWidth + 'px' }">OUI</div>
+            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }">OUI</div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -12,18 +13,18 @@
                 <div class="table-header mx-2">
                     <strong>{{ headerLabel }}</strong>
                 </div>
-                <div class="position-absolute text-center" 
-                    :style="{ left:callGetLeftPosition(col, 'px'), width: columnWidthPx }"
+                    <div class="position-absolute text-center" 
+                    :style="{ left:getLeftPosition(cols.indexOf(col), 'px'), width: columnWidthPx }"
                     style="top: 0px" 
                     v-for="col in cols" 
                     :key="col.id" >
 
                     <div v-if="personnels.length">
-                        <div class="d-flex align-items-center my-1 mx-1">
+                        <div class="d-flex align-items-center">
                             <div class="me-1">
                                 <UserImage :name="col.cache_nom" />
                             </div>
-                            <h5 class="my-0 fs-5">{{ col.cache_nom }}</h5>
+                            <h5 class="fs-5">{{ col.cache_nom }}</h5>
                         </div>
                     </div>
 
@@ -106,7 +107,7 @@ export default {
          * @return {number}
          */
         gridCols() {
-            return Math.round(this.cols.length / 2);
+            return Math.round(this.grid.cols +1 / 2);
         },
 
         cols(){
@@ -145,11 +146,6 @@ export default {
          */
         getLeftPosition(n, sx, coef) {
             return this.grid.getLeftPosition(n, sx, coef);
-        },
-
-        callGetLeftPosition(item, sx, coef){
-            let n = this.cols.indexOf(item);
-            return this.grid.getLeftPosition(n,sx,coef)
         }
     }
 }

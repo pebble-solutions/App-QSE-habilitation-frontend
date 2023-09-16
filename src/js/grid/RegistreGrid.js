@@ -50,6 +50,7 @@ export class RegistreGrid {
      */
     getLeftPosition(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
+        console.log(this.firstColumnWidth, this.secondColumnWidth, this.columnWidth)
         const left = (n-1) * (this.columnWidth * coef) + this.firstColumnWidth + this.secondColumnWidth;
         return sx ? `${left}${sx}` : left;
     }
