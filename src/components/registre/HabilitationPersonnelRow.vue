@@ -23,7 +23,7 @@
 <script>
 // import { diffDate } from '../../js/date';
 import UserImage from '../pebble-ui/UserImage.vue';
-import { WeeksGrid } from '../../js/grid/WeeksGrid';
+import { RegistreGrid } from '../../js/grid/RegistreGrid';
 // import { getSelfDateEnd, getSelfDateStart } from '../../js/contrat';
 
 export default {
@@ -34,7 +34,7 @@ export default {
         habilitationsPersonnels: Array,
         personnel: Object,
         rowLabel: String,
-        grid: WeeksGrid,
+        grid: RegistreGrid,
         useUserImage: {
             type: Boolean,
             default: false

@@ -1,6 +1,6 @@
 <template>
         <div class="my-3">
-        <RegistreGrid
+        <RegistreGridVue
             :grid="grid"
             headerLabel="Habilitations"
             :personnels="personnels"
@@ -16,14 +16,14 @@
                 v-for="(habilitationType, index) in usedHabilitationsTypes"
                 :key="index" />
 
-        </RegistreGrid>
+        </RegistreGridVue>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import { WeeksGrid } from '../../js/grid/WeeksGrid';
-import RegistreGrid from '../grid/RegistreGrid.vue';
+import { RegistreGrid } from '../../js/grid/RegistreGrid.js';
+import RegistreGridVue from '../grid/RegistreGrid.vue';
 import HabilitationPersonnelRow from './HabilitationPersonnelRow.vue';
 
 export default {
@@ -36,14 +36,14 @@ export default {
 
     data() {
 		return {
-			// size : 50,
-            size : 50,
+            size : 150,
             firstColumnWidth: 200,
+            secondColumnWidth: 200,
             grid: null
 		}
 	},
 
-    components: { RegistreGrid, HabilitationPersonnelRow},
+    components: { RegistreGridVue, HabilitationPersonnelRow},
 
     computed: {
         ...mapState(['echeancier']),
@@ -100,11 +100,13 @@ export default {
          * Initialise la grille d'affichage
          */
         initGrid() {
-            this.grid = new WeeksGrid({
+            this.grid = new RegistreGrid({
                 columnWidth: this.size,
                 rowHeight: this.row,
+                secondColumnWidth: this.secondColumnWidth,
                 firstColumnWidth: this.firstColumnWidth,
-                rows: this.usedHabilitationsTypes.length + 1
+                rows: this.usedHabilitationsTypes.length + 1,
+                cols: this.personnels.length
             });
         }
     },

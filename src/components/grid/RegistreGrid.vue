@@ -4,7 +4,7 @@
 
         <div class="table-grid" :style="{width : tableWidthPx}">
             <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2) }"></div>
-            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }"></div>
+            <div v-for="n in gridCols" class="table-col border border-primary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -18,16 +18,14 @@
                     v-for="col in cols" 
                     :key="col.id" >
 
-                    <UserImage :name="col.cache_nom" v-if="personnels.length"/>
-
-                    <!-- <div v-if="personnels.length">
-                        <div class="d-flex align-items-center my-2 mx-2">
-                            <div class="me-2">
+                    <div v-if="personnels.length">
+                        <div class="d-flex align-items-center my-1 mx-1">
+                            <div class="me-1">
                                 <UserImage :name="col.cache_nom" />
                             </div>
-                            <h3 class="my-0 fs-5">{{ col.cache_nom }}</h3>
+                            <h5 class="my-0 fs-5">{{ col.cache_nom }}</h5>
                         </div>
-                    </div> -->
+                    </div>
 
                 </div>
             </div>
@@ -43,13 +41,13 @@
 </style>
 
 <script>
-import { WeeksGrid } from '../../js/grid/WeeksGrid';
+import { RegistreGrid } from '../../js/grid/RegistreGrid.js';
 import UserImage from '../pebble-ui/UserImage.vue';
 
 export default {
     props: {
         grid: {
-            type: WeeksGrid, // Assurez-vous que WeeksGrid est bien un objet si c'est le cas
+            type: RegistreGrid,
             required: true
         },
         headerLabel: String,
