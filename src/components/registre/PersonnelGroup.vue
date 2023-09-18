@@ -36,8 +36,9 @@ export default {
 
     data() {
 		return {
-            size : 150,
+            size : 200,
             firstColumnWidth: 200,
+            firstColumnHeight: 500,
             secondColumnWidth: 200,
             row: 50,
             grid: null
@@ -106,6 +107,7 @@ export default {
                 rowHeight: this.row,
                 secondColumnWidth: this.secondColumnWidth,
                 firstColumnWidth: this.firstColumnWidth,
+                firstColumnHeight : this.firstColumnHeight,
                 rows: this.usedHabilitationsTypes.length + 1,
                 cols: this.personnels.length
             });

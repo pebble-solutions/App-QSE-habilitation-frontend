@@ -17,6 +17,7 @@ export class RegistreGrid {
         this.columnWidth = options.columnWidth;
         this.rowHeight = options.rowHeight;
         this.firstColumnWidth = options.firstColumnWidth;
+        this.firstColumnHeight = options.firstColumnHeight;
         this.secondColumnWidth = options.secondColumnWidth;
         this.dateStart = options.dateStart;
         this.dateEnd = options.dateEnd;
@@ -50,7 +51,7 @@ export class RegistreGrid {
      */
     getLeftPosition(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
-        const left = (n-1) * (this.columnWidth * coef) + this.firstColumnWidth + this.secondColumnWidth;
+        const left = ((n-1) * (this.columnWidth * coef)) + this.firstColumnWidth + this.secondColumnWidth;
         return sx ? `${left}${sx}` : left;
     }
 
@@ -87,7 +88,8 @@ export class RegistreGrid {
      * @return {string|number}
      */
     getTableHeight(sx) {
-        const height = (this.rows) * this.rowHeight;
+        const height = (this.rows) * this.firstColumnHeight + this.rowHeight;
+
         return sx ? `${height}px` : height;
     }
 }

@@ -3,9 +3,10 @@
     <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
 
         <div class="table-grid" :style="{width : tableWidthPx}">
-            <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2) }"></div>
-            <div class="table-col border border-secondary" :style="{ left: grid.secondColumnWidth + 'px' }"></div>
-            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2) }"></div>
+            <div v-for="n in gridRows" class="table-row border border-primary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px'}">{{n}}</div>
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px'), left: grid.firstColumnWidth + 'px'}">{{n}}</div>
+            <div class="table-col border border-warning" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
+            <div v-for="n in gridCols" class="table-col border border-success" :key="n" :style="{ left: getLeftPosition(n, 'px', 2), width: columnWidthPx}"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -14,7 +15,7 @@
                     <strong>{{ headerLabel }}</strong>
                 </div>
                     <div class="position-absolute text-center" 
-                        :style="{ left:getLeftPosition(cols.indexOf(col), 'px'), width: columnWidthPx }"
+                        :style="{ left:getLeftPosition(cols.indexOf(col) + 1, 'px'), width: columnWidthPx }"
                         style="top: 0px" 
                         v-for="col in cols" 
                         :key="col.id" >
@@ -24,7 +25,7 @@
                                 <div class="me-1">
                                     <UserImage :name="col.cache_nom" />
                                 </div>
-                                <h5 class="fs-5">{{ col.cache_nom }}</h5>
+                                <h5 class="fs-5">{{ personnelName(col) }}</h5>
                             </div>
                         </div>
 
@@ -101,6 +102,15 @@ export default {
             return Math.trunc((this.grid.rows +1) / 2);
         },
 
+         /**
+         * Retourne le nombre de lignes à tracer, incluant l'entête
+         * 
+         * @return {number}
+         */
+        infoGridRows(){
+            return Math.trunc(((this.grid.rows*10) +1) / 2);
+        },
+
         /**
          * Retourne le nombre de colonne à tracer incluant l'entête
          * 
@@ -136,6 +146,19 @@ export default {
         },
 
         /**
+         * Retourne la position d'une ligne depuis le haut du tableau
+         * 
+         * @param {number} n Index de la ligne
+         * @param {string} sx Suffix à ajouter à la valeur (ex : "px")
+         * @param {number} coef Coeficient (2 = une ligne sur deux)
+         * 
+         * @return {string|number}
+         */
+         getTopPositionHabilitation(n, sx, coef) {
+            return this.grid.getTopPosition(n, sx, coef);
+        },
+
+        /**
          * Retourne la position d'une colonne depuis la gauche du tableau
          * 
          * @param {number} n Index de la colonne
@@ -146,6 +169,25 @@ export default {
          */
         getLeftPosition(n, sx, coef) {
             return this.grid.getLeftPosition(n, sx, coef);
+        },
+
+        /**
+         * Retourne le nom du personnel d'une colonne du tableau
+         * 
+         * @param {object} personnel personnel de la collonne
+         * 
+         * @return {string}
+         */
+        personnelName(personnel){
+            if (personnel.cache_nom) {
+                const [nom, prenom] = personnel.cache_nom.split(" ");
+                const nomFormate = nom.toUpperCase();
+                const prenomFormate = prenom.charAt(0).toUpperCase() + prenom.slice(1).toLowerCase();
+                const nomFinal = `${nomFormate}\n${prenomFormate}`;
+
+                return nomFinal
+            }
+            return "Aucun nom renseigné"
         }
     }
 }
