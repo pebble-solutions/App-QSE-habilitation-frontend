@@ -4,8 +4,7 @@
      size="lg"
      @modal-hide="routeToParent()"
      :pending="pending.collecte">
-        <!-- <HabMonitorPersonnel></HabMonitorPersonnel> -->
-        <ConsultationCollecteResume :collecte="collecte"></ConsultationCollecteResume>
+        <ConsultationCollecteResume v-if="collecte" :collecte="collecte"></ConsultationCollecteResume>
     </AppModal>
     
 </template>

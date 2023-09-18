@@ -3,6 +3,7 @@
         <div v-if="!pending.type">
             <div class="row mb-2">
                     <label for="intitule" class="form-label">Intitulé</label>
+                    
                     <input class="form-control" name="intitule" id="intitule" type="text" v-model="type.nom">
             </div>
             <div class="row  mb-2">

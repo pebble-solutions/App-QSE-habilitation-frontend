@@ -1,10 +1,7 @@
 <template>
 	<div class="card bg-light" v-if="!pending.control">
-		<!-- veille{{ veille }}
-		<br><br>
-		detail habilitation{{ personnelHabilitation.personnel.dsortie}}
-		<br><br>
-		config veille{{ veilleConfig }} -->
+		
+		
 		
 		<div class="card-body">
 			<!-- Titre -->
@@ -42,12 +39,11 @@
 			
 			<!-- Colonne 3 : caractéristique veille-->
 			<div class="col-lg-4 col-12 px-2" >
-				
 				<Spinner v-if="veille && pending.control"></Spinner>
 				<template v-else-if="veille && !pending.control">
-					<span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>Veille tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
+					Veille  <span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
 					<div v-if="veille">
-						<div>Dernier contrôle : {{changeFormatDateLit(veille.date_last)}}</div>
+						<div>Dernier contrôle : <span class="fw-lighter ms-2">{{changeFormatDateLit(veille.date_last)}}</span> </div>
 					</div>  
 					<!-- Composant ProgressBar -->
 					<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
@@ -62,10 +58,9 @@
 		</div>
 	</div>
 </div>
-<RouterView></RouterView>
 </template>
 <script>
-import { Tooltip } from 'bootstrap';
+// import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
 import Spinner from './pebble-ui/Spinner.vue';
@@ -136,12 +131,12 @@ export default {
 	mounted() {
 		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
-		this.$nextTick(function () {
-			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-			tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-				return new Tooltip(tooltipTriggerEl)
-			})
-		})
+		// this.$nextTick(function () {
+		// 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		// 	tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+		// 		return new Tooltip(tooltipTriggerEl)
+		// 	})
+		// })
 	}
 }
 </script>

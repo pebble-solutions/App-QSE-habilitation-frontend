@@ -55,7 +55,6 @@
             </div>
             <div  v-if="!pending.load && !pending.control && !pending.veille && listHabPersoType">
                 <div class="my-3" v-for="personnelHabilitation in listHabPersoType" :key="personnelHabilitation.id">
-                    <!-- {{ personnelHabilitation }} -->
                     <HabMonitorPersonnel 
                     :personnelHabilitation="personnelHabilitation"
                     :veilleConfig="veilleConfig" 
@@ -67,11 +66,11 @@
                 </div>
             </div>
             <Spinner v-else-if="pending.load || pending.control || pending.veille && !listHabPersoType"></Spinner>
-            <div v-else>Pas d'ahbilitation</div>
+            <div v-else>Pas d'habilitation</div>
         </div>
-        <RouterView></RouterView>
         
-     </div>
+    </div>
+    <RouterView></RouterView>
 </template>
 
 
@@ -178,6 +177,7 @@ export default {
             this.pending.veille = true
             try {
                 this.listVeille = await this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 });
+                console.log(this.listveille)
             }
             catch (e) {
                 this.$app.catchError(e)
@@ -298,7 +298,7 @@ export default {
 
     },
 
-    components: { AlertMessage, Spinner,  RouterView,  HabMonitorPersonnel } //HabMonitor
+    components: { AlertMessage, Spinner,  HabMonitorPersonnel, RouterView} //HabMonitor
  //RouterView
 }
 </script>
