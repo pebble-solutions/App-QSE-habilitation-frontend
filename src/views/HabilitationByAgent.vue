@@ -11,17 +11,17 @@
     </div>
 
 
-    <!-- <div class="container text-custom p-2 mb-2">
-        <h2 class="card-title text-center mb-1">Statistiques : </h2>
+    <div class="container text-custom p-2 mb-2">
+        <h2 class="card-title text-center mb-1">Statistiques :</h2>
         <div class="row">
             <div class="col-md-6 p-3">
-                <img src="../assets/chart1.png" alt="icone 1" class="img-fluid rounded shadow">
+                <div ref="chart1" style="width: 100%; height: 300px;"></div>
             </div>
             <div class="col-md-6 p-3">
-                <img src="../assets/chart3.png" alt="icone 3" class="img-fluid rounded shadow">
+                <div ref="chart2" style="width: 100%; height: 300px;"></div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <div class="container py-2 px-2">
         <div v-if="!pending.agent && !pending.control" class="card bg-custom text-white p-4 mb-4 shadow">
@@ -45,6 +45,7 @@ import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import * as echarts from 'echarts';
 
 export default {
     components: { SuspensionsPersonnelInformations, HabMonitor, Spinner },
@@ -80,6 +81,46 @@ export default {
     },
 
     methods: {
+
+
+        createEChartsCharts() {
+            // Récupérez les références aux div
+            const chart1Container = this.$refs.chart1;
+            const chart2Container = this.$refs.chart2;
+
+            // Créez une instance de graphique ECharts dans chaque div
+            const chart1 = echarts.init(chart1Container);
+            const chart2 = echarts.init(chart2Container);
+
+            // Options pour le premier graphique
+            const option1 = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        data: [120, 200, 150, 80, 70, 110, 130],
+                        type: 'bar'
+                    }
+                ]
+            };
+
+            // Options pour le deuxième graphique (vous pouvez personnaliser cela)
+            const option2 = {
+                // ...
+            };
+
+            // Appliquez les options aux graphiques
+            chart1.setOption(option1);
+            chart2.setOption(option2);
+        },
+
+
+
         /**
          * Envoie une requête pour charger la liste des habilitations d'un personnel
          * en fonction de l'id fourni
@@ -174,7 +215,11 @@ export default {
          * Charge la liste des habilitations du personnel concerné.
          */
         this.loadHabilitationFromPersonnel(this.$route.params.id);
-    }
+    },
+    mounted() {
+        this.createEChartsCharts();
+        this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
+    },
 }
 </script>
   
