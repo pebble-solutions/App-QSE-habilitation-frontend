@@ -1,5 +1,15 @@
 <template>
-    <SuspensionsPersonnelInformations></SuspensionsPersonnelInformations>
+    <div class="container py-2">
+        <div class="card bg-custom mt-4">
+            <div class="card-body">
+                <h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
+                        class="text-secondary">#{{
+                            $route.params.id }}</span></h2>
+                <SuspensionsPersonnelInformations></SuspensionsPersonnelInformations>
+            </div>
+        </div>
+    </div>
+
 
     <!-- <div class="container text-custom p-2 mb-2">
         <h2 class="card-title text-center mb-1">Statistiques : </h2>
@@ -16,15 +26,15 @@
     <div class="container py-2 px-2">
         <div v-if="!pending.agent && !pending.control" class="card bg-custom text-white p-4 mb-4 shadow">
             <template v-if="listHabByPersoJoinType.length">
-            <h2 class="card-title text-center mb-3">Toutes les habilitations : </h2>
-            <div class="card mb-2" v-for="hab in listHabByPersoJoinType" :key="hab.id">
-                <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
-                </HabMonitor>
-            </div>
+                <h2 class="card-title text-center mb-3">Toutes les habilitations : </h2>
+                <div class="card mb-2" v-for="hab in listHabByPersoJoinType" :key="hab.id">
+                    <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
+                    </HabMonitor>
+                </div>
             </template>
             <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
         </div>
-        <spinner v-else ></spinner>
+        <spinner v-else></spinner>
     </div>
 </template>
   
@@ -35,6 +45,7 @@ import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+
 export default {
     components: { SuspensionsPersonnelInformations, HabMonitor, Spinner },
 
@@ -51,14 +62,21 @@ export default {
     },
 
     computed: {
-        ...mapState(['types', 'personnelsFiltered', 'suspensions', 'habilitationsPersonnels', 'veilles']),
+        ...mapState(['types', 'personnelsFiltered', 'suspensions', 'habilitationsPersonnels', 'veilles', 'personnels']),
 
         /**
          * retourne les informations du personnel depuis l'id passé dans l'url
          */
         currentPersonnel() {
             return this.personnelsFiltered.find((e) => e.id == this.$route.params.id);
-        }
+        },
+        /**
+      * Retourne l'objet personnel correspondant à l'ID de l'URL.
+      * @return {Object} L'objet personnel correspondant à l'ID.
+      */
+        personnel() {
+            return this.personnels.find(el => el.id == this.$route.params.id);
+        },
     },
 
     methods: {

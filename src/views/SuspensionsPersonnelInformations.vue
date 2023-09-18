@@ -1,51 +1,45 @@
 <template>
-    <div class="container py-2">
-        <div class="card bg-custom mt-4">
-            <div class="card-body">
-                <h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
-                        class="text-secondary">#{{
-                            $route.params.id }}</span></h2>
-
-                <div class="row row px-3 mt-4">
-                    <div class="card col-md-6 mb-4">
-                        <div class="card-body">
-                            <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
-                            <ul class="custom-ul">
-                                <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
-                                    v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
-                                    {{ getHabilitationTypeName(hab.habilitation_type_id) }}
-                                </li>
-                            </ul>
-                            <p v-if="getNonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
-                                autre
-                                habilitation</p>
-                        </div>
-                    </div>
-                    <div class="card col-md-6 mb-4">
-                        <div class="card-body">
-                            <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
-                            <ul class="custom-ul">
-                                <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
-                                    v-for="hab in getSuspendedHabilitations" :key="hab.id">
-                                    <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
-                                    <span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    <div>
+        <div class="row row px-3 mt-4" v-if="habilitationPersonnel.length > 0">
+            <div class="card col-md-6 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
+                    <ul class="custom-ul">
+                        <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
+                            v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+                            {{ getHabilitationTypeName(hab.habilitation_type_id) }}
+                        </li>
+                    </ul>
+                    <p v-if="getNonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
+                        autre
+                        habilitation</p>
                 </div>
             </div>
+            <div class="card col-md-6 mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
+                    <ul class="custom-ul">
+                        <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
+                            v-for="hab in getSuspendedHabilitations" :key="hab.id">
+                            <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
+                            <span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-secondary" v-else>
         </div>
     </div>
 </template>
 
+
 <script>
 import { mapState } from 'vuex';
-// import HabMonitorPersonnel from '../components/HabMonitorPersonnel.vue';
 import { dateFormat } from '../js/collecte';
 
 export default {
-    // components: { HabMonitorPersonnel },
+
     data() {
         return {
             pending: {
@@ -163,7 +157,7 @@ export default {
         '$route.params.id': 'loadHabilitationFromPersonnel',
     },
 
-    
+
     methods: {
 
         /**
