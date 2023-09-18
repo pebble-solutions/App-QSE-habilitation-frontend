@@ -14,13 +14,17 @@
     </div> -->
 
     <div class="container py-2 px-2">
-        <div class="card bg-custom text-white p-4 mb-4 shadow">
+        <div v-if="!pending.agent && !pending.control" class="card bg-custom text-white p-4 mb-4 shadow">
+            <template v-if="listHabByPersoJoinType.length">
             <h2 class="card-title text-center mb-3">Toutes les habilitations : </h2>
             <div class="card mb-2" v-for="hab in listHabByPersoJoinType" :key="hab.id">
                 <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
                 </HabMonitor>
             </div>
+            </template>
+            <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
         </div>
+        <spinner v-else ></spinner>
     </div>
 </template>
   
@@ -30,9 +34,9 @@ import { dateFormat } from '../js/collecte';
 import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations.vue';
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
-
+import Spinner from '../components/pebble-ui/Spinner.vue';
 export default {
-    components: { SuspensionsPersonnelInformations, HabMonitor },
+    components: { SuspensionsPersonnelInformations, HabMonitor, Spinner },
 
     data() {
         return {
@@ -93,7 +97,8 @@ export default {
 
             for (let i = 0; i < this.listHabByPersoJoinType.length; i++) {
                 this.pending.control = true;
-                if (this.listHabByPersoJoinType[i].configVeille.id) {
+                console.log(this.listHabByPersoJoinType[i].configVeille, "config veille .id");
+                if (this.listHabByPersoJoinType[i].configVeille) {
                     await this.$app.apiGet('v2/controle/veille/' + this.listHabByPersoJoinType[i].configVeille.id + '/todo', { CSP_min: 0, CSP_max: 600 })
                         .then((data) => {
                             let veille = data;
@@ -109,7 +114,8 @@ export default {
                         .catch(this.$app.catchError).finally(() => this.pending.control = false);
                 }
                 else {
-                    console.log(this.listHabByPersoJoinType[i].configVeille.id, "pas de config veille id");
+                    console.log(this.listHabByPersoJoinType[i].configVeille, "pas de config veille id");
+                    this.pending.control = false;
                 }
             }
 

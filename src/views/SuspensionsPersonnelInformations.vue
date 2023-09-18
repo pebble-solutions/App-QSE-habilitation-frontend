@@ -34,13 +34,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="mb-4">
-                    <h2 class="card-title text-center text-white mb-3">Toutes les habilitations : </h2>
-                    <div class="card mb-2" v-for="hab in habilitationFromPerso" :key="hab.id">
-                        <HabMonitorPersonnel :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
-                        </HabMonitorPersonnel>
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
