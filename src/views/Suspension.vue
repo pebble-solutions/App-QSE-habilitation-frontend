@@ -244,9 +244,9 @@ export default {
 
 /* Effet d'agrandissement et d'ombre au survol */
 .card-hover:hover {
-    transform: translate3D(0, -1px, 0) scale(1.025);
+    transform: translate3D(0, -1px, 0) scale(1.02);
     /* Zoom in */
-    box-shadow: 8px 15px 60px rgba(33, 37, 41, 0.217), 1px 6px 12px rgba(35, 39, 42, 0.184);
+    box-shadow: 8px 10px 70px rgba(45, 39, 37, 0.173), 1px 6px 12px rgba(46, 37, 36, 0.184);
     transition: all .15s ease;
     cursor: pointer;
     background-color: #fceae4;
