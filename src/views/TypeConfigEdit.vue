@@ -53,7 +53,6 @@ export default {
     methods: {
         
         updateType(payload) {
-            // console.log(payload)
             this.type = payload;
         },
 

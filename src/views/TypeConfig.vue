@@ -177,7 +177,6 @@ export default {
             this.pending.veille = true
             try {
                 this.listVeille = await this.$app.apiGet('v2/controle/veille/' + id + '/todo', { CSP_min: 0, CSP_max: 600 });
-                console.log(this.listveille)
             }
             catch (e) {
                 this.$app.catchError(e)
