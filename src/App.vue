@@ -548,6 +548,7 @@ export default {
 						await this.$assets.getCollection("personnels").load();
 						await this.$assets.getCollection("habilitationsPersonnels").load();
 						await this.$assets.getCollection("personnelsFiltered").load();
+						// await this.$assets.getCollection("suspensions").load();
 
 						// Mettre à jour currentItemId en fonction des paramètres de l'URL
 						const currentItemIdFromURL = parseInt(this.$route.params.id);
