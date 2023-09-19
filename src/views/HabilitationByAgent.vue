@@ -29,8 +29,7 @@
             <template v-if="listHabByPersoJoinType.length">
                 <h2 class="card-title text-center mb-3">Toutes les habilitations : </h2>
                 <div class="card mb-2" v-for="hab in listHabByPersoJoinType" :key="hab.id">
-                    <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
-                    </HabMonitor>
+                    <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false" />
                 </div>
             </template>
             <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
@@ -41,7 +40,6 @@
   
 <script>
 import { mapState } from 'vuex';
-import { dateFormat } from '../js/collecte';
 import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations.vue';
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
@@ -299,16 +297,7 @@ export default {
         returnNameHab(id) {
             let hab = this.habilitationType.find((e) => e.id == id);
             return hab.nom;
-        },
-
-        /**
-         * Modifie le format de la date au format 01 févr. 2021.
-         * @param {string} el - Date à formater
-         * @returns {string} Date formatée
-         */
-        changeFormatDateLit(el) {
-            return dateFormat(el);
-        },
+        }
     },
 
     /**

@@ -6,7 +6,8 @@ export const ROUTES_NAMES = {
 		'typeConfig',
 		'editConfig',
 		'editVeille',
-		'newVeille'
+		'newVeille',
+		'readCollecte'
 	],
 	operateur: [
 		'operateur',

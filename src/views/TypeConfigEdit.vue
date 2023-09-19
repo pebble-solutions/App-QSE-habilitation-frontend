@@ -53,7 +53,6 @@ export default {
     methods: {
         
         updateType(payload) {
-            // console.log(payload)
             this.type = payload;
         },
 
@@ -130,7 +129,7 @@ export default {
          * Retourne a la vue précédente
          */
         routeToParent() {
-            this.$router.back()
+            this.$router.go(-1)
         },
         
     },

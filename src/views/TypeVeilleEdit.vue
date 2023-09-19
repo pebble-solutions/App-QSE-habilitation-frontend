@@ -49,7 +49,6 @@ export default{
 
     methods: {
         updateVeille(payload) {
-            console.log(payload)
             this.veille = payload;
         },
         /**

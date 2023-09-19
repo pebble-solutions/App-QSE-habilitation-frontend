@@ -1,15 +1,13 @@
 <template>
 	<div class="card bg-light" v-if="!pending.control">
-		<!-- veille{{ veille }}
-		<br><br>
-		detail habilitation{{ personnelHabilitation }}
-		<br><br>
-		config veille{{ veilleConfig }} -->
+		
+		
 		
 		<div class="card-body">
 			<!-- Titre -->
 			<div class="text-center mb-1">
 				<strong v-if="displayAgent" class="me-2">{{returnName(personnelHabilitation.personnel_id)}}</strong>
+				<!-- <span v-if="personnelHabilitation.personnel.dsortie">date sortie le {{ changeFormatDateLit(personnelHabilitation.personnel.dsortie) }}</span> -->
 				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
 			</div>
 			<div class="row">
@@ -29,11 +27,11 @@
 						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 						<span v-else>Pas de contrôle enregistré</span>
 					</div>
-					<div v-if="controles"  class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+					<div v-if="controles"  class="d-flex  flex-wrap align-items-center justify-content-start px-2">
 						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
-						
+						@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+ ' du '+changeFormatDateLit(kn.date_done) ">
 						{{ kn.sami }}
 						</button>
 					</div>
@@ -41,12 +39,11 @@
 			
 			<!-- Colonne 3 : caractéristique veille-->
 			<div class="col-lg-4 col-12 px-2" >
-				
 				<Spinner v-if="veille && pending.control"></Spinner>
 				<template v-else-if="veille && !pending.control">
-					<span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>Veille tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
+					Veille  <span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
 					<div v-if="veille">
-						<div>Dernier contrôle : {{changeFormatDateLit(veille.date_last)}}</div>
+						<div>Dernier contrôle : <span class="fw-lighter ms-2">{{changeFormatDateLit(veille.date_last)}}</span> </div>
 					</div>  
 					<!-- Composant ProgressBar -->
 					<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
@@ -63,7 +60,7 @@
 </div>
 </template>
 <script>
-import { Tooltip } from 'bootstrap';
+// import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
 import Spinner from './pebble-ui/Spinner.vue';
@@ -134,12 +131,12 @@ export default {
 	mounted() {
 		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
-		this.$nextTick(function () {
-			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-			tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-				return new Tooltip(tooltipTriggerEl)
-			})
-		})
+		// this.$nextTick(function () {
+		// 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		// 	tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+		// 		return new Tooltip(tooltipTriggerEl)
+		// 	})
+		// })
 	}
 }
 </script>
