@@ -14,6 +14,7 @@
     "bootstrap-icons": "^1.10.5",
     "core-js": "^3.26.1",
     "date-and-time": "^3.0.2",
+    "echarts": "^5.4.3",
     "firebase": "^9.23.0",
     "jwt-decode": "^3.1.2",
     "string-to-color": "^2.2.2",
