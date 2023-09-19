@@ -1,6 +1,7 @@
 <template>
   <div class="card" v-if="!pending.control">
     <div class="card-body">
+      
       <!-- Titre -->
       <div class="text-secondary text-center mb-1">
         <span class="fw-light me-2">Habilitation #{{ hab.habilitation_type_id }}</span>
@@ -26,12 +27,14 @@
         <!-- Colonne 2 : Résultat de groupe -->
         <div class="col">
           <div class="d-flex align-items-center justify-content-start my-2">
+          
             <button v-for="kn in listControlDone" :key="kn.id"
               :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
               :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
               {{ kn.result_var }}
             </button>
           </div>
+        
           
         </div>
         

@@ -29,6 +29,7 @@
             <template v-if="listHabByPersoJoinType.length">
                 <h2 class="card-title text-center mb-3">Toutes les habilitations : </h2>
                 <div class="card mb-2" v-for="hab in listHabByPersoJoinType" :key="hab.id">
+                    {{ hab }}
                     <HabMonitor :personnelHabilitation="hab" :displayHab="true" :displayAgent="false">
                     </HabMonitor>
                 </div>
@@ -37,6 +38,7 @@
         </div>
         <spinner v-else></spinner>
     </div>
+    <RouterView></RouterView>
 </template>
   
 <script>
@@ -46,11 +48,12 @@ import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import { RouterView } from 'vue-router';
 // import * as echarts from 'echarts';
 
 
 export default {
-    components: { SuspensionsPersonnelInformations, HabMonitor, Spinner },
+    components: {  HabMonitor, Spinner, RouterView, SuspensionsPersonnelInformations}, //SuspensionsPersonnelInformations
 
     data() {
         return {

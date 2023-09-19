@@ -140,17 +140,22 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
     children: [
       {
-        path: ':idHab',
-        name: 'controlHistory',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
-        children: [
-          {
-            path: ':idCollecte',
-            name: 'controlView',
-            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
-          }
-        ]
-      }
+        path: ':idForm',
+        name: 'AgentStats',
+        component: () => import("../views/AgentReadStats.vue"),
+      },
+      // {
+        //   path: ':idHab',
+        //   name: 'controlHistory',
+        //   component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        //   children: [
+          //     {
+            //       path: ':idCollecte',
+            //       name: 'controlView',
+            //       component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+            //     }
+            //   ]
+            // },
     ]
   },
 ]
