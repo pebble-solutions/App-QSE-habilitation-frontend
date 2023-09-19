@@ -63,13 +63,12 @@ export default {
                 this.type = data,
                 alert('type habilitation '+data.label+'/'+data.id+' crée'),
                 this.$assets.getCollection("types").load();
-                
+                this.routeToParent();
             })
             .catch(this.$app.catchError)
             .finally(() => {
                 this.pending.config = false
                 // this.$router.push('/types/'+this.type.id);
-                this.routeToParent()
             });
 
         },
