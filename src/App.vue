@@ -402,11 +402,14 @@ export default {
 				assetName: 'types',
 				apiRoute: 'v2/habilitation/type'
 			});
+			typesCollection.reset();
 
 			const veillesCollection = new AssetsCollection(this, {
 				assetName: 'veilles',
 				apiRoute: 'v2/controle/veille'
 			});
+			veillesCollection.reset();
+
 			const personnelsCollection = new AssetsCollection(this, {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel',
@@ -414,6 +417,8 @@ export default {
                     limit: "aucune"
                 }
 			});
+			personnelsCollection.reset();
+
 			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel',
@@ -422,18 +427,26 @@ export default {
 					limit: "aucune",
 				}
 			});
+			habilitationsPersonnelsCollection.reset();
+
 			const suspensionsCollection = new AssetsCollection(this, {
 				assetName: 'suspensions',
 				apiRoute: 'v2/habilitation/suspension'
 			});
+			suspensionsCollection.reset();
+
 			const habilitationsCollection = new AssetsCollection(this, {
 				assetName: 'habilitations',
 				apiRoute: 'v2/habilitation'
 			});
+			habilitationsCollection.reset();
+
 			const habilitationsTypesCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsTypes',
 				apiRoute: 'v2/controle/habilitation/type'
 			});
+			habilitationsTypesCollection.reset();
+
 			const personnelsFilteredCollection = new AssetsCollection(this, {
 				name: "personnelsFiltered",
 				assetName: "personnelsFiltered",
@@ -447,6 +460,7 @@ export default {
 					limit: "aucune"
 				}
 			});
+			personnelsFilteredCollection.reset();
 
 			this.$assets.addCollection("types", typesCollection);
 			this.$assets.addCollection("veilles", veillesCollection);
