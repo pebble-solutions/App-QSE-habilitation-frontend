@@ -3,13 +3,14 @@
         <AppModal
         title="STATS"
         size="lg">
-        <div v-if="stats && groupsAndQuestions">
+        <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
             <pre>
                 {{ stats }}
                 {{ groupsAndQuestions }}
             </pre>
             <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
         </div>
+        <div v-else>Chargement...</div>
             
             je suis dans la modal
         </AppModal>
@@ -27,8 +28,8 @@ export default {
                 formulaireStats: false,
                 groupsAndQuestions: false,
             },
-            stats: {},
-            groupsAndQuestions: {},
+            stats: null,
+            groupsAndQuestions: null,
             
         }
     },
