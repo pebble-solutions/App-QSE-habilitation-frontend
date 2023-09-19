@@ -121,6 +121,7 @@ export default {
 		};
 	},
 	methods: {
+
 		/**
 		 * Vérifie si une suspension est trouvée et que la date df est nulle ou dans le futur.
 		 *
@@ -128,77 +129,77 @@ export default {
 		 * @param {number} personnelHabilitationId - L'identifiant de l'habilitation du personnel.
 		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
 		 */
-		function shouldDisplayRedBorder(suspensions, personnelHabilitationId) {
-	if (suspensions && suspensions.length > 0) {
-		for (const suspension of suspensions) {
-			if (suspension.habilitation_id === personnelHabilitationId) {
-				if (suspension.df === null || new Date(suspension.df) > new Date()) {
-					return true; // Afficher la bordure rouge
+		shouldDisplayRedBorder() {
+			// Vérifier si une suspension est trouvée et que la date df est nulle ou dans le futur
+			if (this.suspensions && this.suspensions.length > 0) {
+				for (const suspension of this.suspensions) {
+					if (suspension.habilitation_id === this.personnelHabilitation.id) {
+						if (suspension.df === null || new Date(suspension.df) > new Date()) {
+							return true; // Afficher la bordure rouge
+						}
+					}
 				}
 			}
-		}
-	}
-	return false; // Ne pas afficher la bordure rouge
-}
+			return false; // Ne pas afficher la bordure rouge
+		},
 
+		/**
+		 * Retourne le nom du personnel.
+		 *
+		 * @param {number} id - L'ID du personnel.
+		 * @returns {string} Le nom du personnel ou "personnel non trouvé" si non trouvé.
+		 */
+		returnName(id) {
+			let personnel = this.personnels.find(e => e.id == id);
+			if (personnel) {
+				return personnel.cache_nom;
+			} else {
+				return 'personnel non trouvé';
+			}
+		},
 
-/**
- * Retourne le nom du personnel.
- *
- * @param {number} id - L'ID du personnel.
- * @returns {string} Le nom du personnel ou "personnel non trouvé" si non trouvé.
- */
-returnName(id) {
-	let personnel = this.personnels.find(e => e.id == id);
-	if (personnel) {
-		return personnel.cache_nom;
-	} else {
-		return 'personnel non trouvé';
-	}
-},
+		/**
+		 * Calcule la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle.
+		 *
+		 * @param {Date} date - La date du dernier contrôle réalisé.
+		 * @param {number} pdv - Le pas de veille de la veille concernée.
+		 * @returns {Date} La date d'expiration calculée.
+		 */
+		delay(date, pdv) {
+			let dd = new Date(date);
+			dd.setDate(dd.getDate() + pdv);
+			return dd;
+		},
 
-/**
- * Calcule la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle.
- *
- * @param {Date} date - La date du dernier contrôle réalisé.
- * @param {number} pdv - Le pas de veille de la veille concernée.
- * @returns {Date} La date d'expiration calculée.
- */
-delay(date, pdv) {
-	let dd = new Date(date);
-	dd.setDate(dd.getDate() + pdv);
-	return dd;
-},
+		/**
+		 * Change le format de la date au format littéral.
+		 *
+		 * @param {Date} el - La date à formater.
+		 * @returns {string} La date formatée.
+		 */
+		changeFormatDateLit(el) {
+			return dateFormat(el);
+		},
 
-/**
- * Change le format de la date au format littéral.
- *
- * @param {Date} el - La date à formater.
- * @returns {string} La date formatée.
- */
-changeFormatDateLit(el) {
-	return dateFormat(el);
-},
-
-/**
- * Obtient la classe CSS à partir de la réponse SAMI.
- *
- * @param {string} reponse - La réponse SAMI.
- * @returns {string} La classe CSS correspondante.
- */
-classNameFromSAMI(reponse) {
-	return classNameFromSAMI(reponse);
-},
+		/**
+		 * Obtient la classe CSS à partir de la réponse SAMI.
+		 *
+		 * @param {string} reponse - La réponse SAMI.
+		 * @returns {string} La classe CSS correspondante.
+		 */
+		classNameFromSAMI(reponse) {
+			return classNameFromSAMI(reponse);
+		},
 	},
-mounted() {
-	// Initialisation des tooltips Bootstrap après le rendu du composant
-	this.$nextTick(function () {
-		var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-		tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-			return new Tooltip(tooltipTriggerEl)
+	mounted() {
+		// Initialisation des tooltips Bootstrap après le rendu du composant
+		this.$nextTick(function () {
+			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+			tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+				return new Tooltip(tooltipTriggerEl)
+			})
 		})
-	})
-}
+	}
 }
 </script>
   
