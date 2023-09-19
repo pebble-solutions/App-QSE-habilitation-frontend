@@ -1,199 +1,216 @@
-	<template>
-		<div class="card bg-light" v-if="!pending.control">
-			<div class="card-body">
-				<!-- Titre -->
-				<div class="text-center mb-1">
-					<strong v-if="displayAgent" class="me-2">{{returnName(hab.personnel_id)}}</strong>
-					<strong v-if="displayHab">{{hab.habilitationtype.nom}}</strong>
-				</div>
-				<div class="row">
-					<!-- Colonne 1 : Validité de l'habilitation -->
-					<div class="col-lg-4 col-12">
-						<div class="px-2 mb-3 mb-lg-0">
-							<div class="fw-bold col-12">Validité : 3 ans <span class="fw-lighter">#{{ hab.id}}</span></div>
-							<div class="col-12" >{{ changeFormatDateLit(hab.dd) }}
-								au {{ changeFormatDateLit(hab.df) }}
-							</div>
-							<!-- Composant ProgressBar -->
-							<ProgressBar :dd="new Date(hab.dd)  " :df="new Date(hab.df)"></ProgressBar>
-						</div>
-					</div>
-					<!-- Colonne 2 : Résultat des contrôles -->
-					<div class="col">
-						<div class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
-							<button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
-							:class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-							:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
-							{{ kn.result_var }}
-						</button>
-					</div>
-				</div>
-				
-				<!-- Colonne 3 : caractéristique veille-->
-				<div class="col-lg-4 col-12 px-2">
-					<template v-if="listControlToDo?.length">
-						<div class="">
-							<div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
-							<!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
-							<div class="fw-bold col-12">Veille : 180 jours</div>
-						</div>
-						<!-- Composant ProgressBar -->
-						<ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
-						<div class="text-success" v-else> {{ noLastControl }}<i class="bi bi-check text-success"></i></div>
-					</template>
-					<div class="text-secondary d-flex align-items-center" v-else>
-						<i class="bi bi-calendar2-x me-2"></i>
-						<em>Pas de veille configurée</em>
-					</div>
-				</div>
-				
+<template>
+	<div class="card" :class="{ 'bg-light': !pending.control, 'border-danger red-card': shouldDisplayRedBorder() }">
+		<div v-for="suspension in suspensions" :key="suspension.id">
+			<div
+				v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
+				<div class="ribbon ribbon-top-left"><span>suspendue !</span></div>
 			</div>
 		</div>
-		<!-- info KN{{ info }} -->
+		<div class="card-body">
+			<!-- Titre -->
+			<div class="text-center mb-1">
+				<strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
+				<strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
+			</div>
+			<div class="row p-2">
+				<!-- Colonne 1 : Validité de l'habilitation -->
+				<div class="col-lg-4 col-12">
+					<div class="px-2 pt-2 mb-3 mb-lg-0">
+						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">{{
+							personnelHabilitation.id }}</span></div>
+						<div class="col-12 pb-1">Du {{ changeFormatDateLit(personnelHabilitation.dd) }} au {{
+							changeFormatDateLit(personnelHabilitation.df) }}</div>
+						<!-- Composant ProgressBar -->
+						<ProgressBar class="mb-2" :dd="new Date(personnelHabilitation.dd)"
+							:df="new Date(personnelHabilitation.df)">
+						</ProgressBar>
+						<div>
+							<div v-for="suspension in suspensions" :key="suspension.id">
+								<div
+									v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
+									<div class="text-danger fw-bold">
+										<i class="bi bi-exclamation-triangle-fill me-2"></i>
+										<span>Suspendue le {{ changeFormatDateLit(suspension.dd) }}
+											<template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)
+											}}</template>
+										</span>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+				<!-- Colonne 2 : Résultat des contrôles -->
+				<div class="col-lg-4 col-12">
+					<div class="px-2 pt-2 mb-3 mb-lg-0">
+						<div class="col text-center">
+							<span v-if="personnelHabilitation.last_control_date">Dernier contrôle le {{
+								changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
+							<span v-else>Pas de contrôle enregistré</span>
+							<div v-if="personnelHabilitation.controles"
+								class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+								<button class="mb-2" v-for="kn in personnelHabilitation.controles" :key="kn.id"
+									:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+									:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+									{{ kn.sami }}
+								</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+				<!-- Colonne 3 : caractéristique veille -->
+				<div class=" col-lg-4 col-12">
+					<div class="px-2 pt-2 mb-3 mb-lg-0">
+						<template v-if="personnelHabilitation.configVeille">
+							<span class="fw-lighter me-2">#{{ personnelHabilitation.configVeille.id }}</span><span>Veille
+								tous
+								les <span class="fw-lighter">{{ personnelHabilitation.configVeille.control_step }}</span>
+								jours</span>
+							<div v-if="personnelHabilitation.veille">
+								<div>Dernier contrôle : {{ changeFormatDateLit(personnelHabilitation.veille.date_last) }}
+								</div>
+								<ProgressBar :dd="new Date(personnelHabilitation.veille.date_last)"
+									:df="delay(personnelHabilitation.veille.date_last, personnelHabilitation.configVeille.control_step)">
+								</ProgressBar>
+							</div>
+							<div v-else>
+								Pas de contrôle à programmer
+							</div>
+						</template>
+						<div class="text-secondary d-flex align-items-center" v-else>
+							<i class="bi bi-calendar2-x me-2"></i>
+							<em>Pas de contrôle enregistré pour cette veille</em>
+						</div>
+					</div>
+				</div>
+				<div class="col-1">
+					<template v-if="personnelHabilitation.configVeille">
+
+							<RouterLink :to="'/operateur/'+$route.params.id+'/'+personnelHabilitation.configVeille.formulaire_id" custom v-slot="{navigate,href}">
+								<a class="btn btn-primary btn-lg"  :href="href" @click="navigate">Stats</a>
+							</RouterLink>
+							
+					</template>
+					
+					
+				</div>
+			</div>
+			<div v-if="personnelHabilitation.configVeille">
+
+				{{ personnelHabilitation.configVeille.formulaire_id }}
+			</div>
+		</div>
 	</div>
 </template>
+
+  
 <script>
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
+import { RouterLink} from 'vue-router';
+
+
 import { mapState } from 'vuex';
 export default {
-	components: { ProgressBar},
+	components: { ProgressBar, RouterLink },
 	props: {
-		hab: Object,
-		veilleConfig: Object,
+		habId: Number,
 		collecte: Object,
 		info: Object,
 		displayAgent: Boolean,
-		displayHab: Boolean
+		displayHab: Boolean,
+		personnelHabilitation: Object,
+		veille: Object,
+		controles: Object,
 	},
 	computed: {
-		...mapState(['habilitationType', 'listActifs', 'veilleConfig','personnels']),
-		
-		
-		
-		
-		
+		...mapState(['types', 'listActifs', 'personnels', 'suspensions']),
 	},
 	data() {
 		return {
 			pending: {
 				control: false
 			},
-			listControlDone: [],
-			habilitationPerso: [],
-			resultat: '',
-			lastControlDate: '',
-			listControlToDo: [],
-			infosHab: '',
-			lastControl:'',
-			noLastControl: '',
 		};
 	},
 	methods: {
+
 		/**
-		* retourne le nom du personnel
-		* 
-		* @param {number}  id du personnel
-		* 
-		* @return {string}
-		*/
-		returnName(id){
-			let personnel = this.personnels.find (e => e.id == id);
-			if(personnel) {
-				return personnel.cache_nom
+		 * Vérifie si une suspension est trouvée et que la date df est nulle ou dans le futur.
+		 *
+		 * @param {Array} suspensions - La liste des suspensions à vérifier.
+		 * @param {number} personnelHabilitationId - L'identifiant de l'habilitation du personnel.
+		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
+		 */
+		shouldDisplayRedBorder() {
+			// Vérifier si une suspension est trouvée et que la date df est nulle ou dans le futur
+			if (this.suspensions && this.suspensions.length > 0) {
+				for (const suspension of this.suspensions) {
+					if (suspension.habilitation_id === this.personnelHabilitation.id) {
+						if (suspension.df === null || new Date(suspension.df) > new Date()) {
+							return true; // Afficher la bordure rouge
+						}
+					}
+				}
 			}
-			else return id
+			return false; // Ne pas afficher la bordure rouge
 		},
-		
-		
-		filterhabilitationType(id) {
-			let habilitationType = this.habilitationType.find((e) => e.id == id);
-			// let nom = habilitationType.nom
-			return habilitationType
-		},
-		
+
 		/**
-		* Retourne le nom d'une caractéristique (habilitation) par son ID
-		* 
-		* @param {number} id L'ID de la characteristic à chercher
-		* 
-		* @return {string}
-		*/
-		getCharacteristicName(id) {
-			const characteristic = this.filterhabilitationType(id);
-			return characteristic?.nom;
+		 * Retourne le nom du personnel.
+		 *
+		 * @param {number} id - L'ID du personnel.
+		 * @returns {string} Le nom du personnel ou "personnel non trouvé" si non trouvé.
+		 */
+		returnName(id) {
+			let personnel = this.personnels.find(e => e.id == id);
+			if (personnel) {
+				return personnel.cache_nom;
+			} else {
+				return 'personnel non trouvé';
+			}
 		},
-		
-		findVeilleConfig(id) {
-			let veilleConfig = this.veilleConfig.find((v) => v.objet_id == id);
-			this.veille = veilleConfig
-		},
-		
+
 		/**
-		* return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
-		* @param {date} date la date du dernier contôle réalise
-		*/
-		delay(date){
+		 * Calcule la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle.
+		 *
+		 * @param {Date} date - La date du dernier contrôle réalisé.
+		 * @param {number} pdv - Le pas de veille de la veille concernée.
+		 * @returns {Date} La date d'expiration calculée.
+		 */
+		delay(date, pdv) {
 			let dd = new Date(date);
-			
-			dd.setDate(dd.getDate()+180);
-			
-			return dd
-			
-			
+			dd.setDate(dd.getDate() + pdv);
+			return dd;
 		},
-		loadCollecte(id) {
-			this.pending.control = true;
-			this.$app.apiGet('data/GET/collecte', {
-				tli: id,
-				locked: 1
-			})
-			.then((data) => {
-				console.log(data, 'listcontrolDone')
-				this.listControlDone = data;
-			})
-			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-		},
-		
-		loadinfosHabMonitor(id) {
-			this.pending.control = true
-			this.$app.apiGet('v2/collecte', {
-				habilitation_id: id,
-				// kn2kn_info: 'OUI',
-				// retard_info: 'OUI',
-				type: 'KN'
-			})
-			.then((data) => {
-				console.log(data, 'infosHab')
-				this.infosHab = data
-			})
-			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-		},
-		
-		loadHabilitation(id) {
-			this.pending.control = true;
-			this.$app.apiGet('v2/controle/habilitation', {
-				id: id,
-			})
-			.then((data) => {
-				this.habilitationPerso = data;
-				// this.hab = data[0]
-				console.log(data, 'hab')
-			})
-			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-		},
+
+		/**
+		 * Change le format de la date au format littéral.
+		 *
+		 * @param {Date} el - La date à formater.
+		 * @returns {string} La date formatée.
+		 */
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+
+		/**
+		 * Obtient la classe CSS à partir de la réponse SAMI.
+		 *
+		 * @param {string} reponse - La réponse SAMI.
+		 * @returns {string} La classe CSS correspondante.
+		 */
 		classNameFromSAMI(reponse) {
 			return classNameFromSAMI(reponse);
 		},
 	},
 	mounted() {
-		// this.loadHabilitation(this.habId)
-		// this.loadinfosHabMonitor(this.habId)
-		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
 		this.$nextTick(function () {
 			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -204,7 +221,8 @@ export default {
 	}
 }
 </script>
-<style  scoped>
+  
+<style scoped>
 .btn-square {
 	width: 30px;
 	height: 30px;
@@ -232,7 +250,7 @@ export default {
 	padding: 5px;
 	background-color: #000;
 	color: #fff;
-	font-size: 12px;
+	font-size: 16px;
 	border-radius: 3px;
 	white-space: nowrap;
 	opacity: 0;
@@ -244,6 +262,95 @@ export default {
 	opacity: 1;
 	visibility: visible;
 }
+
+/* ruban */
+@import url(https://fonts.googleapis.com/css?family=Lato:700);
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 40vh;
+	background: #f0f0f0;
+}
+
+.box {
+	position: relative;
+	max-width: 500px;
+	width: 80%;
+	height: 300px;
+	background: #fff;
+	box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+}
+
+/* common */
+.ribbon {
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	position: absolute;
+}
+
+.ribbon::before,
+.ribbon::after {
+	position: absolute;
+	z-index: -1;
+	content: '';
+	display: block;
+	border: 5px solid #2980b9;
+}
+
+.ribbon span {
+	position: absolute;
+	display: block;
+	width: 225px;
+	padding: 8px 0;
+	padding-left: 47px;
+	background-color: #dc3545;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+	color: #fff;
+	font: 600 10px/1 'Lato', sans-serif;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	text-transform: uppercase;
+	text-align: center;
+}
+
+/* top left*/
+.ribbon-top-left {
+	top: -3px;
+	left: -3px;
+}
+
+.ribbon-top-left::before,
+.ribbon-top-left::after {
+	border-top-color: transparent;
+	border-left-color: transparent;
+}
+
+.ribbon-top-left::before {
+	top: 0;
+	right: 0;
+}
+
+.ribbon-top-left::after {
+	bottom: 0;
+	left: 0;
+}
+
+.ribbon-top-left span {
+	right: -25px;
+	top: 30px;
+	transform: rotate(-36deg);
+}
+
+.red-card {
+	border: 7px solid red;
+	background-color: #ef151574 !important;
+	color: white !important;
+}
+
+.red-card strong {
+	color: white !important;
+	font-size: 1, 4em !important;
+}
 </style>
-
-

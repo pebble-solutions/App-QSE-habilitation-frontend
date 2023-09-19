@@ -9,14 +9,64 @@ export default createStore({
 		types: [],
 		habilitationType: [],
 		habilitationsPersonnels: [],
-		suspensions:[],
+		suspensions: [
+			{
+				"id": 2,
+				"habilitation_id": 11,
+				"commentaire": null,
+				"dd": "2023-12-01 12:00:00",
+				"df": null
+			},
+			{
+				"id": 1,
+				"habilitation_id": 13,
+				"commentaire": null,
+				"dd": "2023-12-01 12:00:00",
+				"df": null
+			},
+			{
+				"id": 3,
+				"habilitation_id": 608,
+				"commentaire": null,
+				"dd": "2023-07-01 12:00:00",
+				"df": null
+			},
+			{
+				"id": 4,
+				"habilitation_id": 522,
+				"commentaire": null,
+				"dd": "2023-12-01 12:00:00",
+				"df": null
+			},
+			{
+				"id": 5,
+				"habilitation_id":  453,
+				"commentaire": null,
+				"dd": "2022-12-01 12:00:00",
+				"df": "2023-02-01 12:00:00"
+			},
+			{
+				"id": 6,
+				"habilitation_id": 41,
+				"commentaire": null,
+				"dd": "2023-12-01 12:00:00",
+				"df": null
+			},
+			{
+				"id": 7,
+				"habilitation_id": 611,
+				"commentaire": null,
+				"dd": "2023-06-01 12:00:00",
+				"df": null
+			}
+		],
 		veilles: [],
 		formulaires: [],
 		personnels: [],
 		habilitations: [],
 		habilitationsTypes: [],
 		echeancier: null,
-		personnelsFiltered:[],
+		personnelsFiltered: [],
 		pending: {
 			habilitationsPersonnels: false,
 			personnelsFiltered: true,
@@ -57,7 +107,7 @@ export default createStore({
 		setStructureId(state, structureId) {
 			state.activeStructureId = structureId;
 		},
-		
+
 		/**
 		 * Enregistre l'echeance dans le store
 		 * @param {Object} state Le state de l'instance vueX
@@ -126,7 +176,7 @@ export default createStore({
 		 * @param {Object} context 
 		 * @param {Object} data 
 		 */
-		setEcheance(context,data) {
+		setEcheance(context, data) {
 			context.commit('setEcheance', data)
 		},
 		/**

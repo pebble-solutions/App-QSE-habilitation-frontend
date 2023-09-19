@@ -22,8 +22,9 @@
 				</div>
 
 				<!-- Colonne 2 : Résultat des contrôles -->
-				<div class="col">
+				<div class="col text-center">
 					<div>
+						
 						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 						<span v-else>Pas de contrôle enregistré</span>
 					</div>

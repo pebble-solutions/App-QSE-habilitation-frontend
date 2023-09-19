@@ -25,7 +25,6 @@ import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
-import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import ProgressBar from './ProgressBar.vue';
 
 
