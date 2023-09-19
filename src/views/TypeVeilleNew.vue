@@ -68,7 +68,6 @@ export default{
                 tli: this.$route.params.id,
             })
             .then((data) => {
-                    console.log(data, 'retour data')
                     this.veille = data;
                     alert('la configuration "' + this.veille.nom + '" a été créée');
 					this.$assets.getCollection("veilles").load();
