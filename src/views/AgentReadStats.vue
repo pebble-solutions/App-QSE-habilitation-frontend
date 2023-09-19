@@ -4,11 +4,11 @@
         title="STATS"
         size="lg">
         <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
+            <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
             <pre>
                 {{ stats }}
                 {{ groupsAndQuestions }}
             </pre>
-            <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
         </div>
         <div v-else>Chargement...</div>
             
