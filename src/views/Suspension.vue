@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <!-- Titre "Suspensions" avec la couleur de bg-custom -->
+        <!-- Titre "Suspensions" avec la couleur custom -->
         <h1 class="text-center text-custom p-2 mb-4">Suspensions</h1>
         <!-- Liste "Suspensions en cours" -->
         <div class="card bg-custom text-white shadow-lg col-md-12 mt-4">
@@ -19,7 +19,7 @@
                             </div>
                             <!-- Colonne pour les dates, la durée et les commentaires -->
                             <div class="col-md-12 p-2">
-                                <div class="card">
+                                <div class="card bg-light">
                                     <div class="card-body p-1">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -246,11 +246,11 @@ export default {
 .card-hover:hover {
     transform: translate3D(0, -1px, 0) scale(1.025);
     /* Zoom in */
-    box-shadow: 8px 28px 50px rgba(33, 37, 41, 0.217), 1px 6px 12px rgba(39, 44, 49, .04);
-    transition: all .4s ease;
+    box-shadow: 8px 15px 60px rgba(33, 37, 41, 0.217), 1px 6px 12px rgba(35, 39, 42, 0.184);
+    transition: all .15s ease;
     cursor: pointer;
     background-color: #fceae4;
-    border: #f78c6b75 solid 2px;
+    border: #f78c6b51 solid 4px;
 }
 
 .card {
