@@ -7,14 +7,10 @@
     @modal-hide="routeToParent()"
     :submit-btn="true"
     :cancel-btn="true"
-    
-    
     >
-    <FormConfigType
-    :config-type="type"
-    @update-type="updateType"
-   >
-</FormConfigType>
+		<FormConfigType
+		:config-type="type"
+		@update-type="updateType" />
     </AppModal>
 </template>
 <script>
@@ -55,9 +51,8 @@ export default {
          * crée une nouvelle config d'habilitation via API
          * 
          */
-         createConfig(){
+        createConfig(){
             this.pending.config = true
-            alert('Voulez-vous configurer un nouveau type d\'habilitation ?')
             this.$app.apiPost('/v2/habilitation/type', {
                 label: this.type.nom,
                 dd: this.type.dd,
@@ -89,31 +84,3 @@ export default {
 
 }
 </script>
-<style scoped>
-
-.fade-in-modal {
-  animation: fadeIn 0.8s, scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transform-origin: center center;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleUp {
-  0% {
-    transform: scale(0.8);
-  }
-  70% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-</style>

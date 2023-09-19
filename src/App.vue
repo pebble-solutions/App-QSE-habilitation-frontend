@@ -142,10 +142,11 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 }
 
 /* Annule les paddings droit et gauche pour les éléments enfants de .row */
-.row>* {
+/* NON !!!!! IL FAUT ARRÊTER DE MODIFIER LE FONCTIONNEMENT DE BOOTSTRAP */ 
+/*.row>* {
 	padding-right: 0 !important;
 	padding-left: 0 !important;
-}
+}*/
 </style>
 
 <script>
