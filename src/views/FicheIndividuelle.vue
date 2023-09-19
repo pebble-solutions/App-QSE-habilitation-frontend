@@ -81,10 +81,6 @@ export default {
             await assemblerType.joinAsset(this.$assets.getCollection ("types"), 'habilitation_type_id', 'habilitationtype');
             let joinedType = assemblerType.getResult();
             this.listHabPersoType = joinedType;
-
-
-
-
         },
 
 

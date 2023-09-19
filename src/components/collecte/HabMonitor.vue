@@ -245,7 +245,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   padding: 5px;
-  background-color: #000;
+  /* background-color: #000; */
   color: #fff;
   font-size: 12px;
   border-radius: 3px;

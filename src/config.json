@@ -80,7 +80,7 @@
         },
         "dev": {
             "pas": true,
-            "authServer": "172.17.0.4:3333",
+            "authServer": "127.0.0.1:3333",
             "tls": false
         }
     },
@@ -92,7 +92,7 @@
             "projectId": "ace-charter-310713",
             "storageBucket": "ace-charter-310713.appspot.com",
             "messagingSenderId": "914156232758",
-            "appId": "APP ID REGISTERED FOR PRODUCTION"
+            "appId": "1:914156232758:web:5f91c25e7eb7bc9268f897"
         },
         "test": {
             "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
@@ -101,7 +101,7 @@
             "projectId": "ace-charter-310713",
             "storageBucket": "ace-charter-310713.appspot.com",
             "messagingSenderId": "914156232758",
-            "appId": "APP ID REGISTERED FOR TEST"
+            "appId": "1:914156232758:web:5f91c25e7eb7bc9268f897"
         },
         "dev": {
             "apiKey": "AIzaSyAzwQE4rI03KgtFYEN2zkXhqUA1-agVQsA",
