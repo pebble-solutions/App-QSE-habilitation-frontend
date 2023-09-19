@@ -1,3 +1,4 @@
+
 <template>
     <div class="container py-2">
         <div class="card bg-custom mt-4">
@@ -47,6 +48,7 @@ import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import * as echarts from 'echarts';
 
+
 export default {
     components: { SuspensionsPersonnelInformations, HabMonitor, Spinner },
 
@@ -59,6 +61,8 @@ export default {
             habilitationFromPerso: '',
             listControlDone: '',
             listHabByPersoJoinType: '',
+
+
         }
     },
 
@@ -79,10 +83,20 @@ export default {
             return this.personnels.find(el => el.id == this.$route.params.id);
         },
     },
-
     methods: {
 
-
+        /**
+         * Crée deux graphiques ECharts dans des conteneurs HTML spécifiques.
+         * @function
+         * @memberof VotreClasse
+         * @name createEChartsCharts
+         * 
+         * @description Cette méthode initialise deux graphiques ECharts dans des conteneurs HTML donnés, génère des données aléatoires pour les graphiques, et définit des options spécifiques pour chaque graphique.
+         * 
+         * @param {HTMLElement} this.$refs.chart1 - Référence au premier conteneur du graphique.
+         * @param {HTMLElement} this.$refs.chart2 - Référence au deuxième conteneur du graphique.
+         * @returns {void}
+         */
         createEChartsCharts() {
             // Récupérez les références aux div
             const chart1Container = this.$refs.chart1;
@@ -92,33 +106,129 @@ export default {
             const chart1 = echarts.init(chart1Container);
             const chart2 = echarts.init(chart2Container);
 
+
+            // Générer les données pour personnalData avec 6 résultats espacés d'environ 180 jours
+            const personnalData = [];
+            let currentDate = new Date(new Date().getFullYear() - 3, 0, 1); // Date de départ il y a 3 ans
+
+            for (let i = 0; i < 9; i++) {
+                const dataPoint = {
+                    Year: currentDate,
+                    line: 'personnel1',
+                    Income: Math.random() * (9.5 - 5) + 4, // Note aléatoire entre 6 et 9.5
+                };
+                personnalData.push(dataPoint);
+                currentDate = new Date(currentDate.getTime() + (180 * 24 * 60 * 60 * 1000)); // Ajoute environ 180 jours
+            }
+
+            // Générer les données pour averageData avec 50 résultats chronologiques
+            const averageData = [];
+            currentDate = new Date(new Date().getFullYear() - 3, 0, 1); // Réinitialise la date de départ
+            const endDate = new Date(); // Date actuelle
+            const minInterval = 18; // Minimum d'espacement en jours
+            const maxInterval = 24; // Maximum d'espacement en jours
+            const numberOfDates = 70; // Nombre de dates à générer
+
+
+            for (let i = 0; i < numberOfDates; i++) {
+                // Générer un nombre aléatoire d'intervalles de jours entre minInterval et maxInterval
+                const randomInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
+
+                // Ajouter l'espacement aléatoire en jours à la date actuelle
+                currentDate.setDate(currentDate.getDate() + randomInterval);
+
+                // Assurez-vous que la date générée est dans les trois dernières années
+                if (currentDate > endDate) {
+                    break; // Sortez de la boucle si nous avons dépassé la date actuelle
+                }
+
+                const dataPoint = {
+                    Year: new Date(currentDate), // Utilisez une copie de la date actuelle
+                    line: 'Moyenne',
+                    Income: Math.random() * (9.5 - 6) + 6, // Note aléatoire entre 6 et 9.5
+                };
+                averageData.push(dataPoint);
+            }
             // Options pour le premier graphique
             const option1 = {
+                title: {
+                    text: 'Résultats totaux des questions SAMI',
+                },
                 xAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    data: ['S', 'A', 'M', 'I'],
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    min: 0,
+                    max: 50,
                 },
                 series: [
                     {
-                        data: [120, 200, 150, 80, 70, 110, 130],
-                        type: 'bar'
-                    }
-                ]
+                        data: [Math.floor(Math.random() * 50), Math.floor(Math.random() * 50), Math.floor(Math.random() * 50), Math.floor(Math.random() * 50)],
+                        type: 'bar',
+                    },
+                ],
             };
 
-            // Options pour le deuxième graphique (vous pouvez personnaliser cela)
+
+
             const option2 = {
-                // ...
+                title: {
+                    text: 'Évolution de la moyenne des résultats',
+                },
+                tooltip: {
+                    trigger: 'axis',
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: 10,
+                    nameLocation: 'middle',
+                },
+                xAxis: {
+                    type: 'time',
+                    min: new Date(new Date().getFullYear() - 3, 0, 1), // Début il y a 3 ans
+                    max: new Date(), // Fin à la date actuelle
+                    name: 'Date',
+                },
+                series: [
+                    {
+                        name: 'Données Personnelles',
+                        type: 'line',
+                        data: personnalData.map((entry) => ({
+                            value: [entry.Year, entry.Income],
+                        })), // Utilisez les dates précises
+                        showSymbol: true,
+                        encode: {
+                            x: 'Year',
+                            y: 'Income',
+                            itemName: 'Year',
+                            tooltip: ['Income'],
+                        },
+                    },
+                    {
+                        name: 'Moyenne',
+                        type: 'line',
+                        data: averageData.map((entry) => ({
+                            value: [entry.Year, entry.Income],
+                        })), // Utilisez les dates précises
+                        showSymbol: true,
+                        encode: {
+                            x: 'Year',
+                            y: 'Income',
+                            itemName: 'Year',
+                            tooltip: ['Income'],
+                        },
+                    },
+                ],
             };
+
 
             // Appliquez les options aux graphiques
             chart1.setOption(option1);
             chart2.setOption(option2);
         },
-
 
 
         /**
@@ -217,8 +327,12 @@ export default {
         this.loadHabilitationFromPersonnel(this.$route.params.id);
     },
     mounted() {
-        this.createEChartsCharts();
+
         this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
+    },
+    updated() {
+        // Appelez la fonction createEChartsCharts à chaque mise à jour de la vue.
+        this.createEChartsCharts();
     },
 }
 </script>
@@ -232,4 +346,3 @@ export default {
     color: #f78c6b9a;
 }
 </style>
-  
