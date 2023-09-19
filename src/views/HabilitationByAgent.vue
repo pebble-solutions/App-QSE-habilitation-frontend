@@ -19,7 +19,7 @@
                                 <div class="d-flex justify-content-between">
                                     <span> {{ returnNameHab(hab.habilitation_type_id) }}</span>
                                     <span>
-                                        échéance le  {{ changeFormatDateLit(hab.df) }}
+                                        échéance le {{ changeFormatDateLit(hab.df) }}
                                     </span>
                                 </div>
                                 <ProgressBar
@@ -114,6 +114,9 @@ export default{
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+
+       
+
 
 
     },

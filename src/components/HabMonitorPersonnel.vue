@@ -1,58 +1,56 @@
 <template>
 	<div class="card bg-light" v-if="!pending.control">
-		<!-- list de la veille{{ listVeille }}
-		<br><br>
-		detail habilitation{{ persHab }}
-		<br><br>
-		config veille{{ veilleConfig }} -->
+		
+		
 		
 		<div class="card-body">
 			<!-- Titre -->
 			<div class="text-center mb-1">
-				<strong v-if="displayAgent" class="me-2">{{returnName(persHab.personnel_id)}}</strong>
-				<strong v-if="displayHab">{{persHab.habilitation_type_id}}</strong>
+				<strong v-if="displayAgent" class="me-2">{{returnName(personnelHabilitation.personnel_id)}}</strong>
+				<!-- <span v-if="personnelHabilitation.personnel.dsortie">date sortie le {{ changeFormatDateLit(personnelHabilitation.personnel.dsortie) }}</span> -->
+				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
 			</div>
 			<div class="row">
 				<!-- Colonne 1 : Validité de l'habilitation -->
 				<div class="col-lg-4 col-12">
 					<div class="px-2 mb-3 mb-lg-0">
-						<div class="fw-bold col-12">Validité : 3 ans <span class="fw-lighter">#{{ persHab.id }}</span> veille {{ persHab.characteristic_id }} <span> </span> </div>
-						<div class="col-12">{{ changeFormatDateLit(persHab.dd) }}
-							au {{ changeFormatDateLit(persHab.df) }}
-						</div>
+						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">#{{ personnelHabilitation.id }}</span> </div>
+						<div class="col-12">du {{ changeFormatDateLit(personnelHabilitation.dd) }} au {{ changeFormatDateLit(personnelHabilitation.df) }}</div>
 						<!-- Composant ProgressBar -->
-						<ProgressBar :dd="new Date(persHab.dd)  " :df="new Date(persHab.df)"></ProgressBar>
+						<ProgressBar :dd="new Date(personnelHabilitation.dd)  " :df="new Date(personnelHabilitation.df)"></ProgressBar>
 					</div>
 				</div>
+
 				<!-- Colonne 2 : Résultat des contrôles -->
-				
 				<div class="col">
-					<div v-if="listControlDone" class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
-						<button class="mb-2" v-for="kn in listControlDone" :key="kn.id"
+					<div>
+						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
+						<span v-else>Pas de contrôle enregistré</span>
+					</div>
+					<div v-if="controles"  class="d-flex  flex-wrap align-items-center justify-content-start px-2">
+						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
+						@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
 						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+ ' du '+changeFormatDateLit(kn.date_done) ">
 						{{ kn.sami }}
-					</button>
+						</button>
+					</div>
 				</div>
-			</div>
 			
 			<!-- Colonne 3 : caractéristique veille-->
 			<div class="col-lg-4 col-12 px-2" >
-				
-				<template v-if="listVeille">
-					<span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>Veille tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
-					<div class="">
-						<div class="col-12"></div>
-						<div>Dernier contrôle : {{changeFormatDateLit(habVeille.date_last) }}  </div>
-						<!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
-					</div>
+				<Spinner v-if="veille && pending.control"></Spinner>
+				<template v-else-if="veille && !pending.control">
+					Veille  <span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
+					<div v-if="veille">
+						<div>Dernier contrôle : <span class="fw-lighter ms-2">{{changeFormatDateLit(veille.date_last)}}</span> </div>
+					</div>  
 					<!-- Composant ProgressBar -->
-					<ProgressBar v-if="habVeille.date_last" :dd="new Date(habVeille.date_last)" :df="delay(habVeille.date_last, veilleConfig.control_step)"></ProgressBar>
-					<div class="text-success" v-else> {{ noLastControl }}<i class="bi bi-check text-success"></i></div>
+					<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
 				</template>
 				<div class="text-secondary d-flex align-items-center" v-else>
 					<i class="bi bi-calendar2-x me-2"></i>
-					<em>Pas de veille pour cette  habilitation</em>
+					<em>Pas de contrôle enregistré pour cette veille</em>
 				</div>
 			</div>
 			
@@ -62,12 +60,13 @@
 </div>
 </template>
 <script>
-import { Tooltip } from 'bootstrap';
+// import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
+import Spinner from './pebble-ui/Spinner.vue';
 import { mapState } from 'vuex';
 export default {
-	components: { ProgressBar},
+	components: { ProgressBar, Spinner},
 	props: {
 		habId: Number,
 		veilleConfig: Object,
@@ -75,31 +74,26 @@ export default {
 		info: Object,
 		displayAgent: Boolean,
 		displayHab: Boolean,
-		persHab: Object,
-		listVeille:Array,
+		personnelHabilitation: Object,
+		veille: Object,
+		controles: Object,
 	},
 	computed: {
 		...mapState(['types', 'listActifs','personnels']),
-		
+	
+	
+	
+	
 	},
 	data() {
 		return {
 			pending: {
 				control: false
 			},
-			listControlDone: '',
-			habilitationPerso: [],
-			hab: '',
-			resultat: '',
-			lastControlDate: '',
-			infosHab: [],
-			lastControl:'',
-			noLastControl: '',
-			listControlTodo: '',
-			habVeille: '',
 		};
 	},
 	methods: {
+
 		/**
 		* retourne le nom du personnel
 		* 
@@ -114,52 +108,18 @@ export default {
 			}
 			else return 'personnel non trouvé'
 		},
-		
+	
+				
 		/**
-		* trouve la veille pour l'habilitation concernée
-		* 
-		*/
-		findVeilleHab(id) {
-			if(this.listVeille) {
-				let VeilleHab = this.listVeille.find(e => e.habilitation_id == id);
-				this.habVeille = VeilleHab
-				return VeilleHab
-			}
-		},
-		
-		
-		
-		
-		/**
-		* return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
+		* return la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle
 		* @param {date} date la date du dernier contôle réalise
+		* @param	{number}	pasdeveille pas de veille de la veille concernée
 		*/
 		delay(date, pdv){
 			let dd = new Date(date);
-			
 			dd.setDate(dd.getDate()+pdv);
-			
 			return dd
 		},
-		
-		
-		
-		
-		
-		loadinfosCollecte(id) {
-			this.pending.control = true
-			this.$app.apiGet('v2/collecte', {
-				habilitation_id: id,
-				kn2kn_info: 'OUI',
-				retard_info: 'OUI',
-				type: 'KN'
-			})
-			.then((data) => {
-				this.listControlDone = data;
-			})
-			.catch(this.$app.catchError).finally(() => this.pending.control = false);
-		},
-		
 		
 		changeFormatDateLit(el) {
 			return dateFormat(el);
@@ -169,15 +129,14 @@ export default {
 		},
 	},
 	mounted() {
-		this.loadinfosCollecte(this.persHab.id)
 		
 		// Initialisation des tooltips Bootstrap après le rendu du composant
-		this.$nextTick(function () {
-			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-			tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-				return new Tooltip(tooltipTriggerEl)
-			})
-		})
+		// this.$nextTick(function () {
+		// 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		// 	tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+		// 		return new Tooltip(tooltipTriggerEl)
+		// 	})
+		// })
 	}
 }
 </script>
