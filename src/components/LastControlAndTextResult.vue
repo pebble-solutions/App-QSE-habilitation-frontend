@@ -40,7 +40,12 @@ export default {
          * Retourne la date du dernier resultat au bon format
          */
         lastResultDate() {
-            return dateFormat(this.date);
+            if (!this.date) {
+                return 'pas de réponse';
+            }
+            else {
+                return dateFormat(this.date);
+            }
         },
 
         /**

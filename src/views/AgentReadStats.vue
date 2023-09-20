@@ -3,16 +3,14 @@
         <AppModal
         title="STATS"
         size="lg">
-        <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
+        <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions && !pending.agent && !pending.controle">
             <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
-            <pre>
-                {{ stats }}
-                {{ groupsAndQuestions }}
-            </pre>
         </div>
         <div v-else>Chargement...</div>
-            
-            je suis dans la modal
+        <!-- Stats :{{ stats }} -->
+        <!-- <pre>
+            {{ groupsAndQuestions }}
+        </pre> -->
         </AppModal>
 </template>
 <script>

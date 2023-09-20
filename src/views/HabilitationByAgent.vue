@@ -35,8 +35,8 @@
             <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
         </div>
         <spinner v-else></spinner>
+        <RouterView></RouterView>
     </div>
-    <RouterView></RouterView>
 </template>
   
 <script>
@@ -51,7 +51,7 @@ import * as echarts from 'echarts';
 
 
 export default {
-    components: {  HabMonitor, Spinner, RouterView, SuspensionsPersonnelInformations}, //SuspensionsPersonnelInformations
+    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, //SuspensionsPersonnelInformations  RouterView
 
     data() {
         return {
@@ -347,10 +347,10 @@ export default {
 
         this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
     },
-    updated() {
-        // Appelez la fonction createEChartsCharts à chaque mise à jour de la vue.
-        this.createEChartsCharts();
-    },
+    // updated() {
+    //     // Appelez la fonction createEChartsCharts à chaque mise à jour de la vue.
+    //     this.createEChartsCharts();
+    // },
 }
 </script>
   
