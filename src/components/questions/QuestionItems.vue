@@ -19,7 +19,7 @@
 
         <div class="row">
             <div class="col-12 col-lg-4">
-                <span>Total des agents :</span>
+                <span>Tout le personnel :</span>
                 <span class="ms-2">{{ questionStats.global.nbResults }}</span>
                 
             </div>
