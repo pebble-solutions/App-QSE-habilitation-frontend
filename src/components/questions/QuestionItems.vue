@@ -15,7 +15,8 @@
                 </div>
             </div>
            
-        
+        <!-- composants total des réponses -->
+
         <div class="row">
             <div class="col-12 col-lg-4">
                 <span>Total des agents :</span>
