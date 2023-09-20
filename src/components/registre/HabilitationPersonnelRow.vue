@@ -1,5 +1,5 @@
 <template>
-    <div class="table-row-content" :style="{ top: getTopPosition(rowIndex + 2, 'px') }">
+    <div class="table-row-content" :style="{ top: getTopPositionHabilitation(rowIndex + 2, 'px') }">
         <div class="table-header mx-2 fs-7" :title="rowLabel">
 
             <div class="d-flex align-items-center">
@@ -78,8 +78,8 @@ export default {
     },
 
     methods: {
-        getTopPosition(n, sx, coef) {
-            return this.grid.getTopPosition(n, sx, coef);
+        getTopPositionHabilitation(n, sx, coef) {
+            return this.grid.getTopPositionHabilitation(n, sx, coef);
         },
 
         getLeftPosition(n, sx, coef) {

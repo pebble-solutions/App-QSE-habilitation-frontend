@@ -112,6 +112,7 @@ export default {
                 cols: this.personnels.length
             });
         }
+
     },
 
     mounted() {

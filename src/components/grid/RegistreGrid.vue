@@ -3,10 +3,10 @@
     <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
 
         <div class="table-grid" :style="{width : tableWidthPx}">
-            <div v-for="n in gridRows" class="table-row border border-primary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px'}">{{n}}</div>
-            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px'), left: grid.firstColumnWidth + 'px'}">{{n}}</div>
-            <div class="table-col border border-warning" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
-            <div v-for="n in gridCols" class="table-col border border-success" :key="n" :style="{ left: getLeftPosition(n, 'px', 2), width: columnWidthPx}"></div>
+            <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 1), width: grid.firstColumnWidth + 'px'}"></div>
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 1), left: grid.firstColumnWidth + 'px'}"></div>
+            <div class="table-col border border-secondary" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
+            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2), width: columnWidthPx}"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -155,7 +155,7 @@ export default {
          * @return {string|number}
          */
          getTopPositionHabilitation(n, sx, coef) {
-            return this.grid.getTopPosition(n, sx, coef);
+            return this.grid.getTopPositionHabilitation(n, sx, coef);
         },
 
         /**

@@ -36,7 +36,22 @@ export class RegistreGrid {
      */
     getTopPosition(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
-        const top = (n-1) * (this.columnWidth * coef);
+        const top = (n-1) * (this.rowHeight * coef);
+        return sx ? `${top}${sx}` : top;
+    }
+
+    /**
+     * Retourne la position depuis le haut en fonction du numéro de la ligne
+     * 
+     * @param {number} n        Le numéro de la ligne
+     * @param {string} sx       Suffixe à ajouter à l'unité (ex : px)
+     * @param {number} coef     Un coeficient multiplicateur pour tracer la grille (défaut 1)
+     * 
+     * @return {string}
+     */
+    getTopPositionHabilitation(n, sx, coef) {
+        coef = typeof coef === "undefined" ? 1 : coef;
+        const top = (n-1) * (this.firstColumnHeight * coef);
         return sx ? `${top}${sx}` : top;
     }
 
