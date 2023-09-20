@@ -39,7 +39,7 @@ export default {
             size : 200,
             firstColumnWidth: 200,
             firstColumnHeight: 500,
-            secondColumnWidth: 200,
+            secondColumnWidth: 220,
             row: 50,
             grid: null
 		}

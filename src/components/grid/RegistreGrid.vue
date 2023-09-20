@@ -6,7 +6,7 @@
             <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 1), width: grid.firstColumnWidth + 'px'}"></div>
             <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 1), left: grid.firstColumnWidth + 'px'}"></div>
             <div class="table-col border border-secondary" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
-            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 2), width: columnWidthPx}"></div>
+            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx}"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
@@ -14,21 +14,30 @@
                 <div class="table-header mx-2">
                     <strong>{{ headerLabel }}</strong>
                 </div>
-                    <div class="position-absolute text-center" 
-                        :style="{ left:getLeftPosition(cols.indexOf(col) + 1, 'px'), width: columnWidthPx }"
-                        style="top: 0px" 
-                        v-for="col in cols" 
-                        :key="col.id" >
+                <div class="table-row-content text-primary mt-3 mx-1"
+                    :style="{ left: grid.firstColumnWidth + 5 +'px', width: grid.secondColumnWidth }"
+                    style="top: 0px" >
+                    {{ periodeDisplay }}
+                </div>
+                <div class="position-absolute text-center" 
+                    :style="{ left:getLeftPosition(cols.indexOf(col) + 1, 'px'), width: columnWidthPx }"
+                    style="top: 0px" 
+                    v-for="col in cols" 
+                    :key="col.id" >
 
-                        <div class="mx-1" v-if="personnels.length">
-                            <div class="d-flex align-items-center">
-                                <div class="me-1">
-                                    <UserImage :name="col.cache_nom" />
-                                </div>
-                                <h5 class="fs-5">{{ personnelName(col) }}</h5>
+                    <div class="mx-1" v-if="personnels.length">
+                        <div class="d-flex align-items-center">
+                            <div class="me-1">
+                                <UserImage :name="col.cache_nom" />
                             </div>
+                            <h5 class="fs-5">{{ personnelName(col) }}</h5>
                         </div>
-
+                    </div>
+                </div>
+                <div class="position-absolute text-center"
+                    :style="{ left:getLeftPosition(cols.length + 1 , 'px'), width: columnWidthPx }"
+                    style="top: 0px">
+                    <h3 class="fs-3">TOTAL</h3>
                 </div>
             </div>
 
@@ -45,6 +54,8 @@
 <script>
 import { RegistreGrid } from '../../js/grid/RegistreGrid.js';
 import UserImage from '../pebble-ui/UserImage.vue';
+import { mapState } from 'vuex';
+import {getDisplayFormatedDate} from '../../js/date'
 
 export default {
     props: {
@@ -66,6 +77,8 @@ export default {
     components: {UserImage},
 
     computed: {
+        ...mapState(['echeancier']),
+
         /**
          * Retourne la hauteur complète du tableau en pixel
          * 
@@ -128,6 +141,10 @@ export default {
             }else {
                 return []
             }
+        },
+
+        periodeDisplay(){
+            return getDisplayFormatedDate(this.echeancier.dd) + " > " + getDisplayFormatedDate(this.echeancier.df)
         }
     },
 

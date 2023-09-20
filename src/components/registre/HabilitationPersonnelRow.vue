@@ -2,7 +2,7 @@
     <div class="table-row-content" :style="{ top: getTopPositionHabilitation(rowIndex + 2, 'px') }">
         <div class="table-header mx-2 fs-7" :title="rowLabel">
 
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center align-self-center">
                 <div class="me-2" v-if="useUserImage">
                     <UserImage :name="rowLabel" />
                 </div>
@@ -13,6 +13,17 @@
             </div>
         </div>
     </div>
+    <div class="position-absolute text-center" :style="{ width: grid.secondColumnWidth + 'px' }">
+        <div
+            class="table-row-content mt-2"
+            v-for="item in items"
+            :key="item.key"
+            :style="{ top: getTopPosition(rowIndex*10 + item.key +1, 'px'), left: grid.firstColumnWidth + 'px' }"
+            >
+
+            <span>{{ item.label }}</span>
+        </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -38,6 +49,23 @@ export default {
             type: Boolean,
             default: false
         }
+    },
+
+    data() {
+        return {
+            items: [
+                { key: 1, label: 'Date de début' },
+                { key: 2, label: 'Date de fin' },
+                { key: 3, label: 'Dernière Date' },
+                { key: 4, label: 'Note Moyenne' },
+                { key: 5, label: 'Date prochain KN' },
+                { key: 6, label: 'Suspension' },
+                { key: 7, label: 'Motif' },
+                { key: 8, label: 'Date' },
+                { key: 9, label: 'Durée' },
+                { key: 10, label: 'VA et VP' },
+            ],
+        };
     },
 
     computed: {
@@ -78,6 +106,10 @@ export default {
     },
 
     methods: {
+        getTopPosition(n, sx, coef){
+            return this.grid.getTopPosition(n, sx, coef);
+        },
+
         getTopPositionHabilitation(n, sx, coef) {
             return this.grid.getTopPositionHabilitation(n, sx, coef);
         },
