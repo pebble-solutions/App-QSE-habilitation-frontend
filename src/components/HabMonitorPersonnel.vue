@@ -37,6 +37,20 @@
 						</button>
 					</div>
 				</div>
+			</div>
+			<div class="col-12 mt-3" v-if="personnelHabilitation">
+				form {{ veilleConfig.formulaire_id}} perso
+				{{ personnelHabilitation.personnel_id }}
+				<div class="row">
+					<div class="d-flex justify-content-center">
+						<button class=" btn btn-sm bg-custom"
+						@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
+							<span>STATS</span>
+							<i class="bi bi-arrow-up-right-square ms-2"></i>	
+						
+					</button>
+					</div>
+				</div>
 			
 			<!-- Colonne 3 : caractéristique veille-->
 			<div class="col-lg-4 col-12 px-2" >
