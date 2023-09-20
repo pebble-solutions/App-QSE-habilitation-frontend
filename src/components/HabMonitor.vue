@@ -62,7 +62,7 @@
 				<div class="col-12" v-if="personnelHabilitation.configVeille">
 					<div class="row">
 						<div class="d-flex justify-content-center">
-							<button class=" btn btn-lg btn-outline-primary"
+							<button class=" btn btn-lg bg-custom text-light"
 							@click.prevent="this.$router.push({name:'AgentStats', params:{id:this.$route.params.id, idForm:personnelHabilitation.configVeille.formulaire_id}})">
 								<span>STATS</span>
 								<i class="bi bi-arrow-up-right-square ms-2"></i>	
@@ -244,6 +244,9 @@ export default {
 }
 */
 
+.bg-custom {
+    background-color: #f78c6b9a;
+}
 .tooltip {
 	position: absolute;
 	top: -30px;

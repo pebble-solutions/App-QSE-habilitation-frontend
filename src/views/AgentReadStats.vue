@@ -2,15 +2,13 @@
 <template>
         <AppModal
         title="STATS"
-        size="lg">
+        size="lg"
+        @modal-hide="routeToParent()">
         <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions && !pending.agent && !pending.controle">
             <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
         </div>
         <div v-else>Chargement...</div>
-        <!-- Stats :{{ stats }} -->
-        <!-- <pre>
-            {{ groupsAndQuestions }}
-        </pre> -->
+        
         </AppModal>
 </template>
 <script>
@@ -33,6 +31,13 @@ export default {
     },
 
     methods: {
+
+        /**
+         * Retourne a la vue précédente
+         */
+         routeToParent() {
+            this.$router.back()
+        },
         /**
          * Retourne les stats qui correspond a la question
          * 
@@ -51,12 +56,9 @@ export default {
          loadFormulaireStats(personnelId , formulaireId) {
             this.pending.formulaireStats = true;
 
-            console.log(formulaireId);
-
             this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
                 "personnel_ids": personnelId
             }).then((data) => {
-                console.log(data, 'stats')
                 this.stats = data;
             }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
         },
@@ -74,7 +76,6 @@ export default {
                 blocsandlignes: 1,
                 ppp: "private"
             }).then((data) => {
-                console.log(data, 'groupsAndQuestions');
                 this.groupsAndQuestions = data;
             }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
         },
@@ -92,7 +93,7 @@ export default {
 
     beforeMount() {
         /**
-         * charge 
+         * charge les stats du formulaire
          */
         this.loadFormulaireStats(this.$route.params.id  ,this.$route.params.idForm);
         this.getGroupsAndQuestions(this.$route.params.idForm);

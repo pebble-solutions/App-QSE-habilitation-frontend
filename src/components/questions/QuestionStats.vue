@@ -1,16 +1,19 @@
 <template>
-    <div class="d-flex align-items-center mb-2" :class="className">
-        <div class="col-12" :class="{'col-md-4' : !textDisplayClass}">
+    <div class="row mt-2">
+
+        <div class="col-12 col-lg-4">
+            <div class="d-flex align-items-center mb-2" :class="className">
             <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
-
             <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
+            </div>
         </div>
-
-        <div class="col-12 col-md-6 my-3" v-if="personnelStatsAverage">
+    
+        <div class="col-12 col-lg-8" v-if="personnelStatsAverage">
             <JaugeSami :personnalAverage="personnelStatsAverage" :name="personnelName" :generalAverage="generalStatsAverage" />
         </div>
-
     </div>
+        
+
 </template>
 
 

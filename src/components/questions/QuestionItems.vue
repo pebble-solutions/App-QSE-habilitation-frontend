@@ -6,44 +6,30 @@
         
         <QuestionStats v-if="questionStats" :stats="questionStats"/>
         
-            <div v-if="questionStats.personnel">
+            <!-- <div v-if="questionStats.personnel.length">
                 <div v-for="personnel in questionStats.personnel" :key="personnel.id">
-
-                    <pre>
-                        {{ personnel }}
-                    </pre>
+                    <ResultProgressBar v-if="personnel" :questionStats="personnel.stats"></ResultProgressBar>
                 </div>
-            </div>
+            </div> -->
+            <div v-else>Pas de Statistiques pour l'agent {{ questionStats.personnel }}</div>
            
         <!-- composants total des réponses -->
 
-        <div class="row">
-            <div class="col-12 col-lg-4">
-                <span>Tout le personnel :</span>
-                <span class="ms-2">{{ questionStats.global.nbResults }}</span>
-                
-            </div>
-            <div class="col">
-
-                <div class="progress progress-ht">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">{{ questionStats.global.S }}</div>
-                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">{{ questionStats.global.A }}</div>
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">{{ questionStats.global.M }}</div>
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">{{ questionStats.global.I }}</div>
-                </div>
-            </div>
-            
-        </div>
-       
+        
+       <ResultProgressBar v-if="questionStats.global" :questionStats="questionStats.global"/>
  
     </div>
 </template>
 
 <script>
+import ResultProgressBar from '../ResultProgressBar.vue';
 import QuestionStats from './QuestionStats.vue';
 
+
 export default {
-    components: { QuestionStats },
+    components: { QuestionStats, ResultProgressBar },
+    
+       
 
     props: {
         question: Object,
@@ -58,6 +44,7 @@ export default {
          */
         questionStats() {
             let questionStats = this.stats.questions.find(qs => qs.id == this.question.id);
+           
             return questionStats;   
         }
     },
