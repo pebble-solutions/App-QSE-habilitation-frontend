@@ -26,11 +26,11 @@
                     :key="col.id" >
 
                     <div class="mx-1" v-if="personnels.length">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-center">
                             <div class="me-1">
                                 <UserImage :name="col.cache_nom" />
                             </div>
-                            <h5 class="fs-5">{{ personnelName(col) }}</h5>
+                            <h5 class="fs-5">{{ personnelName(col).nom }}<br>{{ personnelName(col).prenom }}</h5>
                         </div>
                     </div>
                 </div>
@@ -188,24 +188,27 @@ export default {
             return this.grid.getLeftPosition(n, sx, coef);
         },
 
-        /**
+       /**
          * Retourne le nom du personnel d'une colonne du tableau
          * 
-         * @param {object} personnel personnel de la collonne
+         * @param {object} personnel personnel de la colonne
          * 
-         * @return {string}
+         * @return {string|object}
          */
-        personnelName(personnel){
+        personnelName(personnel) {
             if (personnel.cache_nom) {
-                const [nom, prenom] = personnel.cache_nom.split(" ");
-                const nomFormate = nom.toUpperCase();
-                const prenomFormate = prenom.charAt(0).toUpperCase() + prenom.slice(1).toLowerCase();
-                const nomFinal = `${nomFormate}\n${prenomFormate}`;
-
-                return nomFinal
+                const [nom, prenom, prenomSiAttribut] = personnel.cache_nom.split(" ");
+                const nomComplet = prenomSiAttribut ? `${nom} ${prenom}` : `${nom}`;
+                
+                return {
+                nom: nomComplet,
+                prenom: prenomSiAttribut || prenom,
+                };
             }
-            return "Aucun nom renseigné"
+            
+            return "Aucun nom renseigné";
         }
+
     }
 }
 </script>
