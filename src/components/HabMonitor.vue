@@ -50,19 +50,19 @@
 							<span v-if="personnelHabilitation.last_control_date">Dernier contrôle le {{
 								changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 							<span v-else>Pas de contrôle enregistré</span>
-							<div v-if="personnelHabilitation.controles"
-							class="d-flex flex-row-reverse flex-wrap align-items-center justify-content-end px-2">
+							<div v-if="personnelHabilitation.controles" class="d-flex flex-row flex-wrap align-items-center justify-content-start px-2">
 							<button class="mb-2" v-for="kn in personnelHabilitation.controles" :key="kn.id"
+							@click.prevent="this.$router.push({name: 'readCollecteOperateur', params:{idCollecte:kn.id}})"
 							:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-							:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+							:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+' du '+changeFormatDateLit(kn.date_done)">
 							{{ kn.sami }}
-						</button>
+							</button>
+						</div>
 					</div>
-				</div>
-				<div class="col-12" v-if="personnelHabilitation.configVeille">
+				<div class="col-12 mt-3" v-if="personnelHabilitation.configVeille">
 					<div class="row">
 						<div class="d-flex justify-content-center">
-							<button class=" btn btn-lg bg-custom text-light"
+							<button class=" btn btn-sm bg-custom"
 							@click.prevent="this.$router.push({name:'AgentStats', params:{id:this.$route.params.id, idForm:personnelHabilitation.configVeille.formulaire_id}})">
 								<span>STATS</span>
 								<i class="bi bi-arrow-up-right-square ms-2"></i>	

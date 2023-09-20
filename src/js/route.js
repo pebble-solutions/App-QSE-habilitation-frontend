@@ -14,7 +14,8 @@ export const ROUTES_NAMES = {
 		'habilitationByAgent',
 		'controlHistory',
 		'controlView',
-		'AgentStats'
+		'AgentStats',
+		'readCollecteOperateur',
 	],
 	personnels: [
 		'personnels',
