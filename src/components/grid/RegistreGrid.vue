@@ -1,10 +1,10 @@
 <template>
 
-    <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
+    <div class="position-relative border-bottom border-success" :style="{height : tableHeightPx, width : tableWidthPx}">
 
         <div class="table-grid" :style="{width : tableWidthPx}">
             <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 1), width: grid.firstColumnWidth + 'px'}"></div>
-            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 1), left: grid.firstColumnWidth + 'px'}"></div>
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 1), left: grid.firstColumnWidth + 'px', width: infoGridRowsWidthPx}"></div>
             <div class="table-col border border-secondary" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
             <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx}"></div>
         </div>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="position-absolute text-center"
-                    :style="{ left:getLeftPosition(cols.length + 1 , 'px'), width: columnWidthPx }"
+                    :style="{ left:getLeftPosition(cols.length +1 , 'px'), width: columnWidthPx }"
                     style="top: 0px">
                     <h3 class="fs-3">TOTAL</h3>
                 </div>
@@ -125,12 +125,28 @@ export default {
         },
 
         /**
+         * Renvoie la largeur en pixels des lignes d'information dans la grille.
+         * Calculée en soustrayant la largeur de la première colonne de la largeur totale de la grille.
+         * 
+         * @returns {string} La largeur des lignes d'information en pixels (au format "Xpx").
+         */
+        infoGridRowsWidthPx() {
+        const remainingWidth = this.grid.getTableWidth() - this.grid.firstColumnWidth;
+        return `${remainingWidth}px`;
+        },
+
+        /**
          * Retourne le nombre de colonne à tracer incluant l'entête
          * 
          * @return {number}
          */
         gridCols() {
             return Math.round(this.grid.cols +1 / 2);
+        },
+
+        lastIndexOfCols(){
+            let lengthCol = this.cols.length;
+            return lengthCol;
         },
 
         cols(){

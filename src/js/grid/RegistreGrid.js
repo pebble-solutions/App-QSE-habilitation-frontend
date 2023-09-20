@@ -91,7 +91,7 @@ export class RegistreGrid {
      * @return {string|number}
      */
     getTableWidth(sx) {
-        const width = (this.cols * this.columnWidth) + this.firstColumnWidth + this.secondColumnWidth;
+        const width = ((this.cols + 1) * this.columnWidth) + this.firstColumnWidth + this.secondColumnWidth;
         return sx ? `${width}px` : width;
     }
 
