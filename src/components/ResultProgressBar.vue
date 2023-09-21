@@ -31,8 +31,8 @@ export default {
          * @returns {string} - valeur de l'attribut style
          */
         getProgressBarWidth(valueW, valueT) {
-        const clampedValue = Math.round((valueW/valueT) * 100)+'%';
-        return 'width:'+clampedValue;
+            const clampedValue = Math.round((valueW/valueT) * 100)+'%';
+            return 'width:'+clampedValue;
         }
     }
 }

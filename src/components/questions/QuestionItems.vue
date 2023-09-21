@@ -11,7 +11,6 @@
             </div>
             </div> -->
         <div v-else>Pas de Statistiques pour l'agent {{ questionStats.personnel }}</div>
-        <!-- composants total des réponses -->
         <ResultProgressBar v-if="questionStats.global" :questionStats="questionStats.global"/>
     </div>
 </template>
