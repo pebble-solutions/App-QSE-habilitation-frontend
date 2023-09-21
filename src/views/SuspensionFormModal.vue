@@ -132,14 +132,14 @@ export default {
         },
 
         getButtonLabel() {
-            if (this.suspension.df === null) {
-                // Si suspension.df est null, affiche "Ajouter une date de fin de suspension"
-                return "Ajouter une date de fin de suspension";
-            } else {
-                // Sinon, affiche le texte standard
-                return this.getSuspensionDuration(this.suspension.dd, this.suspension.df) + " jours";
-            }
-        },
+  if (this.suspension.df === null) {
+    // Si suspension.df est null, affiche "Ajouter une date de fin de suspension"
+    return "Ajouter une date de fin de suspension";
+  } else {
+    // Si suspension.df n'est pas null, affiche "Modifier la date de fin de suspension"
+    return "Modifier la date de fin de suspension";
+  }
+},
         /**
         * Retourne à la vue précédente
         */
