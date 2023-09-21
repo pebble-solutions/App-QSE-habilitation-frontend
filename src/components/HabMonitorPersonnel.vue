@@ -8,9 +8,9 @@
 				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
 				<span class="ms-2" v-if="personnelHabilitation">
 						<button class=" btn btn-sm bg-custom"
-						@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
-						<span>STATS</span>
-						<i class="bi bi-arrow-up-right-square ms-2"></i>	
+							@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
+							<span>STATS</span>
+							<i class="bi bi-arrow-up-right-square ms-2"></i>	
 						</button>
 				</span>
 			</div>
@@ -155,7 +155,7 @@ export default {
 	justify-content: center;
 }
 .bg-custom {
-    background-color: #f78c6b9a;
+    background-color: #f78c6b;
 }
 
 /* .btn {
