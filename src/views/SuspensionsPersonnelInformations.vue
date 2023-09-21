@@ -6,11 +6,11 @@
                     <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
                     <ul class="custom-ul">
                         <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
-                            v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
+                            v-for="hab in nonSuspendedHabilitations" :key="hab.id">
                             {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                         </li>
                     </ul>
-                    <p v-if="getNonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
+                    <p v-if="nonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
                         autre
                         habilitation</p>
                 </div>
@@ -20,7 +20,7 @@
                     <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
                     <ul class="custom-ul">
                         <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
-                            v-for="hab in getSuspendedHabilitations" :key="hab.id">
+                            v-for="hab in nonSuspendedHabilitations" :key="hab.id">
                             <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
                             <span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
                         </li>
@@ -94,7 +94,7 @@ export default {
          * Retourne les habilitations non suspendues du personnel.
          * @return {Array} Les habilitations non suspendues du personnel.
          */
-        getNonSuspendedHabilitations() {
+        nonSuspendedHabilitations() {
             return this.habilitationPersonnel.filter(hab => {
                 // Trouver toutes les suspensions pour cette habilitation
                 const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
@@ -109,13 +109,12 @@ export default {
          * Retourne les habilitations suspendues du personnel.
          * @return {Array} Les habilitations suspendues du personnel.
          */
-        getSuspendedHabilitations() {
+        nonSuspendedHabilitations() {
             return this.habilitationPersonnel.filter(hab => this.getSuspensions.some(sus => sus.habilitation_id === hab.id && sus.df == null));
         },
 
         /**
          * Retourne le nom du type d'habilitation.
-         * @param {number} habilitationTypeId - L'ID du type d'habilitation.
          * @return {string} Le nom du type d'habilitation.
          */
         getHabilitationTypeName() {
