@@ -9,7 +9,7 @@
                 <div class="custom-div" v-for="suspension in getActiveSuspensions" :key="suspension.id">
                     <router-link :to="{ name: 'suspensionInfo', params: { idSuspension: suspension.id } }"
                         v-slot="{ href, navigate }" custom>
-                        <a :href="href" @click="navigate">
+                        <a :href="href" @click="navigate" class="no-underline">
                             <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
                                 <div class="row text-center">
                                     <!-- Colonne pour le nom de l'habilitation -->
@@ -307,5 +307,9 @@ export default {
 .card {
     border: 0;
 
+}
+
+.no-underline {
+    text-decoration: none;
 }
 </style>
