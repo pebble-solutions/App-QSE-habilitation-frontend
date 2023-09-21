@@ -45,9 +45,50 @@
         </div>
 
         <!-- Liste "Suspensions levées ou terminées" -->
-        <div class="card bg-custom text-white shadow-lg col-md-12 mt-4">
+        <div class="card bg-secondary text-white shadow-lg col-md-12 mt-4">
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions levées ou terminées</h3>
+                <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
+                    <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
+                        <div class="row text-center">
+                            <!-- Colonne pour le nom de l'habilitation -->
+                            <div class="col-md-6 text-md-end px-2">
+                                <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id) }}</span>
+                            </div>
+                            <!-- Colonne pour le nom du personnel -->
+                            <div class="col-md-4 text-md-start px-2">
+                                <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
+                            </div>
+                            <!-- Colonne pour les dates, la durée et les commentaires -->
+                            <div class="col-md-12 p-2">
+                                <div class="card">
+                                    <div class="card-body p-1">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span class="fw-bold">Dates:</span>
+                                                <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span class="fw-bold">Durée:</span>
+                                                <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span class="fw-bold">Commentaire:</span>
+                                                <p>{{ suspension.commentaire }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-overSuspensions text-white shadow-lg col-md-12 mt-4">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-3">Suspensions supprimées (todo ajout booléen Supprimé en bdd)</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
                     <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
                         <div class="row text-center">
@@ -236,6 +277,10 @@ export default {
 <style scoped>
 .bg-custom {
     background-color: #f78c6b9a;
+}
+
+.bg-overSuspensions {
+    background-color: #f76b939a;
 }
 
 .text-custom {
