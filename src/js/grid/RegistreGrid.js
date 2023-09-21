@@ -49,9 +49,24 @@ export class RegistreGrid {
      * 
      * @return {string}
      */
+    getTopPositionHabilitationLabel(n, sx, coef) {
+        coef = typeof coef === "undefined" ? 1 : coef;
+        const top = ((n-1) * (this.firstColumnHeight * coef) + this.rowHeight) - (this.firstColumnHeight/(1.8));
+        return sx ? `${top}${sx}` : top;
+    }
+
+    /**
+     * Retourne la position depuis le haut en fonction du numéro de la ligne
+     * 
+     * @param {number} n        Le numéro de la ligne
+     * @param {string} sx       Suffixe à ajouter à l'unité (ex : px)
+     * @param {number} coef     Un coeficient multiplicateur pour tracer la grille (défaut 1)
+     * 
+     * @return {string}
+     */
     getTopPositionHabilitation(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
-        const top = (n-1) * (this.firstColumnHeight * coef);
+        const top = (n-1) * (this.firstColumnHeight * coef) + this.rowHeight;
         return sx ? `${top}${sx}` : top;
     }
 
@@ -103,7 +118,7 @@ export class RegistreGrid {
      * @return {string|number}
      */
     getTableHeight(sx) {
-        const height = (this.rows) * this.firstColumnHeight + this.rowHeight;
+        const height = (this.rows - 1) * this.firstColumnHeight + this.rowHeight;
 
         return sx ? `${height}px` : height;
     }

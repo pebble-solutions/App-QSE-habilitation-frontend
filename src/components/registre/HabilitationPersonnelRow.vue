@@ -1,15 +1,15 @@
 <template>
-    <div class="table-row-content" :style="{ top: getTopPositionHabilitation(rowIndex + 2, 'px') }">
+    <div class="table-row-content" :style="{ top: getTopPositionHabilitationLabel(rowIndex + 2, 'px') }">
         <div class="table-header mx-2 fs-7" :title="rowLabel">
 
             <div class="d-flex align-items-center align-self-center">
                 <div class="me-2" v-if="useUserImage">
                     <UserImage :name="rowLabel" />
                 </div>
-                <span :class="labelClassName">
+                <strong :class="labelClassName">
                     <i class="bi" :class="labelIcon" v-if="labelIcon"></i>
                     {{ displayRowLabel }}
-                </span>
+                </strong>
             </div>
         </div>
     </div>
@@ -18,9 +18,8 @@
             class="table-row-content mt-2"
             v-for="item in items"
             :key="item.key"
-            :style="{ top: getTopPosition(rowIndex*10 + item.key +1, 'px'), left: grid.firstColumnWidth + 'px' }"
+            :style="{ top: getTopPosition(rowIndex*10 + item.key + 1, 'px'), left: grid.firstColumnWidth + 'px' }"
             >
-
             <span>{{ item.label }}</span>
         </div>
   </div>
@@ -110,8 +109,8 @@ export default {
             return this.grid.getTopPosition(n, sx, coef);
         },
 
-        getTopPositionHabilitation(n, sx, coef) {
-            return this.grid.getTopPositionHabilitation(n, sx, coef);
+        getTopPositionHabilitationLabel(n, sx, coef) {
+            return this.grid.getTopPositionHabilitationLabel(n, sx, coef);
         },
 
         getLeftPosition(n, sx, coef) {
@@ -129,6 +128,6 @@ export default {
         getWidth(cols, sx) {
             return this.grid.getWidth(cols, sx);
         }
-    },
+    }
 }
 </script>

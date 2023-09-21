@@ -1,10 +1,11 @@
 <template>
 
-    <div class="position-relative border-bottom border-success" :style="{height : tableHeightPx, width : tableWidthPx}">
+    <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
 
         <div class="table-grid" :style="{width : tableWidthPx}">
-            <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 1), width: grid.firstColumnWidth + 'px'}"></div>
-            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 1), left: grid.firstColumnWidth + 'px', width: infoGridRowsWidthPx}"></div>
+            <div class="table-row border border-secondary" style="top :0" :style="{ width: grid.firstColumnWidth + 'px'}"></div>
+            <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px', height : grid.firstColumnHeight + 'px'}"></div>
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2), left: grid.firstColumnWidth + 'px', width: infoGridRowsWidthPx}"></div>
             <div class="table-col border border-secondary" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
             <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx}"></div>
         </div>
@@ -107,12 +108,12 @@ export default {
         },
 
         /**
-         * Retourne le nombre de lignes à tracer, incluant l'entête
+         * Retourne le nombre de lignes à tracer, incluant l'entête (premiere colonne)
          * 
          * @return {number}
          */
         gridRows() {
-            return Math.trunc((this.grid.rows +1) / 2);
+            return Math.trunc((this.grid.rows) / 2);
         },
 
          /**
@@ -121,7 +122,7 @@ export default {
          * @return {number}
          */
         infoGridRows(){
-            return Math.trunc(((this.grid.rows*10) +1) / 2);
+            return Math.trunc((((this.grid.rows)*10) -8 ) / 2);
         },
 
         /**
@@ -131,8 +132,8 @@ export default {
          * @returns {string} La largeur des lignes d'information en pixels (au format "Xpx").
          */
         infoGridRowsWidthPx() {
-        const remainingWidth = this.grid.getTableWidth() - this.grid.firstColumnWidth;
-        return `${remainingWidth}px`;
+            const remainingWidth = this.grid.getTableWidth() - this.grid.firstColumnWidth;
+            return `${remainingWidth}px`;
         },
 
         /**
