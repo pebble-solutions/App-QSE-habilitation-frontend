@@ -7,7 +7,8 @@ export const ROUTES_NAMES = {
 		'editConfig',
 		'editVeille',
 		'newVeille',
-		'readCollecte'
+		'readCollecte',
+		'StatsAgent'
 	],
 	operateur: [
 		'operateur',

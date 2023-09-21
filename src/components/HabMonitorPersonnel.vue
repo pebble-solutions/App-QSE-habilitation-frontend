@@ -1,14 +1,18 @@
 <template>
 	<div class="card bg-light" v-if="!pending.control">
-		
-		
-		
-		<div class="card-body">
+		<div class="card-body align-items-center">
 			<!-- Titre -->
-			<div class="text-center mb-1">
+			<div class="text-center mb-3">
 				<strong v-if="displayAgent" class="me-2">{{returnName(personnelHabilitation.personnel_id)}}</strong>
 				<!-- <span v-if="personnelHabilitation.personnel.dsortie">date sortie le {{ changeFormatDateLit(personnelHabilitation.personnel.dsortie) }}</span> -->
 				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
+				<span class="ms-2" v-if="personnelHabilitation">
+						<button class=" btn btn-sm bg-custom"
+						@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
+						<span>STATS</span>
+						<i class="bi bi-arrow-up-right-square ms-2"></i>	
+						</button>
+				</span>
 			</div>
 			<div class="row">
 				<!-- Colonne 1 : Validité de l'habilitation -->
@@ -22,54 +26,40 @@
 				</div>
 
 				<!-- Colonne 2 : Résultat des contrôles -->
-				<div class="col text-center">
-					<div>
-						
-						<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
-						<span v-else>Pas de contrôle enregistré</span>
+				<div class="col-lg-4 col-12">
+					<div class="col text-center">
+						<div>
+							<span v-if="personnelHabilitation.last_control_date">dernier contrôle le  {{ changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
+							<span v-else>Pas de contrôle enregistré</span>
+						</div>
+						<div v-if="controles"  class="d-flex  flex-wrap align-items-center justify-content-start px-2">
+							<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
+							@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
+							:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+							:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+ ' du '+changeFormatDateLit(kn.date_done) ">
+							{{ kn.sami }}
+							</button>
+						</div>
 					</div>
-					<div v-if="controles"  class="d-flex  flex-wrap align-items-center justify-content-start px-2">
-						<button class="mb-2" v-for="kn in controles.control" :key="kn.id"
-						@click.prevent="this.$router.push({name: 'readCollecte', params:{idCollecte:kn.id}})"
-						:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-						:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+ ' du '+changeFormatDateLit(kn.date_done) ">
-						{{ kn.sami }}
-						</button>
+					
+				</div>
+				<!-- Colonne 3 : caractéristique veille-->
+				<div class="col-12 col-lg-4" >
+					<Spinner v-if="veille && pending.control"></Spinner>
+					<template v-else-if="veille && !pending.control">
+						<span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span>
+						<span>Veille tous les <span class="fw-lighter">{{ veilleConfig.control_step}}</span>  jours</span>
+						<div v-if="veille">
+							<div>Dernier contrôle : <span class="fw-lighter ms-2">{{changeFormatDateLit(veille.date_last)}}</span> </div>
+							<!-- Composant ProgressBar -->
+							<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
+						</div>  
+					</template>
+					<div class="text-secondary d-flex align-items-center" v-else>
+						<i class="bi bi-calendar2-x me-2"></i>
+						<em>Pas de contrôle enregistré pour cette veille</em>
 					</div>
 				</div>
-			</div>
-			<div class="col-12 mt-3" v-if="personnelHabilitation">
-				form {{ veilleConfig.formulaire_id}} perso
-				{{ personnelHabilitation.personnel_id }}
-				<div class="row">
-					<div class="d-flex justify-content-center">
-						<button class=" btn btn-sm bg-custom"
-						@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
-							<span>STATS</span>
-							<i class="bi bi-arrow-up-right-square ms-2"></i>	
-						
-					</button>
-					</div>
-				</div>
-			
-			<!-- Colonne 3 : caractéristique veille-->
-			<div class="col-lg-4 col-12 px-2" >
-				<Spinner v-if="veille && pending.control"></Spinner>
-				<template v-else-if="veille && !pending.control">
-					Veille  <span class="fw-lighter me-2"> #{{ veilleConfig.id }} </span><span>tous les <span class="fw-lighter">{{ veilleConfig.control_step}} </span>  jours</span>
-					<div v-if="veille">
-						<div>Dernier contrôle : <span class="fw-lighter ms-2">{{changeFormatDateLit(veille.date_last)}}</span> </div>
-					</div>  
-					<!-- Composant ProgressBar -->
-					<ProgressBar v-if="veille" :dd="new Date(veille.date_last)" :df="delay(veille.date_last, veilleConfig.control_step)"></ProgressBar>
-				</template>
-				<div class="text-secondary d-flex align-items-center" v-else>
-					<i class="bi bi-calendar2-x me-2"></i>
-					<em>Pas de contrôle enregistré pour cette veille</em>
-				</div>
-			</div>
-			
-			
 		</div>
 	</div>
 </div>
@@ -164,8 +154,11 @@ export default {
 	align-items: center;
 	justify-content: center;
 }
+.bg-custom {
+    background-color: #f78c6b9a;
+}
 
-.btn {
+/* .btn {
 	width: 30px;
 	height: 30px;
 	padding: 0;
@@ -173,7 +166,7 @@ export default {
 	align-items: center;
 	justify-content: center;
 	position: relative;
-}
+} */
 
 .tooltip {
 	position: absolute;

@@ -59,6 +59,7 @@ methods: {
         this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
             "personnel_ids": personnelId
         }).then((data) => {
+            console.log(data, 'data  formulaire stats')
             this.stats = data;
         }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
     },
@@ -76,6 +77,7 @@ methods: {
             blocsandlignes: 1,
             ppp: "private"
         }).then((data) => {
+            console.log(data, 'data groups and questions')
             this.groupsAndQuestions = data;
         }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
     },
@@ -95,6 +97,7 @@ beforeMount() {
     /**
      * charge les stats du formulaire
      */
+    console.log(this.$route.params.idAgent  ,this.$route.params.idForm, 'agent puis formulaire')
     this.loadFormulaireStats(this.$route.params.idAgent  ,this.$route.params.idForm);
     this.getGroupsAndQuestions(this.$route.params.idForm);
 },
