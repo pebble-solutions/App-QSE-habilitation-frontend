@@ -58,39 +58,46 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions levées ou terminées</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
-                    <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
-                        <div class="row text-center">
-                            <!-- Colonne pour le nom de l'habilitation -->
-                            <div class="col-md-6 text-md-end px-2">
-                                <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id) }}</span>
-                            </div>
-                            <!-- Colonne pour le nom du personnel -->
-                            <div class="col-md-4 text-md-start px-2">
-                                <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
-                            </div>
-                            <!-- Colonne pour les dates, la durée et les commentaires -->
-                            <div class="col-md-12 p-2">
-                                <div class="card">
-                                    <div class="card-body p-1">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Dates:</span>
-                                                <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Durée:</span>
-                                                <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Commentaire:</span>
-                                                <p>{{ suspension.commentaire }}</p>
+                    <router-link :to="{ name: 'suspensionInfo', params: { idSuspension: suspension.id } }"
+                        v-slot="{ href, navigate }" custom>
+                        <a :href="href" @click="navigate" class="no-underline">
+                            <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
+                                <div class="row text-center">
+                                    <!-- Colonne pour le nom de l'habilitation -->
+                                    <div class="col-md-6 text-md-end px-2">
+                                        <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id)
+                                        }}</span>
+                                    </div>
+                                    <!-- Colonne pour le nom du personnel -->
+                                    <div class="col-md-4 text-md-start px-2">
+                                        <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
+                                    </div>
+                                    <!-- Colonne pour les dates, la durée et les commentaires -->
+                                    <div class="col-md-12 p-2">
+                                        <div class="card bg-light">
+                                            <div class="card-body p-1">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <span class="fw-bold">Dates:</span>
+                                                        <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="fw-bold">Durée:</span>
+                                                        <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="fw-bold">Commentaire:</span>
+                                                        <p>{{ suspension.commentaire }}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </a>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -99,7 +106,7 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions supprimées (todo ajout booléen Supprimé en bdd)</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
-                    <div class="card card-hover d-flex rounded px-3 py-2 mb-3">
+                    <div class="card d-flex rounded px-3 py-2 mb-3">
                         <div class="row text-center">
                             <!-- Colonne pour le nom de l'habilitation -->
                             <div class="col-md-6 text-md-end px-2">
