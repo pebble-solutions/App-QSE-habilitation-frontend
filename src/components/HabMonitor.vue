@@ -245,7 +245,7 @@ export default {
 */
 
 .bg-custom {
-    background-color: #f78c6b9a;
+    background-color: #f78c6b;
 }
 .tooltip {
 	position: absolute;
