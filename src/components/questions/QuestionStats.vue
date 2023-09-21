@@ -3,8 +3,8 @@
 
         <div class="col-12 col-lg-4">
             <div class="d-flex align-items-center mb-2" :class="className">
-            <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
-            <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
+                <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
+                <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
             </div>
         </div>
     

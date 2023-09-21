@@ -51,7 +51,7 @@ import * as echarts from 'echarts';
 
 
 export default {
-    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, //SuspensionsPersonnelInformations  RouterView
+    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, 
 
     data() {
         return {

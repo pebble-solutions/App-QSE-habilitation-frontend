@@ -31,7 +31,6 @@ export default {
 				return 'pas de réponse';
 			}
 			else {
-
 				return dateFormat(this.date);
 			}
 

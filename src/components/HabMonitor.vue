@@ -50,12 +50,12 @@
 								changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 							<span v-else>Pas de contrôle enregistré</span>
 							<div v-if="personnelHabilitation.controles" class="d-flex flex-row flex-wrap align-items-center justify-content-start px-2">
-							<button class="mb-2" v-for="kn in personnelHabilitation.controles" :key="kn.id"
-							@click.prevent="this.$router.push({name: 'readCollecteOperateur', params:{idCollecte:kn.id}})"
-							:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-							:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+' du '+changeFormatDateLit(kn.date_done)">
-							{{ kn.sami }}
-							</button>
+								<button class="mb-2" v-for="kn in personnelHabilitation.controles" :key="kn.id"
+									@click.prevent="this.$router.push({name: 'readCollecteOperateur', params:{idCollecte:kn.id}})"
+									:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+									:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+' du '+changeFormatDateLit(kn.date_done)">
+									{{ kn.sami }}
+								</button>
 							</div>
 						</div>
 							
@@ -94,7 +94,6 @@
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
-// import { RouterLink} from 'vue-router';
 
 
 import { mapState } from 'vuex';
@@ -226,7 +225,7 @@ export default {
 */
 
 .bg-custom {
-    background-color: #f78c6b9a;
+    background-color: #f78c6b;
 }
 .tooltip {
 	position: absolute;
