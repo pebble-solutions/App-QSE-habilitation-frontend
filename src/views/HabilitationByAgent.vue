@@ -11,7 +11,6 @@
         </div>
     </div>
 
-
     <div class="container text-custom p-2 mb-2 mt-4 justify-center">
         <!-- <h2 class="card-title text-center mb-1">Statistiques :</h2> -->
         <div class="row">
@@ -50,7 +49,7 @@ import * as echarts from 'echarts';
 
 
 export default {
-    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, //SuspensionsPersonnelInformations  RouterView
+    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, 
 
     data() {
         return {
