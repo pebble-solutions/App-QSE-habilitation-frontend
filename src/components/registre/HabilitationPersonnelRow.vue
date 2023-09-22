@@ -39,27 +39,18 @@
         </div>
     </div> -->
 
-    <!-- Première ligne -->
-    <div class="position-absolute text-center">
-        <div class="table-row-content mt-2"
-            v-for="(col, index) in personnels"
-            :key="index"
-            :style="{ left: getLeftPosition(index + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
-            >
-            <span>{{ displayDate(getHabilitationsPersonnelByTypeId(habilitationType.id,col.id)[0].dd) }}</span>
-        </div>
-    </div>
+    <ContenuHabilitationPersonnelRow 
+        :rowIndex = "rowIndex"
+        :habilitationsPersonnels = "getHabilitationsPersonnelByTypeId(habilitationType.id,col.id)"
+        :grid = "grid"
+        :personnelIndex = "index" 
+        :personnelsSize = "personnels.length"
 
-    <div class="position-absolute text-center">
-        <div class="table-row-content mt-2"
-            v-for="(col, index) in personnels"
-            :key="index"
-            :style="{ left: getLeftPosition(personnels.length + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
-            >
-            <span>Total</span>
-        </div>
-    </div>
-    <!-- Fin première ligne -->
+        v-for="(col, index) in personnels"
+        :key="index"
+        />
+
+
 
 </template>
 
@@ -70,10 +61,10 @@
 <script>
 import UserImage from '../pebble-ui/UserImage.vue';
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-import {getDisplayFormatedDate} from '../../js/date'
+import ContenuHabilitationPersonnelRow from './ContenuHabilitationPersonnelRow.vue'
 
 export default {
-    components: { UserImage },
+    components: { UserImage, ContenuHabilitationPersonnelRow },
     props: {
         rowIndex: Number,
         habilitationType: Object,
@@ -159,22 +150,6 @@ export default {
             return this.grid.getTopPositionHabilitationLabel(n, sx, coef);
         },
 
-        getLeftPosition(n, sx, coef) {
-            return this.grid.getLeftPosition(n, sx, coef);
-        },
-
-        getWeekStartInTimeline(refDd) {
-            return this.grid.getWeekStartInTimeline(refDd);
-        },
-
-        getWeekEndInTimeline(refDd, refDf) {
-            return this.grid.getWeekEndInTimeline(refDd, refDf);
-        },
-
-        getWidth(cols, sx) {
-            return this.grid.getWidth(cols, sx);
-        },
-
         /**
          * Retrourne la liste des habilitations du personnel pour un type donné.
          * 
@@ -189,10 +164,6 @@ export default {
             }
             return this.habilitationsPersonnels.filter(e => e.characteristic_id == characteristicId);
         },
-
-        displayDate(date){
-            return getDisplayFormatedDate(date)
-        }
     }
 }
 </script>
