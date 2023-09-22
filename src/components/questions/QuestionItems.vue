@@ -1,21 +1,20 @@
 <template>
     <div class="list-group-item" >
-        <div class="fst-italic pb-2">
-             {{ question.id }} {{ question.question }} 
+        <div class="fst-italic pb-2 fs-5">
+            <span>{{ question.question }}</span>
+            <span class="fw-lighter ms-2 fs-6">#{{ question.id }}</span>
         </div>
         
+        <!-- composant dernière réponse et stats -->
         <QuestionStats v-if="questionStats" :stats="questionStats"/>
-        
-            <!-- <div v-if="questionStats.personnel.length">
-                <div v-for="personnel in questionStats.personnel" :key="personnel.id">
-                    <ResultProgressBar v-if="personnel" :questionStats="personnel.stats"></ResultProgressBar>
-                </div>
-            </div> -->
-            <div v-else>Pas de Statistiques pour l'agent {{ questionStats.personnel }}</div>
-           
-        <!-- composants total des réponses -->
-
-        
+        <!-- composant pour réponse de l'agent -->
+        <div v-if="questionStats.personnel.length">
+            <div v-for="personnel in questionStats.personnel" :key="personnel.id">
+                <ResultProgressBar v-if="personnel" :questionStats="personnel.stats"></ResultProgressBar>
+            </div>
+        </div>
+        <div v-else>Pas de Statistiques pour l'agent {{ questionStats.personnel }}</div>
+        <!-- composants pour total des réponses -->
        <ResultProgressBar v-if="questionStats.global" :questionStats="questionStats.global"/>
  
     </div>

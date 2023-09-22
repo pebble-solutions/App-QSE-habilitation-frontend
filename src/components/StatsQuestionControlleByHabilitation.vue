@@ -7,21 +7,11 @@
                         {{ bloc.bloc }} 
                     </button>
                 </h2>
-
                 <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                     <div class="accordion-body">
                         <div class="list-group list-group-flush">
                             <template v-for="question in getQuestionsFromBlocId(bloc.id)" :key="'question-'+question.id">
                                 <QuestionItems :question="question" :stats="stats"/>
-                                <!-- {{ question.question }} -->
-                                <!-- <div class="list-group-item" >
-                                    deuxieme
-                                    <div class="fst-italic pb-2">
-                                        {{ question.id }}  {{ question.question }} 
-                                    </div>
-
-                                    <QuestionStats v-if="questionStats" :stats="questionStats"/>
-                                </div> -->
                             </template>
                         </div>
                     </div>

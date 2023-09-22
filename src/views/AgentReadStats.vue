@@ -5,6 +5,9 @@
         size="lg"
         @modal-hide="routeToParent()">
         <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions && !pending.agent && !pending.controle">
+            <!-- <pre>
+                {{ stats }}
+            </pre> -->
             <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
         </div>
         <div v-else>Chargement...</div>
