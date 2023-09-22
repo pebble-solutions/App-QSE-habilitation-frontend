@@ -35,8 +35,8 @@
             <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
         </div>
         <spinner v-else></spinner>
+        <RouterView></RouterView>
     </div>
-    <RouterView></RouterView>
 </template>
   
 <script>
@@ -46,12 +46,11 @@ import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { RouterView } from 'vue-router';
-// import * as echarts from 'echarts';
 import * as echarts from 'echarts';
 
 
 export default {
-    components: {  HabMonitor, Spinner, RouterView, SuspensionsPersonnelInformations}, //SuspensionsPersonnelInformations
+    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, //SuspensionsPersonnelInformations  RouterView
 
     data() {
         return {
@@ -292,7 +291,6 @@ export default {
 
             for (let i = 0; i < this.listHabByPersoJoinType.length; i++) {
                 this.pending.control = true;
-                console.log(this.listHabByPersoJoinType[i].configVeille, "config veille .id");
                 if (this.listHabByPersoJoinType[i].configVeille) {
                     await this.$app.apiGet('v2/controle/veille/' + this.listHabByPersoJoinType[i].configVeille.id + '/todo', { CSP_min: 0, CSP_max: 600 })
                         .then((data) => {
@@ -309,7 +307,6 @@ export default {
                         .catch(this.$app.catchError).finally(() => this.pending.control = false);
                 }
                 else {
-                    console.log(this.listHabByPersoJoinType[i].configVeille, "pas de config veille id");
                     this.pending.control = false;
                 }
             }

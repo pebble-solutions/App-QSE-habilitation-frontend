@@ -13,6 +13,15 @@
                         <div class="list-group list-group-flush">
                             <template v-for="question in getQuestionsFromBlocId(bloc.id)" :key="'question-'+question.id">
                                 <QuestionItems :question="question" :stats="stats"/>
+                                <!-- {{ question.question }} -->
+                                <!-- <div class="list-group-item" >
+                                    deuxieme
+                                    <div class="fst-italic pb-2">
+                                        {{ question.id }}  {{ question.question }} 
+                                    </div>
+
+                                    <QuestionStats v-if="questionStats" :stats="questionStats"/>
+                                </div> -->
                             </template>
                         </div>
                     </div>
@@ -46,7 +55,8 @@ export default {
          */
         questions() {
             return this.groupsAndQuestions.questions;
-        }
+        },
+
     },
 
     methods: {

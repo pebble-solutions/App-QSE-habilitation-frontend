@@ -149,6 +149,11 @@ const routes = [
         name: 'AgentStats',
         component: () => import("../views/AgentReadStats.vue"),
       },
+      {
+        path: ':idCollecte',
+        name: 'readCollecteOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/PersonnelReadCollecte.vue')
+      }
       // {
         //   path: ':idHab',
         //   name: 'controlHistory',
