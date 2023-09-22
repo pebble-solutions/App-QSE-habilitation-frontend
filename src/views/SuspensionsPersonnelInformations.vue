@@ -1,24 +1,16 @@
 <template>
-    <div>
+
         <div class="row row px-3 mt-4" v-if="habilitationPersonnel.length > 0">
             <div class="card col-md-6 mb-4">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
                     <ul class="custom-ul">
                         <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
-<<<<<<< HEAD
                             v-for="hab in nonSuspendedHabilitations" :key="hab.id">
                             {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                         </li>
                     </ul>
                     <p v-if="nonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
-=======
-                            v-for="hab in getNonSuspendedHabilitations" :key="hab.id">
-                            {{ getHabilitationTypeName(hab.habilitation_type_id) }}
-                        </li>
-                    </ul>
-                    <p v-if="getNonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
->>>>>>> unstable
                         autre
                         habilitation</p>
                 </div>
@@ -28,11 +20,7 @@
                     <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
                     <ul class="custom-ul">
                         <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
-<<<<<<< HEAD
-                            v-for="hab in nonSuspendedHabilitations" :key="hab.id">
-=======
-                            v-for="hab in getSuspendedHabilitations" :key="hab.id">
->>>>>>> unstable
+                            v-for="hab in suspendedHabilitations" :key="hab.id">
                             <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
                             <span>le {{ formatSuspensionDate(getSuspensionDate(hab.id)) }}</span>
                         </li>
@@ -42,7 +30,7 @@
         </div>
         <div class="text-center text-secondary" v-else>
         </div>
-    </div>
+
 </template>
 
 
@@ -106,11 +94,7 @@ export default {
          * Retourne les habilitations non suspendues du personnel.
          * @return {Array} Les habilitations non suspendues du personnel.
          */
-<<<<<<< HEAD
         nonSuspendedHabilitations() {
-=======
-        getNonSuspendedHabilitations() {
->>>>>>> unstable
             return this.habilitationPersonnel.filter(hab => {
                 // Trouver toutes les suspensions pour cette habilitation
                 const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
@@ -125,20 +109,12 @@ export default {
          * Retourne les habilitations suspendues du personnel.
          * @return {Array} Les habilitations suspendues du personnel.
          */
-<<<<<<< HEAD
-        nonSuspendedHabilitations() {
-=======
-        getSuspendedHabilitations() {
->>>>>>> unstable
+        suspendedHabilitations() {
             return this.habilitationPersonnel.filter(hab => this.getSuspensions.some(sus => sus.habilitation_id === hab.id && sus.df == null));
         },
 
         /**
          * Retourne le nom du type d'habilitation.
-<<<<<<< HEAD
-=======
-         * @param {number} habilitationTypeId - L'ID du type d'habilitation.
->>>>>>> unstable
          * @return {string} Le nom du type d'habilitation.
          */
         getHabilitationTypeName() {
