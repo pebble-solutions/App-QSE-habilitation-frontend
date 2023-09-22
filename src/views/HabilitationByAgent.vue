@@ -13,8 +13,6 @@
 
 
     <div class="container text-custom p-2 mb-2 mt-4 justify-center">
-
-            <!-- <h2 class="card-title text-center mb-1">Statistiques :</h2> -->
             <div class="row">
                 <div class="col-12 col-lg-6">
                         <div ref="chart1" style="width: 100%; height: 300px;"></div>

@@ -86,21 +86,12 @@ methods: {
     },
 },
 
-// /**
-//  * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
-//  */
-//  beforeRouteUpdate(to) {
-//     if (to.params.id != this.currentPersonnel.id) {
-//         this.loadHabilitationFromPersonnel(to.params.id);
-//         //this.resetStats();
-//     }
-// },
+
 
 beforeMount() {
     /**
      * charge les stats du formulaire
      */
-    console.log(this.$route.params.idAgent  ,this.$route.params.idForm, 'agent puis formulaire')
     this.loadFormulaireStats(this.$route.params.idAgent  ,this.$route.params.idForm);
     this.getGroupsAndQuestions(this.$route.params.idForm);
 },

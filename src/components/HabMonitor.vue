@@ -12,12 +12,12 @@
 				<strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
 				<strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
 				<span class="ms-2" v-if="personnelHabilitation.configVeille">
-								<button class=" btn btn-sm bg-custom"
-									@click.prevent="this.$router.push({name:'AgentStats', params:{id:this.$route.params.id, idForm:personnelHabilitation.configVeille.formulaire_id}})">
-									<span>STATS</span>
-									<i class="bi bi-arrow-up-right-square ms-2"></i>	
-								</button>
-							</span>
+					<button class=" btn btn-sm bg-custom"
+						@click.prevent="this.$router.push({name:'AgentStats', params:{id:this.$route.params.id, idForm:personnelHabilitation.configVeille.formulaire_id}})">
+						<span>STATS</span>
+						<i class="bi bi-arrow-up-right-square ms-2"></i>	
+					</button>
+				</span>
 			</div>
 			<div class="row">
 				<!-- Colonne 1 : Validité de l'habilitation -->

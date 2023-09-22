@@ -10,7 +10,6 @@
 </template>
 <script>
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
-// import HabMonitorPersonnel from '../components/HabMonitorPersonnel.vue';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 
 export default {
@@ -41,7 +40,6 @@ export default {
             })
             .then((data) => {
                 this.collecte = data
-                // this.setCollecte(data);
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
 

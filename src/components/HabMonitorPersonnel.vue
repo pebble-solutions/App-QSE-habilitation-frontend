@@ -7,11 +7,11 @@
 				<!-- <span v-if="personnelHabilitation.personnel.dsortie">date sortie le {{ changeFormatDateLit(personnelHabilitation.personnel.dsortie) }}</span> -->
 				<strong v-if="displayHab">{{personnelHabilitation.habilitation_type_id}}</strong>
 				<span class="ms-2" v-if="personnelHabilitation">
-						<button class=" btn btn-sm bg-custom"
-							@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
-							<span>STATS</span>
-							<i class="bi bi-arrow-up-right-square ms-2"></i>	
-						</button>
+					<button class=" btn btn-sm bg-custom"
+						@click.prevent="this.$router.push({name:'StatsAgent', params:{idAgent:personnelHabilitation.personnel_id, idForm:veilleConfig.formulaire_id}})">
+						<span>STATS</span>
+						<i class="bi bi-arrow-up-right-square ms-2"></i>	
+					</button>
 				</span>
 			</div>
 			<div class="row">
@@ -86,9 +86,6 @@ export default {
 	computed: {
 		...mapState(['types', 'listActifs','personnels']),
 	
-	
-	
-	
 	},
 	data() {
 		return {
@@ -113,7 +110,6 @@ export default {
 			}
 			else return 'personnel non trouvé'
 		},
-	
 				
 		/**
 		* return la date de l'expiration du délai de veille (+pdv) à partir de la date du dernier contrôle
@@ -158,15 +154,7 @@ export default {
     background-color: #f78c6b;
 }
 
-/* .btn {
-	width: 30px;
-	height: 30px;
-	padding: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-} */
+
 
 .tooltip {
 	position: absolute;
