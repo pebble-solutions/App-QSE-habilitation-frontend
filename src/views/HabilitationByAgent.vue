@@ -3,14 +3,14 @@
     <div class="container py-2">
         <div class="card bg-custom mt-4">
             <div class="card-body">
-                <h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
-                        class="text-secondary">#{{
-                            $route.params.id }}</span></h2>
+                <h2 v-if="personnel" class="text-center text-white">
+                    {{ personnel.cache_nom }}
+                    <span class="text-secondary"> #{{ $route.params.id }}</span>
+                </h2>
                 <SuspensionsPersonnelInformations v-if="suspensions.length"></SuspensionsPersonnelInformations>
             </div>
         </div>
     </div>
-
 
     <div class="container text-custom p-2 mb-2 mt-4 justify-center">
         <!-- <h2 class="card-title text-center mb-1">Statistiques :</h2> -->
@@ -23,7 +23,6 @@
             </div>
         </div>
     </div>
-
     <div class="container py-2 px-2">
         <div v-if="!pending.agent && !pending.control" class="card bg-custom text-white p-4 mb-4 shadow">
             <template v-if="listHabByPersoJoinType.length">
@@ -46,9 +45,7 @@ import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { RouterView } from 'vue-router';
-// import * as echarts from 'echarts';
 import * as echarts from 'echarts';
-
 
 export default {
     components: {  HabMonitor, Spinner, RouterView, SuspensionsPersonnelInformations}, //SuspensionsPersonnelInformations
