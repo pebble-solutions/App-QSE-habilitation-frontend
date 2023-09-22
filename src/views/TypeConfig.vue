@@ -98,7 +98,7 @@ export default {
             },
             active: null,
             listHabPersoType:[],
-            listVeille: null,
+            listVeille: [],
             listControles: [],
 
         };

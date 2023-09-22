@@ -94,9 +94,7 @@ export default{
                 .catch(this.$app.catchError)
                 .finally(() => {
                     this.pending.config = false;
-                    this.$router.push('/types/'+this.$route.params.id);
                 });
-                this.pending.config = false
             }
 
         },

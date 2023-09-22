@@ -45,7 +45,6 @@ export default {
         /**
          * Récupère le nom du personnel associé à la suspension.
          * @param {Suspension} suspension - La suspension en cours.
-         * 
          * @returns {string} Le nom du personnel ou une chaîne vide.
          */
         getPersonnelName() {
@@ -61,7 +60,6 @@ export default {
 
         /**
          * Récupère la liste des suspensions pour l'habilitation en cours.
-         * 
          * @returns {Suspension[]} La liste des suspensions.
          */
         getSuspensions() {
@@ -76,7 +74,6 @@ export default {
 
         /**
          * Vérifie s'il n'y a aucun personnel suspendu pour l'habilitation en cours.
-         * 
          * @returns {boolean} True si aucun personnel suspendu, sinon False.
          */
         isNoSuspendedPersonnel() {
