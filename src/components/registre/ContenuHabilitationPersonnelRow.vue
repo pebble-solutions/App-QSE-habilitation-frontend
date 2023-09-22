@@ -5,7 +5,7 @@
         <div class="table-row-content mt-2"
             :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
             >
-            <span>{{ displayDate(habilitationsPersonnels[0].dd) }}</span>
+            <span v-if="habilitationStartDate">{{ displayDate(habilitationStartDate) }}</span>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div class="table-row-content mt-2"
             :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 3, 'px')  }"
             >
-            <span>{{ displayDate(habilitationsPersonnels[0].df) }}</span>
+            <span v-if="habilitationStartEnd">{{ displayDate(habilitationStartEnd) }}</span>
         </div>
     </div>
 
@@ -36,15 +36,50 @@
     </div>
     <!-- Fin Deuxième ligne -->
 
+    <!-- Troisième ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content"
+            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 4, 'px')}" >
+
+            <span class="control-result-item rounded m-1" 
+                :class="[SAMIClassName(habilitationLastControlResult)]" 
+                :title="'Contrôlé le : aucune idée je n\'ai pas les données'"
+                v-if="habilitationLastControlResult" >
+                {{ habilitationLastControlResult }}
+            </span>
+        </div>
+    </div>
+
+    <div class="position-absolute text-center">
+        <div class="table-row-content mt-2"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 4, 'px')  }"
+            >
+            <span>{{lastControlResultTotal()}}</span>
+        </div>
+    </div>
+    <!-- Fin Troisième ligne -->
+
 </template>
 
 <style lang="scss" scoped>
 @import "../grid/grid.scss";
+
+.control-result-item {
+    position: absolute;
+    z-index: 2;
+    width: 40px;
+    line-height: 40px;
+    height: 40px;
+    text-align:center;
+    left : 80px;
+    top:0px;
+}
 </style>
 
 <script>
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-import {getDisplayFormatedDate} from '../../js/date'
+import {getDisplayFormatedDate} from '../../js/date';
+import { classNameFromSAMI } from '../../js/collecte'
 
 export default {
     props: {
@@ -53,6 +88,14 @@ export default {
         grid: RegistreGrid,
         personnelIndex: Number,
         personnelsSize: Number
+    },
+
+    data() {
+        return {
+            habilitationStartDate: this.habilitationsPersonnels[0]?.dd || null,
+            habilitationStartEnd: this.habilitationsPersonnels[0]?.df || null,
+            habilitationLastControlResult: this.habilitationsPersonnels[0]?.last_control_result || null,
+        };
     },
 
     computed: {
@@ -94,6 +137,14 @@ export default {
             return getDisplayFormatedDate(date)
         },
 
+        /**
+         * Retourne le nom de la classe CSS en fonction du résultat SAMI du contrôle
+         * 
+         * @return {string}
+         */
+        SAMIClassName(result_sami) {
+            return classNameFromSAMI(result_sami);
+        },
 
 
         // TOTAL
@@ -104,6 +155,9 @@ export default {
 
         dateFinTotal(){
             return "Total"
+        },
+        lastControlResultTotal(){
+            return "S"
         }
     }
 }

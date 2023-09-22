@@ -151,19 +151,29 @@ export default {
         },
 
         /**
-         * Retrourne la liste des habilitations du personnel pour un type donné.
+         * Retourne la liste des habilitations du personnel pour un type donné.
          * 
-         * @param {number} characteristicId L'ID de la caractéristique à trouver
-         * @param {number} personnelId L'ID du personnel à trouver
+         * @param {number} characteristicId     L'ID de la caractéristique à trouver
+         * @param {number} personnelId          L'ID du personnel à trouver
          * 
          * @return {array}
          */
-         getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
-            if (personnelId){
-                this.habilitationsPersonnels.filter(e => e.personnel_id == personnelId);
-            }
-            return this.habilitationsPersonnels.filter(e => e.characteristic_id == characteristicId);
-        },
+        getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
+            const tabreturn = this.habilitationsPersonnels.filter(e => {
+                if (personnelId !== undefined && e.personnel_id !== personnelId) {
+                return false;
+                }
+                return e.characteristic_id === characteristicId;
+            });
+            console.log(tabreturn)
+            return tabreturn
+            // return this.habilitationsPersonnels.filter(e => {
+            //     if (personnelId !== undefined && e.personnel_id !== personnelId) {
+            //     return false;
+            //     }
+            //     return e.characteristic_id === characteristicId;
+            // });
+        }
     }
 }
 </script>
