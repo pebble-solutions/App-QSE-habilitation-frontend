@@ -2,13 +2,17 @@
 <template>
         <AppModal
         title="STATS"
-        size="lg"
-        @modal-hide="routeToParent()">
-        <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions && !pending.agent && !pending.controle">
+        size="lg">
+        <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
             <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
+            <pre>
+                {{ stats }}
+                {{ groupsAndQuestions }}
+            </pre>
         </div>
         <div v-else>Chargement...</div>
-        
+            
+            je suis dans la modal
         </AppModal>
 </template>
 <script>
@@ -31,13 +35,6 @@ export default {
     },
 
     methods: {
-
-        /**
-         * Retourne a la vue précédente
-         */
-         routeToParent() {
-            this.$router.back()
-        },
         /**
          * Retourne les stats qui correspond a la question
          * 
@@ -56,9 +53,12 @@ export default {
          loadFormulaireStats(personnelId , formulaireId) {
             this.pending.formulaireStats = true;
 
+            console.log(formulaireId);
+
             this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
                 "personnel_ids": personnelId
             }).then((data) => {
+                console.log(data, 'stats')
                 this.stats = data;
             }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
         },
@@ -76,6 +76,7 @@ export default {
                 blocsandlignes: 1,
                 ppp: "private"
             }).then((data) => {
+                console.log(data, 'groupsAndQuestions');
                 this.groupsAndQuestions = data;
             }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
         },
@@ -93,7 +94,7 @@ export default {
 
     beforeMount() {
         /**
-         * charge les stats du formulaire
+         * charge 
          */
         this.loadFormulaireStats(this.$route.params.id  ,this.$route.params.idForm);
         this.getGroupsAndQuestions(this.$route.params.idForm);

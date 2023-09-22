@@ -13,8 +13,7 @@ export const ROUTES_NAMES = {
 		'operateur',
 		'habilitationByAgent',
 		'controlHistory',
-		'controlView',
-		'AgentStats'
+		'controlView'
 	],
 	personnels: [
 		'personnels',

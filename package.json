@@ -1,6 +1,6 @@
 {
   "name": "habilitation",
-  "version": "0.1.0",
+  "version": "1.0.1-dev.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -14,6 +14,7 @@
     "bootstrap-icons": "^1.10.5",
     "core-js": "^3.26.1",
     "date-and-time": "^3.0.2",
+    "date.js": "^0.3.3",
     "echarts": "^5.4.3",
     "firebase": "^9.23.0",
     "jwt-decode": "^3.1.2",

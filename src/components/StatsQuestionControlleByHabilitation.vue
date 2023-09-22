@@ -46,8 +46,7 @@ export default {
          */
         questions() {
             return this.groupsAndQuestions.questions;
-        },
-
+        }
     },
 
     methods: {

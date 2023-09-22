@@ -70,6 +70,10 @@ export default createStore({
 		pending: {
 			habilitationsPersonnels: false,
 			personnelsFiltered: true,
+			suspensions: false,
+			types: false,
+			personnels: false,
+			habilitations: false,
 		},
 
 

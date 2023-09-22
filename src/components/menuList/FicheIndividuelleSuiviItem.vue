@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :class="['row', 'justify-content-center', 'align-items-center']">
+        <div :class="['row', 'px-0', 'justify-content-center', 'align-items-center']">
             <div class="col-1">
                 <span>
                     <UserImage :name="agent.cache_nom" />
@@ -27,17 +27,17 @@
 
 <style lang="scss" scoped>
 .status-badge .status-detail {
-    display: none;
+	display: none;
 }
 
 .status-badge:hover .status-detail {
-    display: inline;
+	display: inline;
 }
 
 .badge-group {
     display: flex;
     align-items: center;
-
+    
     >.badge {
         border-radius: 4px; /* Ajoutez cette ligne pour définir les coins arrondis */
         margin-right: 4px; /* Ajoutez une marge entre les badges */
@@ -48,6 +48,7 @@
     }
 }
 </style>
+
 
 <script>
 import UserImage from '../pebble-ui/UserImage.vue';
@@ -102,7 +103,7 @@ export default {
                 case "warning":
                     dataNb = this.nbExpirationWarning;
                     break;
-
+            
                 default:
                     dataNb = this.nbTotalHabilitation;
                     break;

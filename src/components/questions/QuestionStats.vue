@@ -1,18 +1,16 @@
 <template>
-    <div class="row mt-2">
+    <div class="d-flex  align-items-center" :class="className">
+        <div class="col-12" :class="{'col-md-4' : !textDisplayClass}">
+            <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
 
-        <div class="col-12 col-lg-4">
-            <div class="d-flex align-items-center mb-2" :class="className">
-                <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
-                <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
-            </div>
+            <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
         </div>
-        <div class="col-12 col-lg-8" v-if="personnelStatsAverage">
+
+        <div class="col-12 col-md-6 my-3" v-if="personnelStatsAverage">
             <JaugeSami :personnalAverage="personnelStatsAverage" :name="personnelName" :generalAverage="generalStatsAverage" />
         </div>
-    </div>
-        
 
+    </div>
 </template>
 
 
@@ -49,10 +47,7 @@ export default {
          * Retourne la note moyenne du personnel sur la question
          */
         personnelStatsAverage() {
-            if(this.stats.personnel.length){
-                return this.stats.personnel[0].stats.average;
-            }
-            else return null;   
+            return this.stats.personnel[0].stats.average;
         },
 
         /**
@@ -66,24 +61,16 @@ export default {
          * Retourne le dernier resultat de la question par le personnel
          */
         personnelLastResult() {
-            if(this.stats.personnel.length) {
-                return this.stats.personnel[0].stats.lastResult;    
-            }
-            else return null;
+            return this.stats.personnel[0].stats.lastResult;
         },
 
         /**
          * Retourne la date du dernier resultat de la question par le personnel
          */
         personnelLastResultDate() {
-            if(!this.stats.personnel.length) {
-                return null;
-            }
-            else {
-                let date = this.stats.personnel[0].stats.lastResultDate;
-                return date;    
-            }
+            let date = this.stats.personnel[0].stats.lastResultDate;
 
+            return date;
         },
 
         /**
