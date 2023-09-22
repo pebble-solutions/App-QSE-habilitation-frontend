@@ -5,7 +5,7 @@
                 <h3 class="card-title text-center mb-3">Habilitations en cours</h3>
                 <ul class="custom-ul">
                     <li class="d-flex justify-content-between align-items-center bg-primary rounded text-white px-3 py-2 mb-2"
-                        v-for="hab in nonSuspendedHabilitations" :key="hab.id">
+                        v-for="hab in nonSuspendedHabilitations()" :key="hab.id">
                         {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                     </li>
                 </ul>
@@ -19,7 +19,7 @@
                 <h3 class="card-title text-center mb-3">Habilitations suspendues</h3>
                 <ul class="custom-ul">
                     <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
-                        v-for="hab in suspendedHabilitations" :key="hab.id">
+                        v-for="hab in suspendedHabilitations()" :key="hab.id">
                         <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
                         <span>le {{ getSuspensionDate(hab.id) }}</span>
                     </li>
@@ -88,35 +88,6 @@ export default {
             }, []);
         },
 
-        /**
-         * Retourne les habilitations non suspendues du personnel.
-         * @return {Array} Les habilitations non suspendues du personnel.
-         */
-         nonSuspendedHabilitations() {
-            const currentDate = new Date(); // Obtenir la date actuelle
-            return this.habilitationPersonnel.filter(hab => {
-                // Trouver toutes les suspensions pour cette habilitation
-                const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
-
-                // Vérifier si cette habilitation n'est pas suspendue ou si elle a une suspension dont la df est dans le passé ou égale à la date actuelle
-                return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
-            });
-        },
-
-        /**
-         * Retourne les habilitations suspendues du personnel.
-         * @return {Array} Les habilitations suspendues du personnel.
-         */
-        suspendedHabilitations() {
-            const currentDate = new Date(); // Obtenir la date actuelle
-            return this.habilitationPersonnel.filter(hab => {
-            // Trouver les suspensions pour cette habilitation
-            const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
-
-            // Vérifier si cette habilitation est suspendue ou si elle a une suspension dont la df est dans le futur
-            return suspensionsForThisHab.some(sus => sus.df === null || new Date(sus.df) > currentDate);
-            });
-        },
 
         /**
         * Modifie le format de la date entrée en paramètre et la retourne sous le format "01 févr. 2021".
@@ -142,6 +113,34 @@ export default {
 
 
     methods: {
+
+
+        /**
+         * Retourne les habilitations non suspendues du personnel.
+         * @return {Array} Les habilitations non suspendues du personnel.
+         * 
+         */
+        nonSuspendedHabilitations() {
+            const currentDate = new Date(); // Obtenir la date actuelle
+            return this.habilitationPersonnel.filter(hab => {
+            const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
+            return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
+        });
+        },
+
+        /**
+         * Retourne les habilitations suspendues du personnel.
+         * 
+         * @return {Array} Les habilitations suspendues du personnel.
+         */
+        suspendedHabilitations() {
+            const currentDate = new Date(); // Obtenir la date actuelle
+            return this.habilitationPersonnel.filter(hab => {
+            const suspensionsForThisHab = this.getSuspensions.filter(sus => sus.habilitation_id === hab.id);
+            return suspensionsForThisHab.some(sus => sus.df === null || new Date(sus.df) > currentDate);
+        });
+        },  
+
 
           /**
          * Retourne le nom du type d'habilitation.
