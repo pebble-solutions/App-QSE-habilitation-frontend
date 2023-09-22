@@ -14,15 +14,53 @@
         </div>
     </div>
     <div class="position-absolute text-center" :style="{ width: grid.secondColumnWidth + 'px' }">
-        <div
-            class="table-row-content mt-2"
+        <div class="table-row-content mt-2"
             v-for="item in items"
             :key="item.key"
             :style="{ top: getTopPosition(rowIndex*10 + item.key + 1, 'px'), left: grid.firstColumnWidth + 'px' }"
             >
             <span>{{ item.label }}</span>
         </div>
-  </div>
+    </div>
+
+    <!-- <div class="position-absolute text-center">
+        <div class="table-row-content mt-2"
+            v-for="item in items"
+            :key="item.key"
+            :style="{ top: getTopPosition(rowIndex*10 + item.key + 1, 'px'), left: grid.firstColumnWidth + 'px' }"
+            >
+            <div
+                v-for="(col, index) in personnels"
+                :key="index"
+                :style="{ left: getLeftPosition(index + 2, 'px'), width: columnWidthPx }"
+                >
+                <span>{{ col.cache_nom }}</span>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Première ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content mt-2"
+            v-for="(col, index) in personnels"
+            :key="index"
+            :style="{ left: getLeftPosition(index + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
+            >
+            <span>{{ displayDate(getHabilitationsPersonnelByTypeId(habilitationType.id,col.id)[0].dd) }}</span>
+        </div>
+    </div>
+
+    <div class="position-absolute text-center">
+        <div class="table-row-content mt-2"
+            v-for="(col, index) in personnels"
+            :key="index"
+            :style="{ left: getLeftPosition(personnels.length + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
+            >
+            <span>Total</span>
+        </div>
+    </div>
+    <!-- Fin première ligne -->
+
 </template>
 
 <style lang="scss" scoped>
@@ -30,10 +68,9 @@
 </style>
 
 <script>
-// import { diffDate } from '../../js/date';
 import UserImage from '../pebble-ui/UserImage.vue';
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-// import { getSelfDateEnd, getSelfDateStart } from '../../js/contrat';
+import {getDisplayFormatedDate} from '../../js/date'
 
 export default {
     components: { UserImage },
@@ -41,7 +78,7 @@ export default {
         rowIndex: Number,
         habilitationType: Object,
         habilitationsPersonnels: Array,
-        personnel: Object,
+        personnels: Array,
         rowLabel: String,
         grid: RegistreGrid,
         useUserImage: {
@@ -55,7 +92,7 @@ export default {
             items: [
                 { key: 1, label: 'Date de début' },
                 { key: 2, label: 'Date de fin' },
-                { key: 3, label: 'Dernière Date' },
+                { key: 3, label: 'Dernière Note' },
                 { key: 4, label: 'Note Moyenne' },
                 { key: 5, label: 'Date prochain KN' },
                 { key: 6, label: 'Suspension' },
@@ -101,6 +138,15 @@ export default {
          */
         labelIcon() {
             return this.rowLabel.match(/^!/) ? "bi-exclamation-triangle-fill" : "";
+        },
+
+        /**
+         * Retourne la largeur de colonne en pixel
+         * 
+         * @return {string}
+         */
+         columnWidthPx() {
+            return `${this.grid.columnWidth}px`;
         }
     },
 
@@ -127,6 +173,25 @@ export default {
 
         getWidth(cols, sx) {
             return this.grid.getWidth(cols, sx);
+        },
+
+        /**
+         * Retrourne la liste des habilitations du personnel pour un type donné.
+         * 
+         * @param {number} characteristicId L'ID de la caractéristique à trouver
+         * @param {number} personnelId L'ID du personnel à trouver
+         * 
+         * @return {array}
+         */
+         getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
+            if (personnelId){
+                this.habilitationsPersonnels.filter(e => e.personnel_id == personnelId);
+            }
+            return this.habilitationsPersonnels.filter(e => e.characteristic_id == characteristicId);
+        },
+
+        displayDate(date){
+            return getDisplayFormatedDate(date)
         }
     }
 }

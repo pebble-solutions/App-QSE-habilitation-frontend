@@ -10,7 +10,8 @@
                 :grid="grid"
                 :rowIndex="index"
                 :rowLabel="habilitationType.nom"
-                :habilitationsPersonnels="getHabilitationsPersonnelByTypeId(habilitationType.id)"
+                :habilitationsPersonnels="habilitationsPersonnel"
+                :personnels="personnels"
                 :habilitationType="habilitationType"
                 
                 v-for="(habilitationType, index) in usedHabilitationsTypes"
@@ -82,20 +83,6 @@ export default {
          */
         getHabilitationById(id) {
             return this.habilitationsTypes.find(e => e.id == id);
-        },
-
-        /**
-         * Retrourne la liste des habilitations du personnel pour un type donné.
-         * 
-         * @param {number} characteristicId L'ID de la caractéristique à trouver
-         * 
-         * @return {array}
-         */
-        getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
-            if (personnelId){
-                this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
-            }
-            return this.habilitationsPersonnel.filter(e => e.characteristic_id == characteristicId);
         },
 
         /**
