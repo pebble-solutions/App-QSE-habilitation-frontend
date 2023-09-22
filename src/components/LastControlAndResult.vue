@@ -2,7 +2,6 @@
 	<div class="d-flex align-items-center justify-content-start">
 		<div class="d-flex align-items-center">
 			<i class="bi bi-clock-history"></i>
-	
 			<div class="m-2 fs-7">{{ lastResultDate }}</div>
 		</div>
 
@@ -27,7 +26,13 @@ export default {
          * Retourne la date du dernier resultat au bon format
          */
         lastResultDate() {
-            return dateFormat(this.date);
+			if (!this.date) {
+				return 'pas de réponse';
+			}
+			else {
+				return dateFormat(this.date);
+			}
+
         },
 
         /**

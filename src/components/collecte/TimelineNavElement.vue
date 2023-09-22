@@ -1,6 +1,6 @@
 <template>
-    <router-link :to="'/'+route+'/'+collecte.id" v-slot="{navigate,href}" custom>
-        <a :href="href"  @click="navigate" class="timeline-el link-secondary">
+    <!-- <router-link :to="'/'+route+'/'+collecte.id" v-slot="{navigate,href}" custom> -->
+        <span class="timeline-el link-secondary">
             <div class="timeline-label">
                 <CollecteBadge :result="collecte.result_var" /><br>
                 <span>
@@ -9,13 +9,13 @@
                     <i class="bi bi-arrow-right" v-if="direction == 'following'"></i>
                 </span>
             </div>
-        </a>
-    </router-link>
+        </span>
+    <!-- </router-link> -->
 </template>
 
 <script>
 
-import { RouterLink } from 'vue-router';
+// import { RouterLink } from 'vue-router';
 import CollecteBadge from './CollecteBadge.vue';
 
 export default {
@@ -28,7 +28,7 @@ export default {
         direction: String
     },
 
-    components: { RouterLink, CollecteBadge }
+    components: { CollecteBadge }
 }
 
 </script>

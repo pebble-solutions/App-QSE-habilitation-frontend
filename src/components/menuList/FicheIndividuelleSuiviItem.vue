@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :class="['row', 'justify-content-center', 'align-items-center']">
+        <div :class="['row', 'px-0', 'justify-content-center', 'align-items-center']">
             <div class="col-1">
                 <span>
                     <UserImage :name="agent.cache_nom" />

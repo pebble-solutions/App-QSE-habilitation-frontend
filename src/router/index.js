@@ -61,7 +61,12 @@ const routes = [
         path: ':idCollecte',
         name: 'readCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/TypeReadCollecte.vue')
-      }
+      },
+      {
+        path: ':idForm/:idAgent',
+        name: 'StatsAgent',
+        component: () => import("../views/TypeReadStats.vue"),
+      },
     ]
   },
   {
@@ -149,6 +154,11 @@ const routes = [
         name: 'AgentStats',
         component: () => import("../views/AgentReadStats.vue"),
       },
+      {
+        path: ':idCollecte',
+        name: 'readCollecteOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/PersonnelReadCollecte.vue')
+      }
       // {
         //   path: ':idHab',
         //   name: 'controlHistory',

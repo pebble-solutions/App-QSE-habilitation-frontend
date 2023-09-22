@@ -7,7 +7,6 @@
                         {{ bloc.bloc }} 
                     </button>
                 </h2>
-
                 <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                     <div class="accordion-body">
                         <div class="list-group list-group-flush">
@@ -46,7 +45,8 @@ export default {
          */
         questions() {
             return this.groupsAndQuestions.questions;
-        }
+        },
+
     },
 
     methods: {
