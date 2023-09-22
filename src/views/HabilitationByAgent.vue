@@ -13,6 +13,7 @@
     </div>
 
 
+<<<<<<< HEAD
 <!--    <div class="container text-custom p-2 mb-2 mt-4 justify-center">-->
 <!--            <div class="row">-->
 <!--                <div class="col-12 col-lg-6">-->
@@ -23,6 +24,19 @@
 <!--                </div>-->
 <!--            </div>-->
 <!--    </div>-->
+=======
+    <div class="container text-custom p-2 mb-2 mt-4 justify-center">
+        <!-- <h2 class="card-title text-center mb-1">Statistiques :</h2> -->
+        <div class="row">
+            <div class="col-md-6 p-3">
+                <div ref="chart1" style="width: 100%; height: 300px;"></div>
+            </div>
+            <div class="col-md-6 p-3">
+                <div ref="chart2" style="width: 100%; height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+>>>>>>> 389284ee8b1ee6964564a9ae48a997c45b5a7836
 
     <div class="container py-2 px-2">
         <div v-if="!pending.agent && !pending.control" class="card bg-custom text-white p-4 mb-4 shadow">
@@ -47,10 +61,14 @@ import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { RouterView } from 'vue-router';
 // import * as echarts from 'echarts';
+<<<<<<< HEAD
+=======
+import * as echarts from 'echarts';
+>>>>>>> 389284ee8b1ee6964564a9ae48a997c45b5a7836
 
 
 export default {
-    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, 
+    components: {  HabMonitor, Spinner, RouterView, SuspensionsPersonnelInformations}, //SuspensionsPersonnelInformations
 
     data() {
         return {
@@ -291,6 +309,7 @@ export default {
 
             for (let i = 0; i < this.listHabByPersoJoinType.length; i++) {
                 this.pending.control = true;
+                console.log(this.listHabByPersoJoinType[i].configVeille, "config veille .id");
                 if (this.listHabByPersoJoinType[i].configVeille) {
                     await this.$app.apiGet('v2/controle/veille/' + this.listHabByPersoJoinType[i].configVeille.id + '/todo', { CSP_min: 0, CSP_max: 600 })
                         .then((data) => {
@@ -307,6 +326,7 @@ export default {
                         .catch(this.$app.catchError).finally(() => this.pending.control = false);
                 }
                 else {
+                    console.log(this.listHabByPersoJoinType[i].configVeille, "pas de config veille id");
                     this.pending.control = false;
                 }
             }

@@ -7,16 +7,13 @@ export const ROUTES_NAMES = {
 		'editConfig',
 		'editVeille',
 		'newVeille',
-		'readCollecte',
-		'StatsAgent'
+		'readCollecte'
 	],
 	operateur: [
 		'operateur',
 		'habilitationByAgent',
 		'controlHistory',
-		'controlView',
-		'AgentStats',
-		'readCollecteOperateur',
+		'controlView'
 	],
 	personnels: [
 		'personnels',

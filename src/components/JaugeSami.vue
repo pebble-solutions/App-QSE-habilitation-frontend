@@ -1,6 +1,6 @@
 <template>
-    <div class="progress-container d-flex justify-content-between align-items-center text-center position-relative bg-transparent z-1 mt-2">
-        <div class="progress progress-ht position-relative w-100 z-1">
+    <div class="progress-container d-flex justify-content-between align-items-center text-center position-relative bg-transparent z-1">
+        <div class="progress position-relative w-100 z-1">
             <div v-for="(item, index) in progressItems" :key="index" class="progress-bar" :class="item.class"
                 role="progressbar" :style="styleProgressItems(item)" :aria-valuenow="item.value" aria-valuemin="0"
                 aria-valuemax="100">
