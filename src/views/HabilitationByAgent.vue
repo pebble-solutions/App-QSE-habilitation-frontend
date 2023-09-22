@@ -35,8 +35,8 @@
             <div v-else class="text-center">Aucune habilitation pour ce personnel.</div>
         </div>
         <spinner v-else></spinner>
-        <RouterView></RouterView>
     </div>
+    <RouterView></RouterView>
 </template>
   
 <script>
@@ -329,7 +329,7 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        if (to.params.id != this.personnel_id) {
+        if (to.params.id != this.personnel.id) {
             this.loadHabilitationFromPersonnel(to.params.id);
         }
     },
