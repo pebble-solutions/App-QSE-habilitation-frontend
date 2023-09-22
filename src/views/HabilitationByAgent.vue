@@ -6,7 +6,7 @@
                 <h2 v-if="personnel" class="text-center text-white">{{ personnel.cache_nom }} <span
                         class="text-secondary">#{{
                             $route.params.id }}</span></h2>
-                <SuspensionsPersonnelInformations></SuspensionsPersonnelInformations>
+                <SuspensionsPersonnelInformations v-if="suspensions.length"></SuspensionsPersonnelInformations>
             </div>
         </div>
     </div>
@@ -343,9 +343,10 @@ export default {
          */
         this.loadHabilitationFromPersonnel(this.$route.params.id);
     },
-    mounted() {
-
+    async mounted() {
         this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
+        const suspensionCollection = this.$assets.getCollection('suspensions');
+        await suspensionCollection.load();
     },
     updated() {
         // Appelez la fonction createEChartsCharts à chaque mise à jour de la vue.

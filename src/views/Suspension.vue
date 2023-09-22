@@ -207,6 +207,10 @@ export default {
             return this.suspensions.filter(suspension => suspension.df && new Date(suspension.df) < today);
         },
 
+        /**
+         * Retourne toutes les suspensions.
+         * @return {Array} Toutes les suspensions.
+         */
         getAllSuspensions() {
             return this.suspensions;
         },
@@ -221,9 +225,11 @@ export default {
     methods: {
 
         /**
-        * Formate la date en utilisant les options de format.
-        * @return {string} La date formatée en français.
-        */
+         * Retourne la date au format localisé.
+         * @param {string} date - La date à formater.
+         * 
+         * @return {string} La date au format localisé.
+         */
         formatDate(date) {
             if (date) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };

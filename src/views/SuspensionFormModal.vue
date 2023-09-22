@@ -1,6 +1,5 @@
 <template>
     <AppModal @update-type="updateType" @modal-hide="routeToParent()">
-        <!-- <pre class="text-start" v-if="suspension">{{ suspension }}</pre> -->
         <div class="row text-center pb-0" v-if="suspension">
             <!-- Colonne pour le nom de l'habilitation -->
             <div class="col-12 px-2">
@@ -44,12 +43,12 @@
                 </div>
             </div>
             <!-- Bouton "Modifier la date de fin de suspension" -->
-           <div class="col-12 px-2 mb-1">
-    <button class="btn btn-white-custom w-100" :class="{ 'btn-white': isHovered[1] }" @click="modifyDate()"
-        @mouseover="onButtonHover(1)" @mouseout="onButtonHover(0)">
-        {{ getButtonLabel() }}
-    </button>
-</div>
+            <div class="col-12 px-2 mb-1">
+                <button class="btn btn-white-custom w-100" :class="{ 'btn-white': isHovered[1] }" @click="modifyDate()"
+                    @mouseover="onButtonHover(1)" @mouseout="onButtonHover(0)">
+                    {{ getButtonLabel() }}
+                </button>
+            </div>
 
             <!-- Bouton "Lever la suspension" -->
             <div class="col-12 px-2 mb-1">
@@ -97,23 +96,35 @@ export default {
     },
 
     methods: {
-        modifyDate() {
-            if (this.dateModified) {
-                // La date a été modifiée, vous pouvez effectuer l'action souhaitée ici
-                // Par exemple, envoyer la modification.
-            } else {
-                // La date n'a pas été modifiée, afficher un message d'erreur
-                alert("Vous devez entrer une nouvelle date pour envoyer la modification.");
+
+        /**
+         * Verifie si la date de fin de suspension a été modifiée
+         * 
+         * @return {boolean}
+         */
+        modifDate() {
+            if (!this.dateModified) {
+                alert("vous devez entrer une nouvelle date pour envoyer la modification.")
             }
         },
 
-
+        /**
+         * Vérifie si la date df est différente de la date initiale (null ou autre)
+         * 
+         * @return {boolean}
+         */
         isDateModified() {
             // Vérifie si la date df est différente de la date initiale (null ou autre)
             return this.suspension.df !== null && this.suspension.df !== this.suspension.dfInitial;
         },
 
-
+        /**
+         * Met a jour l'affichage des textes des boutons
+         * 
+         * @param {*} index 
+         * 
+         * @return {boolean}
+         */
         onButtonHover(index) {
             if (index === 1) {
                 this.buttonText[0] = 'Modifier la date de fin de suspension';
@@ -131,15 +142,22 @@ export default {
             }
         },
 
+
+        /**
+         * Met a jour le type de modal
+         * 
+         * return {string}
+         */
         getButtonLabel() {
-  if (this.suspension.df === null) {
-    // Si suspension.df est null, affiche "Ajouter une date de fin de suspension"
-    return "Ajouter une date de fin de suspension";
-  } else {
-    // Si suspension.df n'est pas null, affiche "Modifier la date de fin de suspension"
-    return "Modifier la date de fin de suspension";
-  }
-},
+            if (this.suspension.df === null) {
+                // Si suspension.df est null, affiche "Ajouter une date de fin de suspension"
+                return "Ajouter une date de fin de suspension";
+            } else {
+                // Si suspension.df n'est pas null, affiche "Modifier la date de fin de suspension"
+                return "Modifier la date de fin de suspension";
+            }
+        },
+
         /**
         * Retourne à la vue précédente
         */
@@ -174,29 +192,33 @@ export default {
                 this.$app.catchError(e);
             }
         },
-        /**
-     * Calcule la durée de la suspension en jours.
-     * 
-     * @param {string} dd - La date de début.
-     * @param {string} df - La date de fin.
-     * 
-     * @return {number} La durée en jours.
-     */
-     getSuspensionDuration(dd, df) {
-  if (dd) {
-    const start = new Date(dd);
-    const end = df ? new Date(df) : new Date(); // Utilise la date du jour si df est null
-    const timeDifference = end - start;
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    return daysDifference;
-  }
-  return 0; // Si la date de début est absente ou incorrecte, la durée est de 0 jours.
-},
 
         /**
-      * Formate la date en utilisant les options de format.
-      * @return {string} La date formatée en français.
-      */
+         * Calcule la durée de la suspension en jours.
+         * 
+         * @param {string} dd - La date de début.
+         * @param {string} df - La date de fin.
+         * 
+         * @return {number} La durée en jours.
+         */
+        getSuspensionDuration(dd, df) {
+            if (dd) {
+                const start = new Date(dd);
+                const end = df ? new Date(df) : new Date(); // Utilise la date du jour si df est null
+                const timeDifference = end - start;
+                const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                return daysDifference;
+            }
+            return 0; // Si la date de début est absente ou incorrecte, la durée est de 0 jours.
+        },
+
+        /**
+         * Formate la date en utilisant les options de format.
+         * 
+         * @param {string} date - La date à formater.
+         * 
+         * @return {string} La date formatée en français.
+         */
         formatDate(date) {
             if (date) {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
