@@ -9,9 +9,7 @@
                         {{ getHabilitationTypeName(hab.habilitation_type_id) }}
                     </li>
                 </ul>
-                <p v-if="nonSuspendedHabilitations.length === 0" class="text-center text-secondary">Aucune
-                    autre
-                    habilitation</p>
+                <p v-if="nonSuspendedHabilitations().length === 0" class="text-center text-secondary">Aucune autre habilitation</p>
             </div>
         </div>
         <div class="card col-md-6 mb-4">
