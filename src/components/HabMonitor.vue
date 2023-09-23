@@ -91,7 +91,7 @@
 					</div>
 				</div>
 
-				<div class="col-1">
+				<!-- <div class="col-1">
 					<template v-if="personnelHabilitation.configVeille">
 
 							<RouterLink :to="'/operateur/'+$route.params.id+'/'+personnelHabilitation.configVeille.formulaire_id" custom v-slot="{navigate,href}">
@@ -101,12 +101,12 @@
 					</template>
 					
 					
-				</div>
+				</div> -->
 			</div>
-			<div v-if="personnelHabilitation.configVeille">
+			<!-- <div v-if="personnelHabilitation.configVeille">
 
 				{{ personnelHabilitation.configVeille.formulaire_id }}
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>
@@ -116,12 +116,12 @@
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
-import { RouterLink} from 'vue-router';
+// import { RouterLink} from 'vue-router';
 
 
 import { mapState } from 'vuex';
 export default {
-	components: { ProgressBar, RouterLink },
+	components: { ProgressBar, }, //RouterLink
 	props: {
 		habId: Number,
 		collecte: Object,

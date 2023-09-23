@@ -7,8 +7,8 @@
             style="max-width: 500px; width: 100%;">
         </div>
         
-        <div v-if="typeHab" class="card m-2 p-2 text-white text-center custom-app-color">
-            <h4 class="">{{ typeHab.nom }}</h4>
+        <div v-if="typeHab" class="card m-2 p-3 text-white text-center custom-app-color">
+            <h4 class="my-4">{{ typeHab.nom }}</h4>
             <div class="row g-2 mb-3">
                 <div class="col-12 col-md-6">
                     <div class="card p-2 d-flex flex-column h-100">
@@ -53,6 +53,7 @@
                     </div>
                 </div>
             </div>
+            <h4 class="mt-3">Liste du personnel habilité :</h4>
             <div  v-if="!pending.load && !pending.control && !pending.veille && listHabPersoType">
                 <div class="my-3" v-for="personnelHabilitation in listHabPersoType" :key="personnelHabilitation.id">
                     <HabMonitorPersonnel 
