@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div class="container text-custom p-2 mb-2 mt-4 justify-center">
+    <div class="container text-custom p-2 mt-4 justify-center">
         <!-- <h2 class="card-title text-center mb-1">Statistiques :</h2> -->
         <div class="row">
             <div class="col-md-6 p-3">
