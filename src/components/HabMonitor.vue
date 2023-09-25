@@ -69,10 +69,16 @@
 							<span class="fw-lighter me-2">#{{ personnelHabilitation.configVeille.id }}</span>
 							<span>Veille tous les <span class="fw-lighter">{{ personnelHabilitation.configVeille.control_step }}</span> jours</span>
 							<div v-if="personnelHabilitation.veille">
-								<div>Dernier contrôle : {{ changeFormatDateLit(personnelHabilitation.veille.date_last) }}</div>
-								<ProgressBar :dd="new Date(personnelHabilitation.veille.date_last)"
-									:df="delay(personnelHabilitation.veille.date_last, personnelHabilitation.configVeille.control_step)">
-								</ProgressBar>
+								<div v-if="!personnelHabilitation.veille.date_last" class="d-flex align-items-center text-danger">
+									<i class="bi bi-exclamation-triangle-fill me-2"></i>
+									Jamais contrôlé
+								</div>
+								<template v-else>
+									<div>Dernier contrôle : {{ changeFormatDateLit(personnelHabilitation.veille.date_last) }}</div>
+									<ProgressBar :dd="new Date(personnelHabilitation.veille.date_last)"
+										:df="delay(personnelHabilitation.veille.date_last, personnelHabilitation.configVeille.control_step)">
+									</ProgressBar>
+								</template>
 							</div>
 							<div v-else>
 								Pas de contrôle à programmer
