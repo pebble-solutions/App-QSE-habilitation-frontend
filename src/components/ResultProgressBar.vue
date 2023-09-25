@@ -1,8 +1,9 @@
 <template>
     <div class="row mt-2">
         <div class="col-12 col-lg-4 mb-3">
-            <span v-if="questionStats.personnelId">agent {{ questionStats.personnelId }}  <span class="ms-2">{{ questionStats.nbResults }}réponse</span></span>
-            <span v-else>tous les agents:<span class="mx-2 fw-bold">{{ questionStats.nbResults }}</span>réponses</span>
+            
+            <span v-if="questionStats.personnelId"> {{ findPersonnel(questionStats.personnelId) }} :</span>
+            <span v-else>Tous les agents:<span class="mx-2 fw-bold">{{ questionStats.nbResults }}</span>réponses</span>
         </div>
         <div class="col-12 col-lg-8">
 
@@ -16,11 +17,17 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
+    computed: {
+        ...mapState(['personnels']),
+
+    },
+    
     props: {
         questionStats: Object
     },
-
+    
     methods: {
         /**
          * Retourne l'attribut style de  la progress bar
@@ -33,7 +40,17 @@ export default {
         getProgressBarWidth(valueW, valueT) {
             const clampedValue = Math.round((valueW/valueT) * 100)+'%';
             return 'width:'+clampedValue;
-        }
+        },
+        /**
+        * Retourne l'objet personnel correspondant à l'id fourni.
+        * 
+        *   @param {number} id - L'ID du personnel.
+        *   @return {Object} L'objet personnel correspondant à l'ID.
+        */
+        findPersonnel(id) {
+            let personnel = this.personnels.find(el => el.id == id);
+            return personnel.cache_nom
+        },
     }
 }
 </script>

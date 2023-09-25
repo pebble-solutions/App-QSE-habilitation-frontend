@@ -1,50 +1,26 @@
 <template>
-	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user" @config-menu="displayConfig = true">
+	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user"
+		@config-menu="displayConfig = true">
 
 		<template v-slot:header>
-			
+
 		</template>
-
-
-		<!-- Menu additionnel -->
-		<!--
-Modifier cfgSlots.menu = true; dans config.json pour activer.
--->
-		<!-- <template v-slot:menu>
-<AppMenu>
-<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-<AppMenuItem href="/about" look="dark" icon="bi bi-app">À propos</AppMenuItem>
-</AppMenu>
-</template> -->
-
 		<template v-slot:list>
-			<AppMenu v-if="listMode === 'personnels'">
-				<!-- <AppMenuItem :href="'/personnels/' + personnel.id" v-for="personnel in personnels" :key="personnel.id">
-					<div :class="['row', 'justify-content-center', 'align-items-center', { 'active': isActiveItem(personnel) }]">
-						<div class="col-1">
-							<span>
-								<UserImage :name="personnel.cache_nom" :size="isActiveItem(personnel) ? 'xl' : ''" />
-							</span>
-						</div>
-						<div class="col-8 ps-4">
-							<span>{{ personnel.cache_nom }}</span>
-						</div>
-						<div class="col-2 text-end">
-							<span class="fw-lighter"># {{ personnel.id }}</span>
-						</div>
-					</div>
-				</AppMenuItem> -->
-			</AppMenu>
-			<AppMenu v-else-if="listMode === 'programmer'">
+			<AppMenu v-if="listMode === 'programmer'">
 				<HabilitationList />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
 				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
 				<div v-if="!pending.habilitations">
-					<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" :key="type.id" v-for="type in listConsultation(types)"> {{ cleanTypeName(type.nom) }} </AppMenuItem>
-					
-					<div class="alert alert-warning italic" role="alert" v-if="listConsultation(types).length == 0 && types.length == 0">Aucune habilitation renseignée sur cette structure</div>
-					<div class="alert alert-warning italic" role="alert" v-else-if="listConsultation(types).length == 0 && displaySearch">Aucune habilitation renseignée avec cette recherche</div>
+					<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" :key="type.id"
+						v-for="type in listConsultation(types)"> {{ cleanTypeName(type.nom) }} </AppMenuItem>
+
+					<div class="alert alert-warning italic" role="alert"
+						v-if="listConsultation(types).length == 0 && types.length == 0">Aucune habilitation renseignée sur
+						cette structure</div>
+					<div class="alert alert-warning italic" role="alert"
+						v-else-if="listConsultation(types).length == 0 && displaySearch">Aucune habilitation renseignée avec
+						cette recherche</div>
 
 				</div>
 				<div class="text-center" v-else>
@@ -53,30 +29,13 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 					</div>
 				</div>
 			</AppMenu>
-
-			<AppMenu v-else-if="listMode === 'suspension'">
-				<!-- <button class="btn w-100 mx-1"
-						:class="['btn', { 'btn-primary': showPersonnels, 'btn-secondary': !showPersonnels }]"
-						@click="toggleShow(true)">
-						Personnels
-					</button>
-					<button class="btn w-100 mx-1"
-						:class="['btn', { 'btn-primary': !showPersonnels, 'btn-secondary': showPersonnels }]"
-						@click="toggleShow(false)">
-						Habilitations
-					</button>
-					<div class="text-center">
-						<div class="spinner-border text-primary" role="status">
-							<span class="visually-hidden">Loading...</span>
-						</div>
-					</div> -->
-			</AppMenu>
 			<AppMenu v-else-if="listMode === 'echeancier' || listMode === 'registre'">
 				<FilterFormEcheancier />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'operateur'">
 				<PersonnelList v-slot="personnelProps">
-					<FicheIndividuelleSuiviItem :agent="personnelProps.personnel" :stats="getStatsByAgent(personnelProps.personnel.id)" v-if="personnelProps"/>
+					<FicheIndividuelleSuiviItem :agent="personnelProps.personnel"
+						:stats="getStatsByAgent(personnelProps.personnel.id)" v-if="personnelProps" />
 				</PersonnelList>
 			</AppMenu>
 			<AppMenu v-else>
@@ -95,19 +54,13 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 
 		</template>
 
-
 		<template v-slot:core>
 			<div class="px-2">
 				<router-view v-if="isConnectedUser" />
 			</div>
 
-			<AppModal title="Configuration du module"
-				id="configModule"
-				:display="displayConfig"
-				:close-btn="true"
-				class-name="modal-dialog-scrollable modal-xl"
-				
-				@modal-hide="displayConfig = false">
+			<AppModal title="Configuration du module" id="configModule" :display="displayConfig" :close-btn="true"
+				class-name="modal-dialog-scrollable modal-xl" @modal-hide="displayConfig = false">
 				<Config v-if="!pending.config" />
 			</AppModal>
 		</template>
@@ -140,13 +93,6 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 	font-weight: bold;
 	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.565);
 }
-
-/* Annule les paddings droit et gauche pour les éléments enfants de .row */
-/* NON !!!!! IL FAUT ARRÊTER DE MODIFIER LE FONCTIONNEMENT DE BOOTSTRAP */ 
-/*.row>* {
-	padding-right: 0 !important;
-	padding-left: 0 !important;
-}*/
 </style>
 
 <script>
@@ -183,10 +129,6 @@ export default {
 			isConnectedUser: false,
 			displaySearch: '',
 			currentList: [],
-			showPersonnels: true,
-			currentIndex: null,
-			currentItemId: null,
-			idToIndexMap: {},
 			displayConfig: false,
 			characteristicPersonnelStats: [],
 		}
@@ -214,73 +156,15 @@ export default {
 	methods: {
 		...mapActions(['refreshHabilitationType', 'refreshFormulaires']),
 
-		toggleShow(showPersonnels) {
-			this.showPersonnels = showPersonnels;
-			this.currentList = showPersonnels ? this.personnels : this.habilitations;
-		},
-
-		getItemLink(item) {
-			if (this.showPersonnels) {
-				return `/suspensions/personnel/${item.id}`;
-			} else {
-				// Adjust the route for habilitations if needed
-				return `/suspensions/habilitation/${item.id}`;
-			}
-		},
-
 		cleanTypeName(name) {
 			// Supprime le préfixe "Habilitation : " du nom si présent
 			return name.startsWith('Habilitation : ') ? name.substr(14) : name;
-		},
-
-		navigateToPrevItem() {
-			const currentIndex = this.currentList.findIndex(item => this.isActiveItem(item));
-			if (currentIndex > 0) {
-				this.$router.push(this.getItemLink(this.currentList[currentIndex - 1]));
-			}
-		},
-
-		navigateToNextItem() {
-			const currentIndex = this.currentList.findIndex(item => this.isActiveItem(item));
-			if (currentIndex < this.currentList.length - 1) {
-				this.$router.push(this.getItemLink(this.currentList[currentIndex + 1]));
-			}
 		},
 
 		isActiveItem(item) {
 			return this.openedElement && this.openedElement.id === item.id;
 		},
 
-		handleArrowKeyNavigation(event) {
-			// Vérifier si l'utilisateur appuie sur les touches haut ou bas
-			if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-				event.preventDefault(); // Empêcher le comportement par défaut du défilement de la page
-				const items = this.listItems; // Remplacez par la liste appropriée
-
-				if (items.length === 0) {
-					return; // Pas besoin de navigation si la liste est vide
-				}
-
-				// Mettre à jour l'index actuel en fonction de la touche pressée
-				if (event.key === 'ArrowUp') {
-					this.currentIndex = (this.currentIndex - 1 + items.length) % items.length;
-				} else if (event.key === 'ArrowDown') {
-					this.currentIndex = (this.currentIndex + 1) % items.length;
-				}
-
-				// Mettre à jour l'ID de l'élément actuellement sélectionné
-				this.currentItemId = items[this.currentIndex].id;
-
-				// Mettre à jour l'URL en fonction de l'élément actuel
-				this.$router.push(`/personnels/${this.currentItemId}`);
-			}
-		},
-
-		handleItemSelection(item) {
-			this.currentIndex = this.idToIndexMap[item.id];
-			this.currentItemId = item.id;
-			this.$router.push(`/personnels/${this.currentItemId}`);
-		},
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
@@ -319,11 +203,11 @@ export default {
 			this.pending.stats = true;
 
 			this.$app.apiGet('v2/characteristicPersonnel/stats')
-			.then((data) => {
-				this.characteristicPersonnelStats = data;
-			})
-			.catch(this.$app.catchError)
-			.finally(this.pending.stats = false);
+				.then((data) => {
+					this.characteristicPersonnelStats = data;
+				})
+				.catch(this.$app.catchError)
+				.finally(this.pending.stats = false);
 		},
 
 
@@ -374,20 +258,20 @@ export default {
 		 * @return	{Array}	personnelFiltred liste du personnel trié
 		 */
 
-		listPersonnel(list){
+		listPersonnel(list) {
 			let personnelFiltered = list;
-			personnelFiltered.sort((a,b) => {
+			personnelFiltered.sort((a, b) => {
 				const nameA = a.cache_nom.toUpperCase();
 				const nameB = b.cache_nom.toUpperCase();
 				if (nameA < nameB) {
-                    return -1;
-                }
+					return -1;
+				}
 
-                if (nameA > nameB) {
-                    return 1;
-                }
+				if (nameA > nameB) {
+					return 1;
+				}
 
-                return 0;
+				return 0;
 			});
 			return personnelFiltered
 
@@ -414,15 +298,15 @@ export default {
 				assetName: 'personnels',
 				apiRoute: 'v2/personnel',
 				requestPayload: {
-                    limit: "aucune"
-                }
+					limit: "aucune"
+				}
 			});
 			personnelsCollection.reset();
 
 			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
 				assetName: 'habilitationsPersonnels',
 				apiRoute: 'v2/characteristic/personnel',
-				requestPayload : {
+				requestPayload: {
 					last_control: 1,
 					limit: "aucune",
 				}
@@ -492,7 +376,7 @@ export default {
 			this.pending.formulaires = true
 			let route = 'data/GET/formulaire'
 			this.$app.apiGet(route)
-			.then((data) => {
+				.then((data) => {
 					this.refreshFormulaires(data);
 				}).catch(this.$app.catchError).finally(() => this.pending.formulaires = false);
 		}
@@ -528,70 +412,63 @@ export default {
 	},
 
 	mounted() {
-		// Ajouter les écouteurs d'événements pour les touches fléchées
-		window.addEventListener('keydown', this.handleArrowKeyNavigation);
-		
-			this.$app.addEventListener('structureChanged', async (structureId) => {
-				this.loadHabilitationType();
 
-				this.$store.dispatch('switchStructure', structureId);
+		this.$app.addEventListener('structureChanged', async (structureId) => {
+			this.loadHabilitationType();
 
-				if (this.isConnectedUser) {
-					this.initCollections();
+			this.$store.dispatch('switchStructure', structureId);
 
-					this.pending.habilitations = true;
-					try {
-						this.loadHabilitationType();
-						this.loadFormulaires();
-						this.loadCharacteristicPersonnelStats();
+			if (this.isConnectedUser) {
+				this.initCollections();
 
-						const personnelsCollection = this.$assets.getCollection("personnels");
-						// this.$assets.getCollection("suspensions").load();
-						await personnelsCollection.load();
-						const personnels = personnelsCollection.getCollection();
-						let ids = [];
-						personnels.forEach(personnel => {
-							ids.push(personnel.id);
-						});
-						this.$assets.getCollection("habilitations").load({
-							personnel_id: ids.join(',')
-						});
-						
-						await this.$assets.getCollection("types").load();
-						await this.$assets.getCollection("veilles").load();
-						await this.$assets.getCollection("personnels").load();
-						await this.$assets.getCollection("habilitationsPersonnels").load();
-						await this.$assets.getCollection("personnelsFiltered").load();
-						// await this.$assets.getCollection("suspensions").load();
+				this.pending.habilitations = true;
+				try {
+					this.loadHabilitationType();
+					this.loadFormulaires();
+					this.loadCharacteristicPersonnelStats();
 
-						// Mettre à jour currentItemId en fonction des paramètres de l'URL
-						const currentItemIdFromURL = parseInt(this.$route.params.id);
-						if (!isNaN(currentItemIdFromURL)) {
-							this.currentItemId = currentItemIdFromURL;
-						}
-					}
-					catch (e) {
-						this.$app.catchError(e);
-					}
-					finally {
-						this.pending.habilitations = false;
+					const personnelsCollection = this.$assets.getCollection("personnels");
+					// this.$assets.getCollection("suspensions").load();
+					await personnelsCollection.load();
+					const personnels = personnelsCollection.getCollection();
+					let ids = [];
+					personnels.forEach(personnel => {
+						ids.push(personnel.id);
+					});
+					this.$assets.getCollection("habilitations").load({
+						personnel_id: ids.join(',')
+					});
+
+					await this.$assets.getCollection("types").load();
+					await this.$assets.getCollection("veilles").load();
+					await this.$assets.getCollection("personnels").load();
+					await this.$assets.getCollection("habilitationsPersonnels").load();
+					await this.$assets.getCollection("personnelsFiltered").load();
+					// await this.$assets.getCollection("suspensions").load();
+
+					// Mettre à jour currentItemId en fonction des paramètres de l'URL
+					const currentItemIdFromURL = parseInt(this.$route.params.id);
+					if (!isNaN(currentItemIdFromURL)) {
+						this.currentItemId = currentItemIdFromURL;
 					}
 				}
-				this.idToIndexMap = {};
-    this.currentList.forEach((item, index) => {
-        this.idToIndexMap[item.id] = index;
-    });
+				catch (e) {
+					this.$app.catchError(e);
+				}
+				finally {
+					this.pending.habilitations = false;
+				}
+			}
+			this.idToIndexMap = {};
+			this.currentList.forEach((item, index) => {
+				this.idToIndexMap[item.id] = index;
+			});
 		},
 		);
 
 		this.$router.push('/types');
 	},
 
-
-			beforeUnmount() {
-			// Nettoyer les écouteurs d'événements avant la destruction du composant
-			window.removeEventListener('keydown', this.handleKeyDown);
-		},
 
 }
 </script>
