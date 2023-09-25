@@ -341,7 +341,6 @@ export default {
         this.loadHabilitationFromPersonnel(this.$route.params.id);
     },
     // mounted() {
-
     //     this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
     // },
     // updated() {
