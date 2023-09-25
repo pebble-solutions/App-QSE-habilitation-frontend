@@ -1,9 +1,9 @@
 <template>
     <div class="container">
-        <!-- Titre "Suspensions" avec la couleur custom -->
         <h1 class="text-center text-custom p-2 mb-4">Suspensions</h1>
+
         <!-- Liste "Suspensions en cours" -->
-        <div class="card border-0 bg-custom text-white shadow-lg col-md-12 mt-4" v-if="suspensions">
+        <div class="card border-0 bg-custom text-white shadow-lg col-md-12 mt-4" v-if="suspensions && getActiveSuspensions.length > 0">
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions en cours</h3>
                 <div class="custom-div" v-for="suspension in getActiveSuspensions" :key="suspension.id">
@@ -20,11 +20,13 @@
                 </div>
             </div>
         </div>
-        <Spinner v-else></Spinner>
+        <div v-else>
+            <p class="text-center text-success">Aucune suspension en cours <i class="bi bi-check"></i></p>
+        </div>
 
 
         <!-- Liste "Suspensions levées ou terminées" -->
-        <div class="card border-0 bg-secondary text-white shadow-lg col-md-12 mt-4">
+        <div class="card border-0 bg-secondary text-white shadow-lg col-md-12 mt-4"  v-if="suspensions && getInactiveSuspensions.length > 0">
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions levées ou terminées</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
@@ -41,8 +43,12 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+            <p class="text-center text-secondary my-4">Aucune suspension levée ou terminée.</p>
+        </div>
 
-        <div class="card border-0 bg-overSuspensions text-white shadow-lg col-md-12 mt-4">
+        <!-- Liste "Suspensions supprimées" -->
+        <div class="card border-0 bg-overSuspensions text-white shadow-lg col-md-12 mt-4" v-if="suspensions && getInactiveSuspensions.length > 0 && conditionPourSupprimees">
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions supprimées (todo ajout booléen Supprimé en bdd)</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
@@ -55,6 +61,9 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+            <p class="text-center text-secondary my-4">Aucune suspension supprimée.</p>
+        </div>
     </div>
 
     <RouterView></RouterView>
@@ -62,13 +71,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import Spinner from '@/components/pebble-ui/Spinner.vue';
 import SuspensionCard from '@/components/SuspensionCard.vue';
 
 
 export default {
 
-    components: { Spinner, SuspensionCard },
+    components: { SuspensionCard },
 
     data() {
         return {
