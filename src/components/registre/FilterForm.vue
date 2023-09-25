@@ -65,7 +65,7 @@
 
 <script>
 
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
 
@@ -85,12 +85,13 @@ export default {
             allHabilitationsTypes: [],
             allOperateurs: [],
 
-            operateursSearchValue : '',
+            operateursSearchValue : 'ait a',
             habilitationsTypeSearchValue : ''
         }
     },
 
     computed: {
+        ...mapState(['activeStructureId']),
         /**
          * Retourne la liste des types d'habilitations classées par nom et filtrés en fonction 
          * de la recherche
@@ -180,11 +181,23 @@ export default {
         },
 
         /**
-         * Charge les données des opérateurs via un appel API
-         */
-        getOperateurs() {
-            this.allOperateurs = this.$assets.getCollection("personnels").getCollection();
-        }
+		 * Active Le filtre sur le personnel pour retourner les données en fonction des parametre choisis dans le filtre
+		 */
+		async getOperateurs() {
+			this.$assets.getCollection("personnelsFiltered").reset();
+			await this.$assets.getCollection("personnelsFiltered").load(
+				{
+					// contratDd: this.contratDdFilter,
+					// contratDf: this.contratDfFilter,
+					// withContrat: this.withContratFilter ? 1 : 0,
+					// withoutContrat: this.withoutContratFilter ? 1 : 0,
+					ordre: this.ordre,
+                    structure : this.activeStructureId
+				}
+			);
+
+            this.allOperateurs = this.$assets.getCollection("personnelsFiltered").getCollection();
+		}
     },
 
     unmounted() {

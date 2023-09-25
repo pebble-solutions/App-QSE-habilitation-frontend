@@ -42,12 +42,19 @@
     <ContenuHabilitationPersonnelRow 
         :rowIndex = "rowIndex"
         :habilitationsPersonnels = "getHabilitationsPersonnelByTypeId(habilitationType.id,col.id)"
+        :suspensionsPersonnels = "getSuspensionsPersonnelByTypeId(habilitationType.id,col.id)"
         :grid = "grid"
         :personnelIndex = "index" 
-        :personnelsSize = "personnels.length"
 
         v-for="(col, index) in personnels"
         :key="index"
+        />
+    
+    <TotalStatsHabilitationPersonnelRow
+        :rowIndex = "rowIndex"
+        :grid = "grid"
+        :personnelsSize = "personnels.length"
+        :suspensionsTotal = "getSuspensionsByTypeId(habilitationType.id)"
         />
 
 
@@ -61,10 +68,11 @@
 <script>
 import UserImage from '../pebble-ui/UserImage.vue';
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-import ContenuHabilitationPersonnelRow from './ContenuHabilitationPersonnelRow.vue'
+import ContenuHabilitationPersonnelRow from './ContenuHabilitationPersonnelRow.vue';
+import TotalStatsHabilitationPersonnelRow from './TotalStatsHabilitationPersonnelRow.vue';
 
 export default {
-    components: { UserImage, ContenuHabilitationPersonnelRow },
+    components: { UserImage, ContenuHabilitationPersonnelRow, TotalStatsHabilitationPersonnelRow },
     props: {
         rowIndex: Number,
         habilitationType: Object,
@@ -92,6 +100,8 @@ export default {
                 { key: 9, label: 'Durée' },
                 { key: 10, label: 'VA et VP' },
             ],
+
+            suspensions : this.$assets.getCollection("suspensions").getCollection()
         };
     },
 
@@ -159,21 +169,68 @@ export default {
          * @return {array}
          */
         getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
-            const tabreturn = this.habilitationsPersonnels.filter(e => {
+            return this.habilitationsPersonnels.filter(e => {
                 if (personnelId !== undefined && e.personnel_id !== personnelId) {
-                return false;
+                    return false;
                 }
                 return e.characteristic_id === characteristicId;
             });
-            console.log(tabreturn)
-            return tabreturn
-            // return this.habilitationsPersonnels.filter(e => {
-            //     if (personnelId !== undefined && e.personnel_id !== personnelId) {
-            //     return false;
-            //     }
-            //     return e.characteristic_id === characteristicId;
-            // });
+        },
+
+         /**
+         * Retourne la liste des habilitations du personnel pour un type donné.
+         * 
+         * @param {number} characteristicId     L'ID de la caractéristique à trouver
+         * @param {number} personnelId          L'ID du personnel à trouver
+         * 
+         * @return {array}
+         */
+        //  getSuspensionsPersonnelByTypeId(characteristicId, personnelId) {
+        //     let suspensionsByTypeId = [];
+        //     for (let suspension of this.suspensions){
+        //         if (this.habilitationsPersonnels.find(e => e.id == suspension.habilitation_id && e.characteristic_id == characteristicId && e.personnel_id == personnelId)) {
+        //             suspensionsByTypeId.push(suspension)
+        //         }
+        //     }
+        //     return suspensionsByTypeId
+        // }
+
+        /**
+         * Retourne la liste des suspensions d'un personnel pour un type donné.
+         * 
+         * @param {number} characteristicId     L'ID de la caractéristique à trouver
+         * @param {number} personnelId          L'ID du personnel à trouver
+         * 
+         * @return {array}
+         */
+        getSuspensionsPersonnelByTypeId(characteristicId, personnelId) {
+            return this.suspensions.filter(suspension => {
+                return this.habilitationsPersonnels.some(e =>
+                e.id === suspension.habilitation_id &&
+                e.characteristic_id === characteristicId &&
+                e.personnel_id === personnelId
+                );
+            });
+        },
+
+        /**
+         * Retourne la liste des suspensions de tout le personnel selectionné pour un type donné.
+         * 
+         * @param {number} characteristicId     L'ID de la caractéristique à trouver
+         * 
+         * @return {array}
+         */
+        getSuspensionsByTypeId(characteristicId) {
+            return this.suspensions.filter(suspension =>
+                this.habilitationsPersonnels.some(e =>
+                e.id === suspension.habilitation_id &&
+                e.characteristic_id === characteristicId &&
+                this.personnels.some(personnel => personnel.id === e.personnel_id)
+                )
+            );
         }
+
+
     }
 }
 </script>

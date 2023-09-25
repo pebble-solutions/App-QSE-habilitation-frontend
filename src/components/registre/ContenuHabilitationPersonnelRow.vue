@@ -3,17 +3,10 @@
     <!-- Première ligne -->
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
+            :class="{'backgroudFalse': !habilitationStartDate}"
+            :style="{ left: habilitationStartDate ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', width: habilitationStartDate ? columnWidthPx : grid.columnWidth - 4 + 'px', top: habilitationStartDate ? getTopPosition((rowIndex * 10) + 2, 'px') : getTopPosition((rowIndex * 10) + 2) - 7 + 'px',height : !habilitationStartDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight  }"
             >
             <span v-if="habilitationStartDate">{{ displayDate(habilitationStartDate) }}</span>
-        </div>
-    </div>
-
-    <div class="position-absolute text-center">
-        <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
-            >
-            <span>{{dateDebutTotal()}}</span>
         </div>
     </div>
     <!-- Fin première ligne -->
@@ -21,17 +14,10 @@
     <!-- Deuxième ligne -->
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 3, 'px')  }"
+            :class="{'backgroudFalse': !habilitationEndDate}"
+            :style="{ left: habilitationEndDate ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', width: habilitationEndDate ? columnWidthPx : grid.columnWidth - 4 + 'px', top: habilitationEndDate ? getTopPosition((rowIndex * 10) + 3, 'px') : getTopPosition((rowIndex * 10) + 3) - 8 + 'px', height : !habilitationEndDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight  }"
             >
-            <span v-if="habilitationStartEnd">{{ displayDate(habilitationStartEnd) }}</span>
-        </div>
-    </div>
-
-    <div class="position-absolute text-center">
-        <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 3, 'px')  }"
-            >
-            <span>{{dateFinTotal()}}</span>
+            <span v-if="habilitationEndDate">{{ displayDate(habilitationEndDate) }}</span>
         </div>
     </div>
     <!-- Fin Deuxième ligne -->
@@ -39,7 +25,12 @@
     <!-- Troisième ligne -->
     <div class="position-absolute text-center">
         <div class="table-row-content"
-            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 4, 'px')}" >
+            :class="{'backgroudFalse': !habilitationLastControlResult && !habilitationStartDate}"
+            :style="{ 
+                left: habilitationLastControlResult ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
+                width: habilitationLastControlResult ? columnWidthPx : grid.columnWidth - 4 + 'px', 
+                top: habilitationLastControlResult ? getTopPosition((rowIndex * 10) + 4, 'px'):  getTopPosition((rowIndex * 10) + 4) + 'px', 
+                height : !habilitationLastControlResult && !habilitationStartDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight }" >
 
             <span class="control-result-item rounded m-1" 
                 :class="[SAMIClassName(habilitationLastControlResult)]" 
@@ -47,17 +38,50 @@
                 v-if="habilitationLastControlResult" >
                 {{ habilitationLastControlResult }}
             </span>
-        </div>
-    </div>
-
-    <div class="position-absolute text-center">
-        <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 4, 'px')  }"
-            >
-            <span>{{lastControlResultTotal()}}</span>
+            <span v-else-if="habilitationStartDate && !habilitationLastControlResult">Aucun contrôle</span>
         </div>
     </div>
     <!-- Fin Troisième ligne -->
+
+    <!-- Sixieme ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content"
+            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 7, 'px'), background : styleSuspensions}" >
+
+            <span v-if="suspensionsPersonnels.length">Suspendu</span>
+        </div>
+    </div>
+    <!-- Fin Sixieme ligne -->
+
+    <!-- Septième ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content"
+            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 8, 'px')}" >
+
+            <span v-if="suspensionsPersonnels.length">{{ suspensionsPersonnels[0].commentaire }}</span>
+        </div>
+    </div>
+    <!-- Fin Septième ligne -->
+
+    <!-- Huitième ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content"
+            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 9, 'px')}" >
+
+            <span v-if="suspensionsPersonnels.length">{{ displayDateSuspensions(suspensionsPersonnels[0]) }}</span>
+        </div>
+    </div>
+    <!-- Fin Huitième ligne -->
+
+    <!-- Neuvième ligne -->
+    <div class="position-absolute text-center">
+        <div class="table-row-content"
+            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 10, 'px')}" >
+
+            <span v-if="suspensionsPersonnels.length">{{ displayDureeSuspension(suspensionsPersonnels[0]) }}</span>
+        </div>
+    </div>
+    <!-- Fin Neuvième ligne -->
 
 </template>
 
@@ -78,22 +102,22 @@
 
 <script>
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-import {getDisplayFormatedDate} from '../../js/date';
+import {getDisplayFormatedDate, daysToYearMonthDay, diffDate} from '../../js/date';
 import { classNameFromSAMI } from '../../js/collecte'
 
 export default {
     props: {
         rowIndex: Number,
         habilitationsPersonnels: Array,
+        suspensionsPersonnels: Array,
         grid: RegistreGrid,
-        personnelIndex: Number,
-        personnelsSize: Number
+        personnelIndex: Number
     },
 
     data() {
         return {
             habilitationStartDate: this.habilitationsPersonnels[0]?.dd || null,
-            habilitationStartEnd: this.habilitationsPersonnels[0]?.df || null,
+            habilitationEndDate: this.habilitationsPersonnels[0]?.df || null,
             habilitationLastControlResult: this.habilitationsPersonnels[0]?.last_control_result || null,
         };
     },
@@ -106,7 +130,17 @@ export default {
          */
          columnWidthPx() {
             return `${this.grid.columnWidth}px`;
+        },
+
+        /**
+         * Obtient le style CSS pour les suspensions du personnel.
+         * 
+         * @return {string|null} Style CSS à appliquer ou null si aucune suspension.
+         */
+        styleSuspensions() {
+            return this.suspensionsPersonnels.length ? "red" : null;
         }
+
     },
 
     methods: {
@@ -119,22 +153,31 @@ export default {
         },
 
         /**
-         * Retrourne la liste des habilitations du personnel pour un type donné.
+         * Retourne la date pour qu'elle soit affichable lisiblement : 2 fevr. 2023
          * 
-         * @param {number} characteristicId L'ID de la caractéristique à trouver
-         * @param {number} personnelId L'ID du personnel à trouver
+         * @param {string|date} date 
          * 
-         * @return {array}
+         * @return {string}
          */
-         getHabilitationsPersonnelByTypeId(characteristicId, personnelId) {
-            if (personnelId){
-                this.habilitationsPersonnels.filter(e => e.personnel_id == personnelId);
-            }
-            return this.habilitationsPersonnels.filter(e => e.characteristic_id == characteristicId);
-        },
-
         displayDate(date){
             return getDisplayFormatedDate(date)
+        },
+
+        /**
+         * Retourne le label date_de_debut > date_de_fin pour qu'elle soit affichable lisiblement : 2 fevr. 2023 > 2 sept. 2023
+         * 
+         * @param {object} suspension 
+         * 
+         * @return {string}
+         */
+        displayDateSuspensions(suspension){
+            return this.displayDate(suspension.dd) + " > " + this.displayDate(suspension.df)
+        },
+
+        displayDureeSuspension(suspension){
+            let diff = diffDate(suspension.dd, suspension.df, 'day');
+            console.log(daysToYearMonthDay(diff))
+            return daysToYearMonthDay(diff)
         },
 
         /**
@@ -144,21 +187,8 @@ export default {
          */
         SAMIClassName(result_sami) {
             return classNameFromSAMI(result_sami);
-        },
-
-
-        // TOTAL
-
-        dateDebutTotal(){
-            return "Total"
-        },
-
-        dateFinTotal(){
-            return "Total"
-        },
-        lastControlResultTotal(){
-            return "S"
         }
+
     }
 }
 </script>

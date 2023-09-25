@@ -528,7 +528,7 @@ export default {
 						this.loadCharacteristicPersonnelStats();
 
 						const personnelsCollection = this.$assets.getCollection("personnels");
-						// this.$assets.getCollection("suspensions").load();
+						this.$assets.getCollection("suspensions").load();
 						await personnelsCollection.load();
 						const personnels = personnelsCollection.getCollection();
 						let ids = [];

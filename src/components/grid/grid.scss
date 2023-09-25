@@ -42,3 +42,8 @@
 .table-header {
     line-height: 50px;
 }
+
+.backgroudFalse{
+    background: linear-gradient(45deg, #000 1%, #fff 1%, #fff 49%, #000 49%, #000 51%, #fff 51%, #fff 99%, #000 99%);
+    background-size: 6px 6px;
+  }
