@@ -81,12 +81,19 @@ const routes = [
   {
     path: '/suspension',
     name: 'suspension',
-    meta: { transitionName: 'fade' }, 
+    meta: { transitionName: 'fade' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Suspension.vue'),
-  },
+    children: [
+        {
+            path: ':idSuspension',
+            name: 'suspensionInfo',
+            component: () => import(/* webpackChunkName: "about" */ '../views/SuspensionFormModal.vue')
+        }
+    ]
+},
   {
     path: '/personnels/:id',
     name: 'ficheIndividuelleSuivi',
