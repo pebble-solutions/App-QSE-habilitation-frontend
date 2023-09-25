@@ -14,12 +14,12 @@
                                 <div class="row text-center">
                                     <!-- Colonne pour le nom de l'habilitation -->
                                     <div class="col-md-6 text-md-end px-2">
-                                        <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id)
+                                        <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id)
                                         }}</span>
                                     </div>
                                     <!-- Colonne pour le nom du personnel -->
                                     <div class="col-md-4 text-md-start px-2">
-                                        <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
+                                        <p>{{ personnelName(suspension.habilitation_id) }}</p>
                                     </div>
                                     <!-- Colonne pour les dates, la durée et les commentaires -->
                                     <div class="col-md-12 p-2">
@@ -32,7 +32,7 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span class="fw-bold">Durée:</span>
-                                                        <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours
+                                                        <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours
                                                         </p>
                                                     </div>
                                                     <div class="col-md-4">
@@ -65,12 +65,12 @@
                                 <div class="row text-center">
                                     <!-- Colonne pour le nom de l'habilitation -->
                                     <div class="col-md-6 text-md-end px-2">
-                                        <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id)
+                                        <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id)
                                         }}</span>
                                     </div>
                                     <!-- Colonne pour le nom du personnel -->
                                     <div class="col-md-4 text-md-start px-2">
-                                        <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
+                                        <p>{{ personnelName(suspension.habilitation_id) }}</p>
                                     </div>
                                     <!-- Colonne pour les dates, la durée et les commentaires -->
                                     <div class="col-md-12 p-2">
@@ -83,7 +83,7 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span class="fw-bold">Durée:</span>
-                                                        <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours
+                                                        <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours
                                                         </p>
                                                     </div>
                                                     <div class="col-md-4">
@@ -110,11 +110,11 @@
                         <div class="row text-center">
                             <!-- Colonne pour le nom de l'habilitation -->
                             <div class="col-md-6 text-md-end px-2">
-                                <span class="fw-bold">{{ getHabilitationTypeNom(suspension.habilitation_id) }}</span>
+                                <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id) }}</span>
                             </div>
                             <!-- Colonne pour le nom du personnel -->
                             <div class="col-md-4 text-md-start px-2">
-                                <p>{{ getPersonnelNom(suspension.habilitation_id) }}</p>
+                                <p>{{ personnelName(suspension.habilitation_id) }}</p>
                             </div>
                             <!-- Colonne pour les dates, la durée et les commentaires -->
                             <div class="col-md-12 p-2">
@@ -127,7 +127,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <span class="fw-bold">Durée:</span>
-                                                <p>{{ getSuspensionDuration(suspension.dd, suspension.df) }} jours</p>
+                                                <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours</p>
                                             </div>
                                             <div class="col-md-4">
                                                 <span class="fw-bold">Commentaire:</span>
@@ -175,21 +175,6 @@ export default {
 
 
         /**
-        * Retourne le nom du type d'habilitation en fonction de l'ID de l'habilitation.
-        * @return {string} Le nom du type d'habilitation.
-        */
-        getHabilitationTypeNom() {
-            return habilitationId => {
-                const habilitation = this.habilitations.find(hab => hab.id === habilitationId);
-                if (habilitation) {
-                    const type = this.types.find(type => type.id === habilitation.habilitation_type_id);
-                    return type ? type.nom : '';
-                }
-                return '';
-            };
-        },
-
-        /**
           * Retourne les suspensions en cours (date df est null ou supérieure à la date du jour).
           * @return {Array} Les suspensions en cours.
           */
@@ -223,6 +208,20 @@ export default {
     },
 
     methods: {
+
+         /**
+         * Retourne le nom du type d'habilitation en fonction de l'ID de l'habilitation.
+         * @param {number} habilitationId - L'ID de l'habilitation.
+         * @return {string} Le nom du type d'habilitation.
+         */
+        habilitationTypeName(habilitationId) {
+            const habilitation = this.habilitations.find(hab => hab.id === habilitationId);
+            if (habilitation) {
+                const type = this.types.find(type => type.id === habilitation.habilitation_type_id);
+                return type ? type.nom : '';
+            }
+            return '';
+        },
 
         /**
          * Retourne la date au format localisé.
@@ -260,7 +259,7 @@ export default {
          * @param {number} habilitationId - L'ID de l'habilitation.
          * @return {string} Le nom du personnel.
          */
-        getPersonnelNom(habilitationId) {
+        personnelName(habilitationId) {
             const habilitation = this.habilitations.find(hab => hab.id === habilitationId);
             if (habilitation && habilitation.personnel_id) {
                 const personnel = this.personnels.find(personnel => personnel.id === habilitation.personnel_id);
@@ -279,7 +278,7 @@ export default {
         * 
         * @return {number} La durée en jours.
         */
-        getSuspensionDuration(dd, df) {
+        suspensionDuration(dd, df) {
             if (dd && df) {
                 const start = new Date(dd);
                 const end = new Date(df);
