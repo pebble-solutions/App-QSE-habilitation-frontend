@@ -44,9 +44,9 @@
     </div>
     <!-- Fin Sixieme ligne -->
 
-      <!-- Septième ligne -->
-
-      <div class="position-absolute text-center">
+    <!-- Septième ligne -->
+  
+    <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
             :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 8, 'px')  }"
             >
@@ -54,6 +54,17 @@
         </div>
     </div>
     <!-- Fin Septième ligne -->
+
+    <!-- Neuvième ligne -->
+
+    <div class="position-absolute text-center">
+        <div class="table-row-content mt-2"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 10, 'px')  }"
+            >
+            <span>{{labelSuspensionsDureeTotal}}</span>
+        </div>
+    </div>
+    <!-- Fin Neuvième ligne -->
 
 </template>
 
@@ -74,7 +85,7 @@
 
 <script>
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
-import {getDisplayFormatedDate} from '../../js/date';
+import {getDisplayFormatedDate, daysToYearMonthDay, diffDate} from '../../js/date';
 import { classNameFromSAMI } from '../../js/collecte'
 
 export default {
@@ -127,7 +138,37 @@ export default {
             } else {
                 return count + " commentaires";
             }
+        },
+
+        // labelSuspensionsDureeTotal(){
+        //     if (this.suspensionsTotal.length != 0){
+        //         let countDiffDate = 0;
+        //         for (let suspension of this.suspensionsTotal) {
+        //             countDiffDate = countDiffDate + diffDate(suspension.dd, suspension.df, 'day');
+        //         }
+        //         return daysToYearMonthDay(countDiffDate)
+        //     }
+        //     return ""
+        // }
+
+        /**
+         * Obtient le label de la durée totale des suspensions.
+         * 
+         * @return {string} Le label de la durée totale des suspensions au format "Année(s) Mois Jour(s)".
+         */
+        labelSuspensionsDureeTotal() {
+            if (this.suspensionsTotal.length === 0) {
+                return "";
+            }
+
+            const totalDurationInDays = this.suspensionsTotal.reduce((acc, suspension) => {
+                const durationInDays = diffDate(suspension.dd, suspension.df, 'day');
+                return acc + durationInDays;
+            }, 0);
+
+            return daysToYearMonthDay(totalDurationInDays);
         }
+
 
 
     },

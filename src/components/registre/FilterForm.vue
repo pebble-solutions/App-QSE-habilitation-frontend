@@ -85,7 +85,7 @@ export default {
             allHabilitationsTypes: [],
             allOperateurs: [],
 
-            operateursSearchValue : 'ait a',
+            operateursSearchValue : '',
             habilitationsTypeSearchValue : ''
         }
     },

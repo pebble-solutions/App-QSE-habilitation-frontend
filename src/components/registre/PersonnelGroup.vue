@@ -14,7 +14,7 @@
                 :personnels="personnels"
                 :habilitationType="habilitationType"
                 
-                v-for="(habilitationType, index) in usedHabilitationsTypes"
+                v-for="(habilitationType, index) in habilitationsTypes"
                 :key="index" />
 
         </RegistreGridVue>
@@ -58,13 +58,13 @@ export default {
             let habilitationsTypes = [];
 
             this.habilitationsPersonnel.forEach((habilitationPersonnel) => {
-                const found = habilitationsTypes.find(e => e.id == habilitationPersonnel.characteristic_id);
+                const found = this.habilitationsTypes.find(e => e.id == habilitationPersonnel.characteristic_id);
 
                 if (!found) {
                     const habilitationType = this.getHabilitationById(habilitationPersonnel.characteristic_id); 
                     habilitationsTypes.push(habilitationType ? habilitationType : {
                         id: habilitationPersonnel.characteristic_id,
-                        nom: "!Habilitation "+habilitationPersonnel.characteristic_id+" inconnue"
+                        nom: "!Habilitation " + habilitationPersonnel.characteristic_id + " inconnue"
                     });
                 }
             });
@@ -95,7 +95,7 @@ export default {
                 secondColumnWidth: this.secondColumnWidth,
                 firstColumnWidth: this.firstColumnWidth,
                 firstColumnHeight : this.firstColumnHeight,
-                rows: this.usedHabilitationsTypes.length + 1,
+                rows: this.habilitationsTypes.length + 1,
                 cols: this.personnels.length
             });
         }
