@@ -85,7 +85,7 @@ export default {
 }
 
 .custom-app-color {
-    background-color: #F78C6B;
+    background-color: #f78c6bb0;
 }
 
 .btn-custom-primary {
