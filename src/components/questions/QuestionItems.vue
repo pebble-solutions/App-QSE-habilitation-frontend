@@ -13,7 +13,7 @@
                 <ResultProgressBar v-if="personnel" :questionStats="personnel.stats"></ResultProgressBar>
             </div>
         </div>
-        <div v-else>Pas de Statistiques pour l'agent {{ questionStats.personnel }}</div>
+        <div class="fst-italic text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>L'agent n'a pas été contrôlé sur cette question</div>
         <!-- composants pour total des réponses -->
        <ResultProgressBar v-if="questionStats.global" :questionStats="questionStats.global"/>
  
