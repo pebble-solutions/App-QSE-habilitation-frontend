@@ -339,7 +339,13 @@ export default {
          * Charge la liste des habilitations du personnel concerné.
          */
         this.loadHabilitationFromPersonnel(this.$route.params.id);
+        // charge les suspensions
+        const suspensionCollection = this.$assets.getCollection('suspensions');
+        suspensionCollection.load();   
+    
     },
+
+
     // mounted() {
 
     //     this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
