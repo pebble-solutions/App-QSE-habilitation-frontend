@@ -10,41 +10,11 @@
                     <router-link :to="{ name: 'suspensionInfo', params: { idSuspension: suspension.id } }"
                         v-slot="{ href, navigate }" custom>
                         <a :href="href" @click="navigate" class="no-underline">
-                            <div class="card border-0 card-hover d-flex rounded px-3 py-2 mb-3">
-                                <div class="row text-center">
-                                    <!-- Colonne pour le nom de l'habilitation -->
-                                    <div class="col-md-6 text-md-end px-2">
-                                        <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id)
-                                        }}</span>
-                                    </div>
-                                    <!-- Colonne pour le nom du personnel -->
-                                    <div class="col-md-4 text-md-start px-2">
-                                        <p>{{ personnelName(suspension.habilitation_id) }}</p>
-                                    </div>
-                                    <!-- Colonne pour les dates, la durée et les commentaires -->
-                                    <div class="col-md-12 p-2">
-                                        <div class="card border-0 bg-light">
-                                            <div class="card-body p-1">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Dates:</span>
-                                                        <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Durée:</span>
-                                                        <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Commentaire:</span>
-                                                        <p>{{ suspension.commentaire }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <SuspensionCard :habilitationTypeName="habilitationTypeName(suspension.habilitation_id)"
+                                :personnelName="personnelName(suspension.habilitation_id)"
+                                :formattedDates="formatSuspensionText(suspension.dd, suspension.df)"
+                                :suspensionDuration="suspensionDuration(suspension.dd, suspension.df)"
+                                :commentaire="suspension.commentaire" />
                         </a>
                     </router-link>
                 </div>
@@ -61,41 +31,11 @@
                     <router-link :to="{ name: 'suspensionInfo', params: { idSuspension: suspension.id } }"
                         v-slot="{ href, navigate }" custom>
                         <a :href="href" @click="navigate" class="no-underline">
-                            <div class="card border-0 card-hover d-flex rounded px-3 py-2 mb-3">
-                                <div class="row text-center">
-                                    <!-- Colonne pour le nom de l'habilitation -->
-                                    <div class="col-md-6 text-md-end px-2">
-                                        <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id)
-                                        }}</span>
-                                    </div>
-                                    <!-- Colonne pour le nom du personnel -->
-                                    <div class="col-md-4 text-md-start px-2">
-                                        <p>{{ personnelName(suspension.habilitation_id) }}</p>
-                                    </div>
-                                    <!-- Colonne pour les dates, la durée et les commentaires -->
-                                    <div class="col-md-12 p-2">
-                                        <div class="card border-0 bg-light">
-                                            <div class="card-body p-1">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Dates:</span>
-                                                        <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Durée:</span>
-                                                        <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <span class="fw-bold">Commentaire:</span>
-                                                        <p>{{ suspension.commentaire }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <SuspensionCard :habilitationTypeName="habilitationTypeName(suspension.habilitation_id)"
+                                :personnelName="personnelName(suspension.habilitation_id)"
+                                :formattedDates="formatSuspensionText(suspension.dd, suspension.df)"
+                                :suspensionDuration="suspensionDuration(suspension.dd, suspension.df)"
+                                :commentaire="suspension.commentaire" />
                         </a>
                     </router-link>
                 </div>
@@ -106,39 +46,12 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions supprimées (todo ajout booléen Supprimé en bdd)</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
-                    <div class="card border-0 d-flex rounded px-3 py-2 mb-3">
-                        <div class="row text-center">
-                            <!-- Colonne pour le nom de l'habilitation -->
-                            <div class="col-md-6 text-md-end px-2">
-                                <span class="fw-bold">{{ habilitationTypeName(suspension.habilitation_id) }}</span>
-                            </div>
-                            <!-- Colonne pour le nom du personnel -->
-                            <div class="col-md-4 text-md-start px-2">
-                                <p>{{ personnelName(suspension.habilitation_id) }}</p>
-                            </div>
-                            <!-- Colonne pour les dates, la durée et les commentaires -->
-                            <div class="col-md-12 p-2">
-                                <div class="card">
-                                    <div class="card-body p-1">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Dates:</span>
-                                                <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Durée:</span>
-                                                <p>{{ suspensionDuration(suspension.dd, suspension.df) }} jours</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <span class="fw-bold">Commentaire:</span>
-                                                <p>{{ suspension.commentaire }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <SuspensionCard :habilitationTypeName="habilitationTypeName(suspension.habilitation_id)"
+                        :personnelName="personnelName(suspension.habilitation_id)"
+                        :formattedDates="formatSuspensionText(suspension.dd, suspension.df)"
+                        :suspensionDuration="suspensionDuration(suspension.dd, suspension.df)"
+                        :commentaire="suspension.commentaire"
+                        :no-hover="true" />
                 </div>
             </div>
         </div>
@@ -150,11 +63,12 @@
 <script>
 import { mapState } from 'vuex';
 import Spinner from '@/components/pebble-ui/Spinner.vue';
+import SuspensionCard from '@/components/SuspensionCard.vue';
 
 
 export default {
 
-    components: { Spinner, },
+    components: { Spinner, SuspensionCard },
 
     data() {
         return {
@@ -170,9 +84,6 @@ export default {
     computed: {
 
         ...mapState(['suspensions', 'personnels', 'habilitations', 'types',]),
-
-
-
 
         /**
           * Retourne les suspensions en cours (date df est null ou supérieure à la date du jour).
@@ -209,11 +120,11 @@ export default {
 
     methods: {
 
-         /**
-         * Retourne le nom du type d'habilitation en fonction de l'ID de l'habilitation.
-         * @param {number} habilitationId - L'ID de l'habilitation.
-         * @return {string} Le nom du type d'habilitation.
-         */
+        /**
+        * Retourne le nom du type d'habilitation en fonction de l'ID de l'habilitation.
+        * @param {number} habilitationId - L'ID de l'habilitation.
+        * @return {string} Le nom du type d'habilitation.
+        */
         habilitationTypeName(habilitationId) {
             const habilitation = this.habilitations.find(hab => hab.id === habilitationId);
             if (habilitation) {
@@ -303,17 +214,6 @@ export default {
 
 .text-custom {
     color: #f78c6b;
-}
-
-/* Effet d'agrandissement et d'ombre au survol */
-.card-hover:hover {
-    transform: translate3D(0, -1px, 0) scale(1.02);
-    /* Zoom in */
-    box-shadow: 8px 10px 70px rgba(45, 39, 37, 0.173), 1px 6px 12px rgba(46, 37, 36, 0.184);
-    transition: all .15s ease;
-    cursor: pointer;
-    background-color: #fceae4;
-    border: #f78c6b51 solid 4px;
 }
 
 .no-underline {
