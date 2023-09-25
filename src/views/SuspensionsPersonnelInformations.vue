@@ -76,7 +76,7 @@ export default {
          * Retourne les suspensions associées aux habilitations du personnel.
          * @return {Array} Les suspensions du personnel.
          */
-        suspensionsPersonnel() {
+        suspensions() {
             return this.habilitationPersonnel.reduce((suspensions, hab) => {
                 const suspension = this.suspensions.find(el => el.habilitation_id === hab.id);
                 if (suspension) {
@@ -121,7 +121,7 @@ export default {
         getNonSuspendedHabilitations() {
             const currentDate = new Date(); // Obtenir la date actuelle
             return this.habilitationPersonnel.filter(hab => {
-            const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
+            const suspensionsForThisHab = this.suspensions.filter(sus => sus.habilitation_id === hab.id);
             return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
         });
         },
@@ -134,7 +134,7 @@ export default {
         getSuspendedHabilitations() {
             const currentDate = new Date(); // Obtenir la date actuelle
             return this.habilitationPersonnel.filter(hab => {
-            const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
+            const suspensionsForThisHab = this.suspensions.filter(sus => sus.habilitation_id === hab.id);
             return suspensionsForThisHab.some(sus => sus.df === null || new Date(sus.df) > currentDate);
         });
         },  
