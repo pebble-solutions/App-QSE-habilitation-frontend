@@ -8,32 +8,35 @@
 		</div>
 		<div class="card-body">
 			<!-- Titre -->
-			<div class="text-center mb-1">
-				<strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
-				<strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
-				<span class="ms-2" v-if="personnelHabilitation.configVeille">
-					<button class=" btn btn-sm bg-custom"
-						@click.prevent="this.$router.push({name:'AgentStats', params:{id:this.$route.params.id, idForm:personnelHabilitation.configVeille.formulaire_id}})">
-						<span>STATS</span>
-						<i class="bi bi-arrow-up-right-square ms-2"></i>	
-					</button>
-				</span>
-			</div>
+			<div class="position-relative text-center">
+    <strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
+    <strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
+    <button class="btn btn-sm butn-custom-stats text-white position-absolute end-0"
+        @click.prevent="this.$router.push({ name: 'AgentStats', params: { id: this.$route.params.id, idForm: personnelHabilitation.configVeille.formulaire_id } })">
+        <span>STATS</span>
+        <i class="bi bi-arrow-up-right-square ms-2"></i>
+    </button>
+</div>
 			<div class="row">
 				<!-- Colonne 1 : Validité de l'habilitation -->
 				<div class="col-lg-4 col-12">
 					<div class="px-2 pt-2 mb-3 mb-lg-0">
-						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">{{ personnelHabilitation.id }}</span></div>
-						<div class="col-12 pb-1">Du {{ changeFormatDateLit(personnelHabilitation.dd) }} au {{changeFormatDateLit(personnelHabilitation.df) }}</div>
+						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">{{
+							personnelHabilitation.id }}</span></div>
+						<div class="col-12 pb-1">Du {{ changeFormatDateLit(personnelHabilitation.dd) }} au
+							{{ changeFormatDateLit(personnelHabilitation.df) }}</div>
 						<!-- Composant ProgressBar -->
-						<ProgressBar class="mb-2" :dd="new Date(personnelHabilitation.dd)" :df="new Date(personnelHabilitation.df)"></ProgressBar>
+						<ProgressBar class="mb-2" :dd="new Date(personnelHabilitation.dd)"
+							:df="new Date(personnelHabilitation.df)"></ProgressBar>
 						<div>
 							<div v-for="suspension in suspensions" :key="suspension.id">
-								<div v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
+								<div
+									v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
 									<div class="text-danger fw-bold">
 										<i class="bi bi-exclamation-triangle-fill me-2"></i>
 										<span>Suspendue le {{ changeFormatDateLit(suspension.dd) }}
-											<template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df) }}</template>
+											<template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)
+											}}</template>
 										</span>
 									</div>
 								</div>
@@ -49,32 +52,37 @@
 							<span v-if="personnelHabilitation.last_control_date">Dernier contrôle le {{
 								changeFormatDateLit(personnelHabilitation.last_control_date) }}</span>
 							<span v-else>Pas de contrôle enregistré</span>
-							<div v-if="personnelHabilitation.controles" class="d-flex flex-row flex-wrap align-items-center justify-content-start px-2">
+							<div v-if="personnelHabilitation.controles"
+								class="d-flex flex-row flex-wrap align-items-center justify-content-start px-2">
 								<button class="mb-2" v-for="kn in personnelHabilitation.controles" :key="kn.id"
-									@click.prevent="this.$router.push({name: 'readCollecteOperateur', params:{idCollecte:kn.id}})"
+									@click.prevent="this.$router.push({ name: 'readCollecteOperateur', params: { idCollecte: kn.id } })"
 									:class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-									:data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id+' du '+changeFormatDateLit(kn.date_done)">
+									:data-bs-toggle="'tooltip'" :data-bs-placement="'top'"
+									:title="'#' + kn.id + ' du ' + changeFormatDateLit(kn.date_done)">
 									{{ kn.sami }}
 								</button>
 							</div>
 						</div>
-							
+
 					</div>
 				</div>
-				
+
 				<!-- Colonne 3 : caractéristique veille -->
 				<div class=" col-lg-4 col-12">
 					<div class="px-2 pt-2 mb-3 mb-lg-0">
 						<template v-if="personnelHabilitation.configVeille">
 							<span class="fw-lighter me-2">#{{ personnelHabilitation.configVeille.id }}</span>
-							<span>Veille tous les <span class="fw-lighter">{{ personnelHabilitation.configVeille.control_step }}</span> jours</span>
+							<span>Veille tous les <span class="fw-lighter">{{
+								personnelHabilitation.configVeille.control_step }}</span> jours</span>
 							<div v-if="personnelHabilitation.veille">
-								<div v-if="!personnelHabilitation.veille.date_last" class="d-flex align-items-center text-danger">
+								<div v-if="!personnelHabilitation.veille.date_last"
+									class="d-flex align-items-center text-danger">
 									<i class="bi bi-exclamation-triangle-fill me-2"></i>
 									Jamais contrôlé
 								</div>
 								<template v-else>
-									<div>Dernier contrôle : {{ changeFormatDateLit(personnelHabilitation.veille.date_last) }}</div>
+									<div>Dernier contrôle : {{ changeFormatDateLit(personnelHabilitation.veille.date_last)
+									}}</div>
 									<ProgressBar :dd="new Date(personnelHabilitation.veille.date_last)"
 										:df="delay(personnelHabilitation.veille.date_last, personnelHabilitation.configVeille.control_step)">
 									</ProgressBar>
@@ -216,7 +224,20 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 }
+
+.butn-custom-stats {
+	background-color: #f78c6b;
+
+}
+
+.butn-custom-stats:hover {
+	background-color: #dc6e4c;
+	/* Couleur foncée pour l'overlay */
+	transform: scale(1.1);
+}
+
 /**
 
 .btn {
@@ -231,8 +252,9 @@ export default {
 */
 
 .bg-custom {
-    background-color: #f78c6b;
+	background-color: #f78c6b;
 }
+
 .tooltip {
 	position: absolute;
 	top: -30px;
