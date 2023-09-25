@@ -32,29 +32,29 @@
         
                     <input type="date" class="form-control" id="dateFinDone" v-model="searchContratDf">
                 </div>
-        
-                <div class="input-group">
-                    <input type="checkbox" class="btn-check" id="btn-check-with-contrat" v-model="searchWithContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom rounded-start checkboxBtnSize" for="btn-check-with-contrat" @click.prevent="updateVal('searchWithContrat')">
-                        Avec {{ searchWithContrat }}
-                    </label>
-        
-                    <input type="checkbox" class="btn-check" id="btn-check-without-contrat" v-model="searchWithoutContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom checkboxBtnSize" for="btn-check-without-contrat" @click.prevent="updateVal('searchWithoutContrat')">
-                        Sans {{ searchWithoutContrat }}
-                    </label>
-        
-                    <input type="checkbox" class="btn-check" id="btn-check-all-contrat" v-model="searchAllContrat" autocomplete="off">
-                    <label class="btn btn-outline-custom rounded-end checkboxBtnSize" for="btn-check-all-contrat" @click.prevent="updateVal('searchAllContrat')">
-                        Tous {{ searchAllContrat }}
-                    </label>
+
+                <div class="btn-group w-100" role="group" aria-label="toggle contrat button">
+                    <button v-for="(oButton, i) in toggleButtonsContrat" :key="'toggleContratButton-'+i" class="btn radioBtnSize" :class="displayToggleButtonsContrat(oButton.value)" @click.prevent="updateToggleButtonContrat(oButton)">
+                        {{ oButton.label }}
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style>
+<style lang="scss">
+@use "sass:color";
+@import "@/_variables.scss";
+
+.btn-custom {
+    color: white!important;
+    background-color: $theme-color!important;
+}
+
+.btn-custom-hover:hover {
+    background-color: rgba(0, 0, 0, 0.1)!important;
+}
 
 .checkboxBtnSize {
     width: 33.33%
@@ -92,10 +92,13 @@ export default {
         return {
             searchContratDd: null,
             searchContratDf: null,
-            searchWithContrat: true,
-            searchWithoutContrat: false,
-            searchAllContrat: false,
-            searchOrdre: "croissant"
+            searchOrdre: "croissant",
+
+            toggleButtonsContrat: [
+                { label: "Avec", value: true, events: ['update:withContrat'] },
+                { label: "Sans", value: false, events: ['update:withoutContrat'] },
+                { label: "Tous", value: false, events: ['update:withContrat', 'update:withoutContrat'] }
+            ]
         }
     },
 
@@ -133,26 +136,64 @@ export default {
     },
 
     methods: {
-        updateVal(filterLabel) {
-            this[filterLabel] = !this[filterLabel];
-
-            if (filterLabel === 'searchAllContrat') {
-                if (this.searchAllContrat) {
-                    this.searchWithContrat = false;
-                    this.searchWithoutContrat = false;
+        /**
+         * Met à jour les informations sur le toggleButtonsContrat et l'envoi a l'élement parents vie un emit
+         *
+         * @param   {object}    objectButton
+         */
+        updateToggleButtonContrat(objectButton)
+        {
+            this.toggleButtonsContrat.forEach((oButton) => {
+                if (objectButton === oButton) {
+                    oButton.value = true;
+                    this.sendEventToggleButtonsContrat(oButton);
                 } else {
-                    this.searchWithContrat = true;
+                    oButton.value = false;
+                    this.sendEventToggleButtonsContrat(oButton);
+                }
+            });
+        },
+
+        /**
+         * Affichage CSS des buttons de toggleButtonsContrat en fonction de la sélection
+         *
+         * @param   {boolean}   buttonValue
+         *
+         * @returns {string}
+         */
+        displayToggleButtonsContrat(buttonValue)
+        {
+            if (buttonValue) {
+                return 'btn-custom';
+            } else {
+                return 'btn-outline-custom';
+            }
+        },
+
+        /**
+         * Envoi les events au component parent
+         *
+         * @param {object} oButton
+         *
+         * @emits update:withContrat
+         * @emits update:withoutContrat
+         */
+        sendEventToggleButtonsContrat(oButton) {
+            let emitValue = true;
+
+            if ("Tous" === oButton.label) {
+                if (oButton.value) {
+                    emitValue = false;
                 }
             } else {
-                if (this.searchWithContrat && this.searchWithoutContrat) {
-                    this.searchAllContrat = true;
-                    this.searchWithContrat = false;
-                    this.searchWithoutContrat = false;
-                } else {
-                    this.searchAllContrat = false;
-                }
+                emitValue = oButton.value;
             }
 
+            if ("Tous" !== oButton.label || "Tous" === oButton.label && !emitValue) {
+                oButton.events.forEach((emit) => {
+                    this.$emit(emit, emitValue);
+                });
+            }
         }
     },
 
@@ -160,12 +201,24 @@ export default {
         this.searchContratDd = this.contratDd;
         this.searchContratDf = this.contratDf;
         this.searchOrdre = this.ordre;
-        this.searchWithContrat = this.withContrat;
-        this.searchWithoutContrat = this.withoutContrat;
 
-        if (!this.withContrat && !this.withoutContrat) {
-            this.searchAllContrat = true;
-        }
+        this.toggleButtonsContrat.forEach((oButton) => {
+            switch (oButton.label) {
+                case "Avec":
+                    oButton.value = this.withContrat;
+                    break;
+
+                case "Sans":
+                    oButton.value = this.withoutContrat;
+                    break;
+
+                case "Tous":
+                    if (!this.withContrat && !this.withoutContrat) {
+                        oButton.value = true;
+                    }
+                    break
+            }
+        });
     },
 };
 
