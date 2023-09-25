@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                
+               
                 <div class="my-2">
                     <strong>Projet :</strong>
                     <span class="fw-lighter ms-1">
