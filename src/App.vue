@@ -97,7 +97,7 @@ Modifier cfgSlots.menu = true; dans config.json pour activer.
 
 
 		<template v-slot:core>
-			<div class="px-2 bg-light">
+			<div class="px-2">
 				<router-view v-if="isConnectedUser" />
 			</div>
 
