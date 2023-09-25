@@ -33,12 +33,12 @@
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="operateursSearchValue">
-            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5" v-if="filteredOperateurs.length">
+            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5" v-if="filteredOperateurs.length && !pending.personnel">
                 <option value="" selected>Tous</option>
                 <option v-for="(agent) in filteredOperateurs" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
-
-            <div class="alert alert-warning italic" role="alert" v-else>Aucun personnel renseigné sur cette structure ou avec cette recherche</div>
+            <div class="alert alert-warning italic" role="alert" v-else-if="!filteredOperateurs.length && !pending.personnel">Aucun personnel renseigné sur cette structure ou avec cette recherche</div>
+            <Spinner v-else />
         </div>
 
         <div class="mb-3">
@@ -66,8 +66,10 @@
 <script>
 
 import { mapState, mapActions } from 'vuex';
+import Spinner from "@/components/pebble-ui/Spinner.vue";
 
 export default {
+    components: {Spinner},
 
     data() {
         return {
@@ -80,7 +82,8 @@ export default {
                 environnement:'private'
             },
             pending: {
-                echeance: false
+                echeance: false,
+                personnel: true
             },
             allHabilitationsTypes: [],
             allOperateurs: [],
@@ -197,6 +200,7 @@ export default {
 			);
 
             this.allOperateurs = this.$assets.getCollection("personnelsFiltered").getCollection();
+            this.pending.personnel = false;
 		}
     },
 

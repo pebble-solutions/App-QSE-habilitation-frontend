@@ -10,7 +10,7 @@
             :style="{ 
                 left: habilitationStartDate ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                 width: habilitationStartDate ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                top: habilitationStartDate ? getTopPosition((rowIndex * 10) + 2, 'px') : getTopPosition((rowIndex * 10) + 2) + 1 + 'px',
+                top: habilitationStartDate ? getTopPosition((rowIndex * 10) + 1, 'px') : getTopPosition((rowIndex * 10) + 1) + 1 + 'px',
                 height : !habilitationStartDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight  
             }">
             <span v-if="habilitationStartDate">{{ displayDate(habilitationStartDate) }}</span>
@@ -28,7 +28,7 @@
             :style="{ 
                 left: habilitationEndDate ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                 width: habilitationEndDate ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                top: habilitationEndDate ? getTopPosition((rowIndex * 10) + 3, 'px') : getTopPosition((rowIndex * 10) + 3) + 1 + 'px', 
+                top: habilitationEndDate ? getTopPosition((rowIndex * 10) + 2, 'px') : getTopPosition((rowIndex * 10) + 2) + 1 + 'px', 
                 height : !habilitationEndDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight  
             }" >
             <span v-if="habilitationEndDate">{{ displayDate(habilitationEndDate) }}</span>
@@ -46,7 +46,7 @@
                 :style="{ 
                     left: habilitationLastControlResult ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                     width: habilitationLastControlResult ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                    top: habilitationLastControlResult ? getTopPosition((rowIndex * 10) + 4, 'px'):  getTopPosition((rowIndex * 10) + 4) + 'px', 
+                    top: habilitationLastControlResult ? getTopPosition((rowIndex * 10) + 3, 'px'):  getTopPosition((rowIndex * 10) + 3) + 'px', 
                     height : !habilitationLastControlResult && !habilitationStartDate ? grid.rowHeight - 2 + 'px' : grid.rowHeight 
                 }" >
 
@@ -65,7 +65,12 @@
     <div class="position-absolute text-center">
         <div class="table-row-content"
             :class="{'mt-2': !suspensionsPersonnels.length}"
-            :style="{ left: getLeftPosition(personnelIndex + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 7, 'px'), background : styleSuspensions}" >
+            :style="{ 
+                left: getLeftPosition(personnelIndex + 1, 'px'), 
+                width: columnWidthPx, 
+                top: getTopPosition((rowIndex * 10) + 6, 'px'), 
+                background : styleSuspensions
+            }" >
 
             <!-- <span v-if="suspensionsPersonnels.length" class="with-top-margin">Suspendu</span> -->
             <div v-if="suspensionsPersonnels.length" class="with-top-margin">
@@ -86,7 +91,7 @@
             :style="{ 
                 left: suspensionsPersonnels.length ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                 width: suspensionsPersonnels.length ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 8, 'px') : getTopPosition((rowIndex * 10) + 8) + 1 + 'px',
+                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 7, 'px') : getTopPosition((rowIndex * 10) + 7) + 1 + 'px',
                 height : suspensionsPersonnels.length ? grid.rowHeight : grid.rowHeight - 2 + 'px'
             }">
 
@@ -105,7 +110,7 @@
             :style="{ 
                 left: suspensionsPersonnels.length ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                 width: suspensionsPersonnels.length ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 9, 'px') : getTopPosition((rowIndex * 10) + 9) + 1 + 'px',
+                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 8, 'px') : getTopPosition((rowIndex * 10) + 8) + 1 + 'px',
                 height : suspensionsPersonnels.length ? grid.rowHeight : grid.rowHeight - 2 + 'px'
             }">
             <span v-if="suspensionsPersonnels.length">{{ displayDateSuspensions(suspensionsPersonnels[0]) }}</span>
@@ -123,7 +128,7 @@
             :style="{ 
                 left: suspensionsPersonnels.length ? getLeftPosition(personnelIndex + 1, 'px') : getLeftPosition(personnelIndex + 1) + 2 + 'px', 
                 width: suspensionsPersonnels.length ? columnWidthPx : grid.columnWidth - 4 + 'px', 
-                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 10, 'px') : getTopPosition((rowIndex * 10) + 10) + 1 + 'px',
+                top: suspensionsPersonnels.length ? getTopPosition((rowIndex * 10) + 9, 'px') : getTopPosition((rowIndex * 10) + 9) + 1 + 'px',
                 height : suspensionsPersonnels.length ? grid.rowHeight : grid.rowHeight - 2 + 'px'
             }">
                 <span v-if="suspensionsPersonnels.length">{{ displayDureeSuspension(suspensionsPersonnels[0]) }}</span>
@@ -137,7 +142,7 @@
             :style="{ 
                 left:   getLeftPosition(personnelIndex + 1, 'px'), 
                 width:  columnWidthPx , 
-                top:    getTopPosition((rowIndex * 10) + 11, 'px'),
+                top:    getTopPosition((rowIndex * 10) + 10, 'px'),
             }">
                 <span class="text-success"> VA </span>
                 <span> & </span>

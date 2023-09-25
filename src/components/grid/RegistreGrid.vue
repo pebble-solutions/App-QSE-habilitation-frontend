@@ -3,22 +3,41 @@
     <div class="position-relative border-bottom border-secondary" :style="{height : tableHeightPx, width : tableWidthPx}">
 
         <div class="table-grid" :style="{width : tableWidthPx}">
-            <div class="table-row border border-secondary" style="top :0" :style="{ width: grid.firstColumnWidth + 'px'}"></div>
-            <div v-for="n in gridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px', height : grid.firstColumnHeight + 'px'}"></div>
-            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2), left: grid.firstColumnWidth + 'px', width: infoGridRowsWidthPx}"></div>
-            <div class="table-col border border-secondary" :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
-            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx}"></div>
+            <!-- Entetes -->
+
+            <!-- Colonnes -->
+            <!-- <div style="position: sticky; left: 0;">
+            </div> -->
+            <div v-for="n in gridRows" class="table-row border border-secondary " :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px', height : grid.firstColumnHeight + 'px'}"></div>
+            <!-- <div style="position: sticky;" :style="{left: grid.secondColumnWidth + 'px'}">
+            </div> -->
+            <div class="table-col border border-success " :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
+            <!-- <div style="position: sticky;" :style="{left: grid.firstColumnWidth + 'px'}">
+            </div> -->
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2), left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px'}"></div>
+
+            <!-- Ligne -->
+            <div style="position: sticky; top: 0px; background-color: white; z-index: 20;">
+                <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx, height: grid.rowHeight + 'px' }"></div>
+                <div class="table-row border border-secondary" style="top :0" :style="{ width: tableWidthPx}"></div>
+            </div>
+
+            <!-- Corps -->
+            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n+1 , 'px', 2), left: grid.firstColumnWidth + grid.secondColumnWidth + 'px', width: infoGridRowsWidthPx}"></div>
+            <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ top: grid.rowHeight + 'px' ,left: getLeftPosition(n, 'px', 1), width: columnWidthPx}"></div>
         </div>
 
         <div class="table-content" :style="{width : tableWidthPx}">
-            <div class="table-row-content" :style="{top: getTopPosition(1, 'px')}">
-                <div class="table-header mx-2">
-                    <strong>{{ headerLabel }}</strong>
-                </div>
-                <div class="table-row-content text-primary mt-3 mx-1"
-                    :style="{ left: grid.firstColumnWidth + 5 +'px', width: grid.secondColumnWidth }"
-                    style="top: 0px" >
-                    {{ periodeDisplay }}
+            <div class="table-row-content" style="position: sticky;" :style="{top: getTopPosition(1, 'px')}">
+                <div style="position: sticky;">
+                    <div class="table-header mx-2" style="left: 0px;">
+                        <strong>{{ headerLabel }}</strong>
+                    </div>
+                    <div class="table-row-content text-primary mt-3 mx-1"
+                        :style="{left: grid.firstColumnWidth + 3 +'px', width: grid.secondColumnWidth }"
+                        style="top: 0px" >
+                        <span>{{ periodeDisplay }}</span>
+                    </div>
                 </div>
                 <div class="position-absolute text-center" 
                     :style="{ left:getLeftPosition(cols.indexOf(col) + 1, 'px'), width: columnWidthPx }"
@@ -44,12 +63,17 @@
 
             <slot></slot>
         </div>
+
     </div>
 
 </template>
 
 <style lang="scss" scoped>
 @import "./grid.scss";
+
+.sticky-col{
+    position: sticky;
+}
 </style>
 
 <script>
@@ -132,7 +156,7 @@ export default {
          * @returns {string} La largeur des lignes d'information en pixels (au format "Xpx").
          */
         infoGridRowsWidthPx() {
-            const remainingWidth = this.grid.getTableWidth() - this.grid.firstColumnWidth;
+            const remainingWidth = this.grid.getTableWidth() - this.grid.firstColumnWidth - this.grid.secondColumnWidth;
             return `${remainingWidth}px`;
         },
 
