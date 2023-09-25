@@ -4,7 +4,6 @@
             <div class="list-group" v-if="listHabilitationPersonnel.length">
                 <div class="list-group-item" v-for="control in listHabilitationPersonnel" :key="control.id">
                     <div class="row align-items-center">
-        
                         <div class="col-3">
                             {{returnName(control)}}
                         </div>
@@ -12,7 +11,7 @@
                             <progress-bar :dd="new Date(control.dd)" :df="new Date(control.df)" label="contrôle"></progress-bar>
             
                         </div>
-                        <div class="col-1"></div>
+                        <!-- <div class="col-1"></div>
                         <div class="col-auto text-end">
                             <router-link :to="'/habilitationHab/'+this.$route.params.id+'/renouveler'" v-slot="{navigate, href}">
                                 <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
@@ -22,11 +21,11 @@
                                     </span>
                                 </a>
                             </router-link>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à habilité pour cette habilitation</alert-message>
+            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel habilité</alert-message>
 
         </template>
 
