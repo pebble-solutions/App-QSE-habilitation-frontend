@@ -41,20 +41,11 @@ export default {
             pending: {
                 agent: false,
             },
-            habilitationFromPerso: '',
             listControlDone: ''
         };
     },
     computed: {
-
         ...mapState(['habilitationType', 'personnelsFiltered', 'suspensions', 'personnels', 'habilitations', 'types',]),
-
-        /**
-         * retourne les informations du personnel depuis l'id passé dans l'url
-         */
-        currentPersonnel() {
-            return this.personnelsFiltered.find((e) => e.id == this.$route.params.id);
-        },
 
         /**
          * Retourne l'objet personnel correspondant à l'ID de l'URL.
@@ -76,7 +67,7 @@ export default {
          * Retourne les suspensions associées aux habilitations du personnel.
          * @return {Array} Les suspensions du personnel.
          */
-        suspensions() {
+        suspensionsPersonnel() {
             return this.habilitationPersonnel.reduce((suspensions, hab) => {
                 const suspension = this.suspensions.find(el => el.habilitation_id === hab.id);
                 if (suspension) {
@@ -104,12 +95,6 @@ export default {
 
     },
 
-    watch: {
-        '$route.params.id': 'loadHabilitationFromPersonnel',
-    },
-
-
-
     methods: {
 
 
@@ -121,9 +106,9 @@ export default {
         getNonSuspendedHabilitations() {
             const currentDate = new Date(); // Obtenir la date actuelle
             return this.habilitationPersonnel.filter(hab => {
-            const suspensionsForThisHab = this.suspensions.filter(sus => sus.habilitation_id === hab.id);
-            return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
-        });
+                const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
+                return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
+            });
         },
 
         /**
@@ -134,7 +119,7 @@ export default {
         getSuspendedHabilitations() {
             const currentDate = new Date(); // Obtenir la date actuelle
             return this.habilitationPersonnel.filter(hab => {
-            const suspensionsForThisHab = this.suspensions.filter(sus => sus.habilitation_id === hab.id);
+            const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
             return suspensionsForThisHab.some(sus => sus.df === null || new Date(sus.df) > currentDate);
         });
         },  
@@ -142,7 +127,7 @@ export default {
 
           /**
          * Retourne le nom du type d'habilitation.
-         * @param {number} habilitationTypeId - L'ID du type d'habilitation.
+         * @param {number} habilitationTypeId - L'ID du tysuspensionspe d'habilitation.
          * @return {string} Le nom du type d'habilitation.
          */
         getHabilitationTypeName(habilitationTypeId) {
@@ -161,22 +146,6 @@ export default {
         },
 
         /**
-         * Envoie une requête pour charger la liste des habilitation d'un personnel
-         * en fonction de l'id fourni
-         * @param {Number} id du personnel 
-         */
-        loadHabilitationFromPersonnel(id) {
-            this.pending.agent = true;
-            this.$app.apiGet('v2/controle/habilitation', {
-                personnel_id: id,
-            })
-                .then((data) => {
-                    this.habilitationFromPerso = data;
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-        },
-
-        /**
         * Retourne le nom de l'habilitation en fonction de son ID.
         *
         * @param {number} id - L'ID de l'habilitation.
@@ -191,27 +160,6 @@ export default {
             return hab ? hab.nom : '';
         },
 
-    },
-
-    /**
-     * Cette méthode est appelée lorsque la route interne est mise à jour, et le nouvel élément doit être chargé.
-     *
-     * @param {Object} to - L'objet de la nouvelle route.
-     */
-    beforeRouteUpdate(to) {
-        // Vérifie si l'ID dans les paramètres de la nouvelle route est différent de celui actuel.
-        if (to.params.id !== this.$route.params.id) {
-            // Charge les habilitations du personnel en utilisant la nouvelle ID.
-            this.loadHabilitationFromPersonnel(to.params.id);
-        }
-    },
-
-
-    beforeMount() {
-        /**
-         * charge la list des habilitations du personnel concerné
-         */
-        this.loadHabilitationFromPersonnel(this.$route.params.id);
     }
 };
 

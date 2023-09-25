@@ -41,7 +41,7 @@
   
 <script>
 import { mapState } from 'vuex';
-import SuspensionsPersonnelInformations from './SuspensionsPersonnelInformations.vue';
+import SuspensionsPersonnelInformations from '../components/SuspensionsPersonnelInformations.vue';
 import HabMonitor from '../components/HabMonitor.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
@@ -50,7 +50,7 @@ import { RouterView } from 'vue-router';
 
 
 export default {
-    components: {  HabMonitor, Spinner,  SuspensionsPersonnelInformations, RouterView}, 
+    components: {  HabMonitor, Spinner,  RouterView, SuspensionsPersonnelInformations}, 
 
     data() {
         return {
@@ -340,10 +340,10 @@ export default {
          */
         this.loadHabilitationFromPersonnel(this.$route.params.id);
     },
-    mounted() {
+    // mounted() {
 
-        this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
-    },
+    //     this.loadHabilitationFromPersonnel(this.$route.params.id); // Assurez-vous d'appeler cette méthode ici si nécessaire.
+    // },
     // updated() {
     //     // Appelez la fonction createEChartsCharts à chaque mise à jour de la vue.
     //     this.createEChartsCharts();
