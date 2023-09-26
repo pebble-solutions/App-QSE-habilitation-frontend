@@ -4,7 +4,7 @@
 
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 1, 'px')  }"
             >
             <span>{{dateDebutTotal()}}</span>
         </div>
@@ -15,7 +15,7 @@
 
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 3, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 2, 'px')  }"
             >
             <span>{{dateFinTotal()}}</span>
         </div>
@@ -26,7 +26,7 @@
 
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 4, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 3, 'px')  }"
             >
             <span>{{lastControlResultTotal()}}</span>
         </div>
@@ -37,7 +37,7 @@
 
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 7, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 6, 'px')  }"
             >
             <span>{{labelSuspensionsTotal}}</span>
         </div>
@@ -48,7 +48,7 @@
   
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 8, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 7, 'px')  }"
             >
             <span>{{labelSuspensionsCommentaireTotal}}</span>
         </div>
@@ -59,7 +59,7 @@
 
     <div class="position-absolute text-center">
         <div class="table-row-content mt-2"
-            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 10, 'px')  }"
+            :style="{ left: getLeftPosition(personnelsSize + 1, 'px'), width: columnWidthPx, top: getTopPosition((rowIndex * 10) + 9, 'px')  }"
             >
             <span>{{labelSuspensionsDureeTotal}}</span>
         </div>

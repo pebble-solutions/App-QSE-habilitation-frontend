@@ -6,18 +6,17 @@
             <!-- Entetes -->
 
             <!-- Colonnes -->
-            <!-- <div style="position: sticky; left: 0;">
-            </div> -->
-            <div v-for="n in gridRows" class="table-row border border-secondary " :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px', height : grid.firstColumnHeight + 'px'}"></div>
-            <!-- <div style="position: sticky;" :style="{left: grid.secondColumnWidth + 'px'}">
-            </div> -->
-            <div class="table-col border border-success " :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
-            <!-- <div style="position: sticky;" :style="{left: grid.firstColumnWidth + 'px'}">
-            </div> -->
-            <div v-for="n in infoGridRows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 'px', 2), left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px'}"></div>
+            <div class="sticky-col" style="left: 0;">
+                <div v-for="n in gridRows" class="table-row border border-primary " :key="n" :style="{ top: getTopPositionHabilitation(n, 'px', 2), width: grid.firstColumnWidth + 'px', height : grid.firstColumnHeight + 'px'}"></div>
+            </div>
+            
+            <div class="sticky-col" :style="{left: grid.firstColumnWidth + 'px'}">
+                <div class="table-row border border-warning " :style="{ left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px' }"></div>
+                <div v-for="n in infoGridRows" class="table-row border border-danger" :key="n" :style="{ top: getTopPosition(n, 'px', 2), left: grid.firstColumnWidth + 'px', width: grid.secondColumnWidth + 'px'}"></div>
+            </div>
 
             <!-- Ligne -->
-            <div style="position: sticky; top: 0px; background-color: white; z-index: 20;">
+            <div class="sticky-col" style="top: 0px; background-color: white; z-index: 20;">
                 <div v-for="n in gridCols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 'px', 1), width: columnWidthPx, height: grid.rowHeight + 'px' }"></div>
                 <div class="table-row border border-secondary" style="top :0" :style="{ width: tableWidthPx}"></div>
             </div>

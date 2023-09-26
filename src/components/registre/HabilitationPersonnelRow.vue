@@ -1,5 +1,4 @@
 <template>
-    <div style="position: sticky; left: 0;">
         <div class="table-row-content" :style="{ top: getTopPositionHabilitationLabel(rowIndex + 2, 'px') }">
             <div class="table-header mx-2 fs-7" :title="rowLabel">
                 <div class="d-flex align-items-center align-self-center">
@@ -10,7 +9,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <div class="position-sticky text-center" :style="{ width: grid.secondColumnWidth + 'px', left: grid.firstColumnWidth + 'px' }">
         <div class="table-row-content mt-2"
             v-for="item in items"
@@ -48,13 +46,12 @@
 </style>
 
 <script>
-import UserImage from '../pebble-ui/UserImage.vue';
 import { RegistreGrid } from '../../js/grid/RegistreGrid';
 import ContenuHabilitationPersonnelRow from './ContenuHabilitationPersonnelRow.vue';
 import TotalStatsHabilitationPersonnelRow from './TotalStatsHabilitationPersonnelRow.vue';
 
 export default {
-    components: { UserImage, ContenuHabilitationPersonnelRow, TotalStatsHabilitationPersonnelRow },
+    components: { ContenuHabilitationPersonnelRow, TotalStatsHabilitationPersonnelRow },
     props: {
         rowIndex: Number,
         habilitationType: Object,
