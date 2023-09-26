@@ -1,27 +1,26 @@
 <template>
-    <div>
-        <div :class="['row', 'px-0', 'justify-content-center', 'align-items-center']">
-            <div class="col-1">
-                <span>
-                    <UserImage :name="agent.cache_nom" />
-                </span>
-            </div>
-            <div class="col-8 ps-4">
-                <span>{{ agent.cache_nom }}</span>
-            </div>
-            <div class="col-2 text-end">
-                <span class="fw-lighter"># {{ agent.id }}</span>
-            </div>
+    <div class="row-no-padding-x justify-content-center align-items-center">
+        <div class="col-1">
+            <span>
+                <UserImage :name="agent.cache_nom" />
+            </span>
         </div>
-        <div class="badge-group mt-2" v-if="nbTotalHabilitation">
-            <template v-for="badge in badges" :key="badge.label">
-                <span class="badge status-badge me-2" :class="'text-bg-' + badge.style" v-if="getHabiliationNb(badge.style) > 0">
-                    <i class="bi" :class="badge.icon"></i>
-                    <span class="mx-1">{{ getHabiliationNb(badge.style) }}</span>
-                    <span class="status-detail">{{ badge.label }}</span>
-                </span>
-            </template>
+        <div class="col-8 ps-4">
+            <span>{{ agent.cache_nom }}</span>
         </div>
+        <div class="col-2 text-end">
+            <span class="fw-lighter"># {{ agent.id }}</span>
+        </div>
+    </div>
+    <div class="badge-group mt-2" v-if="nbTotalHabilitation">
+        <template v-for="badge in badges" :key="badge.label">
+            <span class="badge status-badge me-2" :class="'text-bg-' + badge.style"
+                v-if="getHabiliationNb(badge.style) > 0">
+                <i class="bi" :class="badge.icon"></i>
+                <span class="mx-1">{{ getHabiliationNb(badge.style) }}</span>
+                <span class="status-detail">{{ badge.label }}</span>
+            </span>
+        </template>
     </div>
 </template>
 
@@ -39,14 +38,28 @@
     align-items: center;
 
     >.badge {
-        border-radius: 4px; /* Ajoutez cette ligne pour définir les coins arrondis */
-        margin-right: 4px; /* Ajoutez une marge entre les badges */
+        border-radius: 4px;
+        /* Ajoutez cette ligne pour définir les coins arrondis */
+        margin-right: 4px;
+        /* Ajoutez une marge entre les badges */
     }
 
     >.badge:first-child {
-        margin-left: 4px; /* Ajoutez une marge à gauche du premier badge */
+        margin-left: 10px;
+        /* Ajoutez une marge à gauche du premier badge */
     }
 }
+
+.row-no-padding-x {
+    display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+
 </style>
 
 <script>
