@@ -7,7 +7,8 @@
             Chargement...
         </div>
         <template v-else>
-            <div v-if="echeancier.priorite == false">
+            <!-- Impossibilité de parvenir a habilitationGroup pour le moment -->
+            <div v-if="echeancier.priorite == false && echeancier.priorite == true">
     
                 <div  v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
                     <HabilitationGroup
