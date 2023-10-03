@@ -37,7 +37,7 @@ export default {
 			contratDfFilter: null,
 			withContratFilter: true,
 			withoutContratFilter: false,
-			ordreFilter: "croissant"
+			ordreFilter: "asc"
 		}
 	},
 
@@ -53,11 +53,10 @@ export default {
 			this.$assets.getCollection("personnelsFiltered").reset();
 			await this.$assets.getCollection("personnelsFiltered").load(
 				{
-					contratDd: this.contratDdFilter,
-					contratDf: this.contratDfFilter,
-					withContrat: this.withContratFilter ? 1 : 0,
-					withoutContrat: this.withoutContratFilter ? 1 : 0,
-					ordre: this.ordreFilter,
+					date_start: this.contratDdFilter,
+					date_end: this.contratDfFilter,
+					active_only: this.withContratFilter ? 1 : 0,
+					order_sort: this.ordreFilter,
                     name: this.nameFilter === '' ? null : this.nameFilter
 				}
 			);

@@ -3,19 +3,19 @@
         <div class="btn-group w-100 mb-2" v-if="croissant">
             <button type="button" class="btn btn-outline-custom dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi" :class="classIcon"></i>
-                {{ searchOrdre }}
+                {{ labelOrderBy }}
             </button>
 
             <ul class="dropdown-menu w-100">
                 <li>
-                    <div class="dropdown-item" @click="searchOrdre = 'croissant'">
+                    <div class="dropdown-item" @click="searchOrdre = 'asc'">
                         <i class="bi bi-arrow-up"></i>
                         Croissant
                     </div>
                 </li>
 
                 <li>
-                    <div class="dropdown-item" @click="searchOrdre = 'décroissant'">
+                    <div class="dropdown-item" @click="searchOrdre = 'desc'">
                         <i class="bi bi-arrow-down"></i>
                         Décroissant
                     </div>
@@ -26,18 +26,15 @@
         <div v-if="displayContrat" class="mb-2">
             <h6 v-if="contratLabel" class="col-12 mb-2">Contrat</h6>
     
-            <div>
-                <div class="input-group mb-1">
-                    <input type="date" class="form-control" id="dateDebutDone"  v-model="searchContratDd">
-        
-                    <input type="date" class="form-control" id="dateFinDone" v-model="searchContratDf">
-                </div>
-
-                <div class="btn-group w-100" role="group" aria-label="toggle contrat button">
-                    <button v-for="(oButton, i) in toggleButtonsContrat" :key="'toggleContratButton-'+i" class="btn radioBtnSize" :class="displayToggleButtonsContrat(oButton.value)" @click.prevent="updateToggleButtonContrat(oButton)">
-                        {{ oButton.label }}
-                    </button>
-                </div>
+            <div class="btn-group w-100" role="group" aria-label="toggle contrat button">
+                <button v-for="(oButton, i) in toggleButtonsContrat" :key="'toggleContratButton-'+i" class="btn radioBtnSize" :class="displayToggleButtonsContrat(oButton.value)" @click.prevent="updateToggleButtonContrat(oButton)">
+                    {{ oButton.label }}
+                </button>
+            </div>
+            <div class="input-group my-1" v-if="withContrat">
+                <input type="date" class="form-control" id="dateDebutDone"  v-model="searchContratDd">
+    
+                <input type="date" class="form-control" id="dateFinDone" v-model="searchContratDf">
             </div>
         </div>
     </div>
@@ -92,22 +89,25 @@ export default {
         return {
             searchContratDd: null,
             searchContratDf: null,
-            searchOrdre: "croissant",
+            searchOrdre: "asc",
 
             toggleButtonsContrat: [
-                { label: "Avec", value: true, events: ['update:withContrat'] },
-                { label: "Sans", value: false, events: ['update:withoutContrat'] },
-                { label: "Tous", value: false, events: ['update:withContrat', 'update:withoutContrat'] }
+                { label: "Sous contrat", value: true, events: ['update:withContrat'] },
+                { label: "Tous", value: false, events: ['update:withoutContrat'] }
             ]
         }
     },
 
     computed: {
         classIcon() {
-            if ('croissant' == this.searchOrdre) {
+            if ('asc' == this.searchOrdre) {
                 return 'bi-arrow-up';
             }
             return 'bi-arrow-down';
+        },
+
+        labelOrderBy() {
+            return this.searchOrdre == "asc" ? "Croissant" : "Décroissant"
         }
     },
 
@@ -115,23 +115,16 @@ export default {
 
 
     watch: {
-        searchWithContrat(newVal) {
-            this.$emit('update:withContrat', newVal);
-        },
-
-        searchWithoutContrat(newVal) {
-            this.$emit('update:withoutContrat', newVal);
-        },
-
-        searchAllContrat(newVal) {
-            if (newVal) {
-                this.$emit('update:withContrat', false);
-                this.$emit('update:withoutContrat', false);
-            }
-        },
-
         searchOrdre(newVal) {
             this.$emit('update:ordre', newVal);
+        },
+
+        searchContratDd(newVal) {
+            this.$emit('update:contratDd', newVal);
+        },
+
+        searchContratDf(newVal) {
+            this.$emit('update:contratDf', newVal);
         }
     },
 
@@ -204,12 +197,8 @@ export default {
 
         this.toggleButtonsContrat.forEach((oButton) => {
             switch (oButton.label) {
-                case "Avec":
+                case "Sous contrat":
                     oButton.value = this.withContrat;
-                    break;
-
-                case "Sans":
-                    oButton.value = this.withoutContrat;
                     break;
 
                 case "Tous":
