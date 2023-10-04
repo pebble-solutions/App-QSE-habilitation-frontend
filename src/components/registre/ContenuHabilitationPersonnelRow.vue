@@ -76,7 +76,6 @@
             <div v-if="suspensionsPersonnels.length" class="with-top-margin">
                 <span>Suspendu</span>
             </div>
-            <span v-else>Pas suspendu</span>
         </div>
     </div>
     <!-- Fin Sixieme ligne -->

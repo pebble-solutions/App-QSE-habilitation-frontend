@@ -4,23 +4,23 @@
 
 
         <!-- Colonnes -->
-            <div v-for="n in gridRows"
-                class="table-row border border-secondary"
-                :key="n"
-                :style="{
-                    top: getTopPositionHabilitation(n, 'px', 2),
-                    width: grid.firstColumnWidth + 'px',
-                    height : grid.firstColumnHeight + 'px'
-                }">
-            </div>
+        <div v-for="n in gridRows"
+            class="table-row border border-secondary"
+            :key="n"
+            :style="{
+                top: getTopPositionHabilitation(n, 'px', 2),
+                width: grid.firstColumnWidth + 'px',
+                height : grid.firstColumnHeight + 'px'
+            }">
+        </div>
 
-            <div class="sticky-col border border-secondary"
-                :style="{
-                    left: grid.firstColumnWidth + 'px',
-                    width: grid.secondColumnWidth + 'px',
-                    height : tableHeightPx
-                }">
-            </div>
+        <div class="sticky-col border border-secondary"
+            :style="{
+                left: grid.firstColumnWidth + 'px',
+                width: grid.secondColumnWidth + 'px',
+                height : tableHeightPx
+            }">
+        </div>
 
         <div class="table-grid" :style="{width : tableWidthPx}">
             <!-- Entetes -->
@@ -38,14 +38,16 @@
 
             <!-- Ligne -->
             <div style=" position: sticky; top: 0px;">
-                <div v-for="n in gridCols"
-                    class="table-col border border-secondary"
-                    :key="n"
-                    :style="{
-                        left: getLeftPosition(n, 'px', 1),
-                        width: columnWidthPx,
-                        height: grid.rowHeight + 'px'
-                    }">
+                <div class="entete">
+                    <div v-for="n in gridCols"
+                        class="table-col border border-secondary"
+                        :key="n"
+                        :style="{
+                            left: getLeftPosition(n, 'px', 1),
+                            width: columnWidthPx,
+                            height: grid.rowHeight + 'px'
+                        }">
+                    </div>
                 </div>
 
                 <div class="table-row border border-secondary"
