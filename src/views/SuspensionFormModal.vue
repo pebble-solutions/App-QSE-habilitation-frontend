@@ -26,8 +26,8 @@
 
                                 <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
                             </div>
-                            <div v-if="suspension.df" class="col-4">
-                                <input type="date" v-model="suspension.df" class="form-control border-0 px-2"
+                            <div v-if="suspension.df" class="mb-3 col-4">
+                                <input type="date" v-model="dateDeFin" class="form-control border-0 px-2"
                                     @change="dateModified = true">
                             </div>
                             <div class="col-12">
@@ -70,6 +70,8 @@ export default {
             isHovered: false, // Initialisation l'état de survol
             dateModified: false, // Variable pour suivre la modification de la date
 
+            dateDeFin : null,
+
             pending : {
                 buttonModif : false, // Initialisation de l'etat de chargement du bouton 
             }
@@ -83,7 +85,8 @@ export default {
             if (!this.dateModified) {
                 alert("Vous devez entrer une nouvelle date pour envoyer la modification.")
             } else {
-                if (confirm("Etes vous sur de vouloir modifier la date de fin au : " + getDisplayFormatedDate(this.suspension.df))){  
+                if (confirm("Etes vous sur de vouloir modifier la date de fin du "+ getDisplayFormatedDate(this.suspension.df) +" au : " + getDisplayFormatedDate(this.dateDeFin))){  
+                    this.suspension.df = this.dateDeFin;
                     this.$app.api.patch('/v2/habilitation/suspension/'+this.$route.params.idSuspension,
                         this.suspension
                     )
@@ -155,6 +158,7 @@ export default {
                 if (this.suspension.df) {
                     const dfDate = new Date(this.suspension.df);
                     this.suspension.df = dfDate.toISOString().split('T')[0]; // Format "aaaa-mm-jj"
+                    this.dateDeFin = this.suspension.df;
                 }
             }
             catch (e) {
