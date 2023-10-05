@@ -1,5 +1,5 @@
 <template>
-    <AppModal @modal-hide="routeToParent()">
+    <AppModal :title="'Modification de la suspension n° ' + this.$route.params.idSuspension" @modal-hide="routeToParent()">
         <div class="row text-center pb-0" v-if="suspension">
             <!-- Colonne pour le nom de l'habilitation -->
             <div class="col-12 px-2">
@@ -18,15 +18,10 @@
                             <div class="col-12">
                                 <span class="fw-bold">Dates:</span>
                             </div>
-                            <div v-if="!suspension.df" class="col-12">
-
+                            <div class="col-7 text-end">
                                 <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
                             </div>
-                            <div v-else class="col-7 text-end">
-
-                                <p>{{ formatSuspensionText(suspension.dd, suspension.df) }}</p>
-                            </div>
-                            <div v-if="suspension.df" class="mb-3 col-4">
+                            <div class="mb-3 col-4">
                                 <input type="date" v-model="dateDeFin" class="form-control border-0 px-2"
                                     @change="dateModified = true">
                             </div>
@@ -93,8 +88,8 @@ export default {
                     .then((data) => {
 
                         alert('La suspension à bien été modifié : Date de fin --> ' + data.df);
-
                         this.$assets.getCollection("suspensions").load();
+
                     })
                     .catch(this.$app.catchError)
                     .finally(() => {

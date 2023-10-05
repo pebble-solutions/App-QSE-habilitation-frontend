@@ -158,14 +158,24 @@ const routes = [
     children: [
       {
         path: ':idForm',
-        name: 'AgentStats',
+        name: 'agentStats',
         component: () => import("../views/AgentReadStats.vue"),
       },
       {
         path: ':idCollecte',
         name: 'readCollecteOperateur',
         component: () => import(/* webpackChunkName: "about" */ '../views/PersonnelReadCollecte.vue')
-      }
+      },
+      {
+        path: ':idSuspension/edit',
+        name: 'editSuspension',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idHabilitation/create',
+        name: 'createSuspension',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
       // {
         //   path: ':idHab',
         //   name: 'controlHistory',

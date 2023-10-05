@@ -15,8 +15,10 @@ export const ROUTES_NAMES = {
 		'habilitationByAgent',
 		'controlHistory',
 		'controlView',
-		'AgentStats',
+		'agentStats',
 		'readCollecteOperateur',
+		'editSuspension',
+		'createSuspension'
 	],
 	personnels: [
 		'personnels',

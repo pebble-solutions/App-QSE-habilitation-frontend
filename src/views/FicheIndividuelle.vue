@@ -16,8 +16,7 @@
     </div>
 </template>
 <script>
-// import {mapState, mapActions} from 'vuex'; 
-// import HabMonitor from '../components/HabMonitor.vue';
+
 import { mapState } from 'vuex';
 import HabMonitor from '../components/HabMonitor.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
