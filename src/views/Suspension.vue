@@ -30,16 +30,11 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions levées ou terminées</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
-                    <router-link :to="{ name: 'suspensionInfo', params: { idSuspension: suspension.id } }"
-                        v-slot="{ href, navigate }" custom>
-                        <a :href="href" @click="navigate" class="no-underline">
-                            <SuspensionCard :habilitationTypeName="habilitationTypeName(suspension.habilitation_id)"
-                                :personnelName="personnelName(suspension.habilitation_id)"
-                                :formattedDates="formatSuspensionText(suspension.dd, suspension.df)"
-                                :suspensionDuration="suspensionDuration(suspension.dd, suspension.df)"
-                                :commentaire="suspension.commentaire" />
-                        </a>
-                    </router-link>
+                        <SuspensionCard :habilitationTypeName="habilitationTypeName(suspension.habilitation_id)"
+                            :personnelName="personnelName(suspension.habilitation_id)"
+                            :formattedDates="formatSuspensionText(suspension.dd, suspension.df)"
+                            :suspensionDuration="suspensionDuration(suspension.dd, suspension.df)"
+                            :commentaire="suspension.commentaire" />
                 </div>
             </div>
         </div>
@@ -48,7 +43,7 @@
         </div>
 
         <!-- Liste "Suspensions supprimées" -->
-        <div class="card border-0 bg-overSuspensions text-white shadow-lg col-md-12 mt-4" v-if="suspensions && getInactiveSuspensions.length > 0 && conditionPourSupprimees">
+        <!-- <div class="card border-0 bg-overSuspensions text-white shadow-lg col-md-12 mt-4" v-if="suspensions && getInactiveSuspensions.length > 0 && conditionPourSupprimees">
             <div class="card-body">
                 <h3 class="card-title text-center mb-3">Suspensions supprimées (todo ajout booléen Supprimé en bdd)</h3>
                 <div class="custom-div" v-for="suspension in getInactiveSuspensions" :key="suspension.id">
@@ -63,7 +58,7 @@
         </div>
         <div v-else>
             <p class="text-center text-secondary my-4">Aucune suspension supprimée.</p>
-        </div>
+        </div> -->
     </div>
 
     <RouterView></RouterView>

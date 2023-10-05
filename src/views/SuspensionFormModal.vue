@@ -1,5 +1,5 @@
 <template>
-    <AppModal @update-type="updateType" @modal-hide="routeToParent()">
+    <AppModal @modal-hide="routeToParent()">
         <div class="row text-center pb-0" v-if="suspension">
             <!-- Colonne pour le nom de l'habilitation -->
             <div class="col-12 px-2">
@@ -44,25 +44,11 @@
             </div>
             <!-- Bouton "Modifier la date de fin de suspension" -->
             <div class="col-12 px-2 mb-1">
-                <button class="btn btn-white-custom w-100" :class="{ 'btn-white': isHovered[1] }" @click="modifyDate()"
-                    @mouseover="onButtonHover(1)" @mouseout="onButtonHover(0)">
-                    {{ getButtonLabel() }}
-                </button>
-            </div>
-
-            <!-- Bouton "Lever la suspension" -->
-            <div class="col-12 px-2 mb-1">
-                <button class="btn btn-white-custom w-100" :class="{ 'btn-primary': isHovered[2] }"
-                    @mouseover="onButtonHover(2)" @mouseout="onButtonHover(0)">
-                    {{ buttonText[1] }}
-                </button>
-            </div>
-
-            <!-- Bouton "Supprimer la suspension" -->
-            <div class="col-12 px-2">
-                <button class="btn btn-danger text-white w-100" :class="{ 'btn-white': isHovered[3] }"
-                    @mouseover="onButtonHover(3)" @mouseout="onButtonHover(0)">
-                    {{ buttonText[2] }}
+                <button class="btn btn-white-custom w-100" :class="{ 'btn-white': isHovered }" @click="modifyDate()">
+                    <div v-if="pending.buttonModif" class="spinner-border text-primary" role="status">
+                        <span>Loading...</span>
+                    </div>
+                    <span v-else>{{ getButtonLabel() }}</span>
                 </button>
             </div>
 
@@ -71,41 +57,49 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
+import {getDisplayFormatedDate} from '../js/date';
 
 export default {
-    components: { AppModal, },
+    components: { AppModal},
 
     data() {
         return {
-            buttonText: [
-                'Modifier la date de fin de suspension',
-                'Lever la suspension',
-                'Supprimer la suspension'
-            ],
-            suspension: null,
-            isHovered: [false, false, false, false], // Initialisation des états de survol
+            suspension: null, // Initialisation la valeur de l'objet de la suspension
+            isHovered: false, // Initialisation l'état de survol
             dateModified: false, // Variable pour suivre la modification de la date
-        };
-    },
 
-    computed: {
-        ...mapState(['pending'])
+            pending : {
+                buttonModif : false, // Initialisation de l'etat de chargement du bouton 
+            }
+        };
     },
 
     methods: {
 
-        /**
-         * Verifie si la date de fin de suspension a été modifiée
-         * 
-         * @return {boolean}
-         */
-        modifDate() {
+        modifyDate(){
+            this.pending.buttonModif = true 
             if (!this.dateModified) {
-                alert("vous devez entrer une nouvelle date pour envoyer la modification.")
+                alert("Vous devez entrer une nouvelle date pour envoyer la modification.")
+            } else {
+                if (confirm("Etes vous sur de vouloir modifier la date de fin au : " + getDisplayFormatedDate(this.suspension.df))){  
+                    this.$app.api.patch('/v2/habilitation/suspension/'+this.$route.params.idSuspension,
+                        this.suspension
+                    )
+                    .then((data) => {
+
+                        alert('La suspension à bien été modifié : Date de fin --> ' + data.df);
+
+                        this.$assets.getCollection("suspensions").load();
+                    })
+                    .catch(this.$app.catchError)
+                    .finally(() => {
+                        this.routeToParent();
+                    });
+                }
             }
+            this.pending.buttonModif = false
         },
 
         /**
@@ -117,31 +111,6 @@ export default {
             // Vérifie si la date df est différente de la date initiale (null ou autre)
             return this.suspension.df !== null && this.suspension.df !== this.suspension.dfInitial;
         },
-
-        /**
-         * Met a jour l'affichage des textes des boutons
-         * 
-         * @param {*} index 
-         * 
-         * @return {boolean}
-         */
-        onButtonHover(index) {
-            if (index === 1) {
-                this.buttonText[0] = 'Modifier la date de fin de suspension';
-            } else if (index === 2) {
-                this.buttonText[1] = 'Lever la suspension';
-            } else if (index === 3) {
-                this.buttonText[2] = 'Supprimer la suspension';
-            } else {
-                // Réinitialiser tous les libellés si aucun bouton n'est survolé
-                this.buttonText = [
-                    'Modifier la date de fin de suspension',
-                    'Lever la suspension',
-                    'Supprimer la suspension'
-                ];
-            }
-        },
-
 
         /**
          * Met a jour le type de modal
