@@ -41,6 +41,8 @@ export const ROUTES_NAMES = {
 		'programmerHabilitationPersonnel',
 		'programmerHabilitationPersonnelInfo',
 		'programmerHabilitationHab',
-		'programmerHabilitation'
+		'programmerHabilitation',
+		'createSuspensionHabilitationPersonnel',
+		'editSuspensionHabilitationPersonnel'
 ]
 };

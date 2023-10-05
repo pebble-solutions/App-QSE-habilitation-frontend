@@ -32,7 +32,7 @@
 								<div v-if="isSuspension(suspension)">
 									<div class="text-danger fw-bold">
 										<i class="bi bi-exclamation-triangle-fill me-2"></i>
-										<span>Suspendue le {{ changeFormatDateLit(suspension.dd) }}
+										<span>Suspendue du {{ changeFormatDateLit(suspension.dd) }}
 											<template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)
 											}}</template>
 										</span>
@@ -117,7 +117,7 @@
 							<span>Suspendre</span>
 							<i class="bi bi-arrow-up-right-square ms-2"></i>
 						</a>
-					</router-link>
+					</router-link> 
 				</div>
 
 			</div>
@@ -130,9 +130,8 @@
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
-
-
 import { mapState } from 'vuex';
+
 export default {
 	components: { ProgressBar },
 	props: {

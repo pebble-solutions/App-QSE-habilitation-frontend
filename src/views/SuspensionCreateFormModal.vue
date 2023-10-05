@@ -82,7 +82,19 @@ export default {
         ...mapState(['personnels', 'suspensions', 'habilitationsPersonnels']),
 
         personnelName(){
-            return this.personnels.find(e => e.id == this.$route.params.id).cache_nom
+            if (this.$route.params.idPersonnel) {
+                return this.personnels.find(e => e.id == this.$route.params.idPersonnel).cache_nom
+            } else {
+                return this.personnels.find(e => e.id == this.$route.params.id).cache_nom
+            }
+        },
+
+        habilitationId(){
+            if (this.$route.params.idHabilitation){
+                return this.$route.params.idHabilitation
+            } else {
+                return this.$route.params.id
+            }
         },
 
         habilitationName(){
@@ -123,6 +135,9 @@ export default {
         routeToParent() {
             this.$router.go(-1);
         },
+    },
+    mounted(){
+        console.log(this.$route)
     }
 }
 </script>

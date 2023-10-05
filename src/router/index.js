@@ -129,6 +129,18 @@ const routes = [
     path: '/habilitationPersonnel/:id',
     name: 'programmerHabilitationPersonnelInfo',
     component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationPersonnelStatus.vue'),
+    children: [
+      {
+        path: 'suspension/:idSuspension/edit',
+        name: 'editSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idPersonnel/create',
+        name: 'createSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
+    ]
   },
   {
     path: '/habilitation',

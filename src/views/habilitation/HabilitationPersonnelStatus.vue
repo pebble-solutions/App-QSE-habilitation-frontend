@@ -31,10 +31,51 @@
                     <strong>Expire le : </strong>
                     {{ dateFormat(habilitationPersonnel.df) }}
                 </span>
+
+                <div class="mb-4 me-1">
+                    <div v-if="isSuspension()">
+                        <router-link :to="{ name: 'editSuspensionHabilitationPersonnel', params: { idSuspension: idSuspension } }"
+                        v-slot="{ href, navigate }">
+                            <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
+                                <span>Lever la suspension</span>
+                                <i class="bi bi-arrow-up-right-square ms-2"></i>
+                            </a>
+                        </router-link>
+                    </div>
+                    <div v-else>
+                        <router-link :to="{ name: 'createSuspensionHabilitationPersonnel', params: { idPersonnel: habilitationPersonnel.personnel_id }}"
+                        v-slot="{ href, navigate }" custom>
+                            <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
+                                <span>Suspendre</span>
+                                <i class="bi bi-arrow-up-right-square ms-2"></i>
+                            </a>
+                        </router-link> 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+
+.butn-custom-stats {
+	background-color: #f78c6b;
+
+}
+
+.butn-custom-stats:hover {
+	background-color: #dc6e4c;
+	/* Couleur foncée pour l'overlay */
+	transform: scale(1.1);
+}
+
+.btn:hover {
+	opacity: 1;
+	visibility: visible;
+}
+
+</style>
 
 <script>
 
@@ -46,7 +87,9 @@ export default {
     data() {
         return {
             collection: null,
-            habilitationPersonnel: null
+            habilitationPersonnel: null,
+            idSuspension: null,
+            suspensions : null
         };
     },
 
@@ -68,6 +111,36 @@ export default {
     },
 
     methods: {
+
+        /**
+         * Vérifie si une suspension est trouvée et que la date df est nulle ou dans le futur pour l'habilitation actuelle du personnel.
+         *
+         * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
+         */
+        isSuspension() {
+            if (this.suspensions) {
+                const suspensionFound = this.suspensions.some((suspension) => {
+                if (
+                    suspension.habilitation_id === this.habilitationPersonnel.id &&
+                    (suspension.df === null || new Date(suspension.df) > new Date())
+                ) {
+                    this.idSuspension = suspension.id; // Stocke l'ID de la suspension correspondante
+                    return true; // Afficher la bordure rouge
+                }
+                return false;
+                });
+
+                return suspensionFound; // Renvoie vrai si une suspension correspondante a été trouvée, sinon renvoie faux
+            }
+
+            return false; // Si la collection de suspensions n'existe pas, renvoie faux
+        },
+
+        loadSuspensions(){
+            const suspensionCollection = this.$assets.getCollection('suspensions');
+            suspensionCollection.load(); 
+            this.suspensions = suspensionCollection.getCollection()
+        },
 
         /**
          * Récupère l'habilitation personnel dans data
@@ -104,6 +177,7 @@ export default {
     mounted() {
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
         this.getHabilitationPersonnel();
+        this.loadSuspensions();
     },
 
     components: { ControlTodoHabilitationItem }
