@@ -19,7 +19,7 @@
                     <li class="d-flex justify-content-between align-items-center bg-danger rounded text-white px-3 py-2 mb-2"
                         v-for="hab in getSuspendedHabilitations()" :key="hab.id">
                         <span>{{ getHabilitationTypeName(hab.habilitation_type_id) }}</span>
-                        <span>le {{ getSuspensionDate(hab.id) }}</span>
+                        <span>le {{ changeFormatDateLit(getSuspensionDate(hab.id)) }}</span>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import datejs from 'date.js';
+import {getDisplayFormatedDate} from '../js/date';
 
 export default {
 
@@ -77,6 +77,9 @@ export default {
             }, []);
         },
 
+    },
+
+    methods: {
 
         /**
         * Modifie le format de la date entrée en paramètre et la retourne sous le format "01 févr. 2021".
@@ -85,18 +88,8 @@ export default {
         * @returns {string} La date au format "01 févr. 2021" ou une chaîne vide si la date est invalide.
         */
         changeFormatDateLit(date) {
-            if (date) {
-                // Utilisez les fonctions de date.js pour formater la date.
-                const formattedDate = datejs(date).format('DD MMM. YYYY');
-                return formattedDate;
-            }
-            return '';
+            return getDisplayFormatedDate(date)
         },
-
-    },
-
-    methods: {
-
 
         /**
          * Retourne les habilitations non suspendues du personnel.
