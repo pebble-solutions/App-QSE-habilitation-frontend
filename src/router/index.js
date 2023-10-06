@@ -9,14 +9,6 @@ const routes = [
     meta: { transitionName: 'fade' }, 
   },
   {
-    path: '/about',
-    name: 'À propos',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
     path: '/types',
     name: 'types',
     meta: { transitionName: 'fade' } ,
@@ -70,15 +62,6 @@ const routes = [
     ]
   },
   {
-    path: '/personnels',
-    name: 'personnels',
-    meta: { transitionName: 'fade' }, 
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Personnels.vue'),
-  },
-  {
     path: '/suspension',
     name: 'suspension',
     meta: { transitionName: 'fade' },
@@ -93,14 +76,6 @@ const routes = [
             component: () => import(/* webpackChunkName: "about" */ '../views/SuspensionFormModal.vue')
         }
     ]
-},
-  {
-    path: '/personnels/:id',
-    name: 'ficheIndividuelleSuivi',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/FicheIndividuelle.vue'),
   },
   {
     path:'/registre',
