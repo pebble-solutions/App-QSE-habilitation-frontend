@@ -32,26 +32,23 @@
                     {{ dateFormat(habilitationPersonnel.df) }}
                 </span>
 
-                <div class="mb-4 me-1">
-                    <div v-if="isSuspension()">
-                        <router-link :to="{ name: 'editSuspensionHabilitationPersonnel', params: { idSuspension: idSuspension } }"
-                        v-slot="{ href, navigate }">
-                            <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
-                                <span>Lever la suspension</span>
-                                <i class="bi bi-arrow-up-right-square ms-2"></i>
-                            </a>
-                        </router-link>
-                    </div>
-                    <div v-else>
-                        <router-link :to="{ name: 'createSuspensionHabilitationPersonnel', params: { idPersonnel: habilitationPersonnel.personnel_id }}"
-                        v-slot="{ href, navigate }" custom>
-                            <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
-                                <span>Suspendre</span>
-                                <i class="bi bi-arrow-up-right-square ms-2"></i>
-                            </a>
-                        </router-link> 
-                    </div>
-                </div>
+                <router-link :to="{ name: 'editSuspensionHabilitationPersonnel', params: { idSuspension: idSuspension } }" 
+                v-slot="{ href, navigate }" v-if="isSuspension()">
+                    <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
+                        <span>Lever la suspension</span>
+                        <i class="bi bi-arrow-up-right-square ms-2"></i>
+                    </a>
+                </router-link>
+
+                <router-link :to="{ name: 'createSuspensionHabilitationPersonnel', params: { idPersonnel: habilitationPersonnel.personnel_id }}"
+                v-slot="{ href, navigate }" custom v-else>
+                    <a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-2">
+                        <span>Suspendre</span>
+                        <i class="bi bi-arrow-up-right-square ms-2"></i>
+                    </a>
+                </router-link>
+                <RouterView></RouterView>
+
             </div>
         </div>
     </div>
@@ -100,7 +97,7 @@ export default {
          * @return {boolean}
          */
         isReady() {
-            return this.collection && this.habilitationPersonnel ? true : false;
+            return this.collection && this.habilitationPersonnel && this.suspensions ? true : false;
         },
 
         isExpire(){

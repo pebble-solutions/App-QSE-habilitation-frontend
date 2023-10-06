@@ -98,8 +98,8 @@ export default {
         },
 
         habilitationName(){
-            let habilitation = this.$assets.getCollection('habilitationsPersonnels').getCollection().find(e => e.id == this.$route.params.idHabilitation);
-            return this.$assets.getCollection('types').getCollection().find(e => e.id == habilitation.characteristic_id).nom;
+            let habilitation = this.$assets.getCollection('habilitationsPersonnels').getCollection().find(e => e.id == this.habilitationId);
+            return this.$assets.getCollection('types').getCollection().find(e => e.id == habilitation.characteristic_id).nom;  
         }
     },
 
@@ -110,8 +110,7 @@ export default {
             if (!this.suspension.dd && !this.suspension.df) {
                 alert("Vous devez entrer une nouvelle date de début et une nouvelle date de fin pour envoyer la création.")
             } else {
-                this.suspension.characteristic__personnel_id = this.$route.params.idHabilitation;
-                console.log(this.suspension)
+                this.suspension.characteristic__personnel_id = this.habilitationId;
                 if (confirm("Etes vous sur de vouloir créer cette suspension?")){  
                     this.$app.api.post('/v2/habilitation/suspension',
                         this.suspension
@@ -135,9 +134,6 @@ export default {
         routeToParent() {
             this.$router.go(-1);
         },
-    },
-    mounted(){
-        console.log(this.$route)
     }
 }
 </script>
