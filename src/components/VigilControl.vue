@@ -9,7 +9,16 @@
                         </div>
                         <div class="col">
                             <progress-bar :dd="new Date(control.dd)" :df="new Date(control.df)" label="contrôle"></progress-bar>
-            
+                            <div v-for="suspension in suspensions" :key="suspension.id" class="d-flex justify-content-center">
+                                <div v-if="wasSuspended(suspension, control)">
+                                    <div class="text-danger fw-bold">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        <span>Suspendue du {{ changeFormatDateLit(suspension.dd) }}
+                                            <template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)}}</template>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- <div class="col-1"></div>
                         <div class="col-auto text-end">
@@ -36,6 +45,8 @@
 import ProgressBar from './ProgressBar.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import { mapState } from 'vuex';
+import { dateFormat } from '../js/collecte';
 
 
 export default{
@@ -52,6 +63,10 @@ export default{
 
     components: {ProgressBar, AlertMessage, Spinner},
 
+    computed: {
+        ...mapState(['suspensions'])
+    },
+
     data() {
         return {
             pending: {
@@ -63,6 +78,25 @@ export default{
     },
 
     methods: {
+        /**
+         * Modifie le format de la date entrée en paramètre et la retourne 
+         * sous le format 01 févr. 2021
+         * @param {date} date 
+         * @returns {date} date formatée
+         */
+        changeFormatDateLit(el) {
+            return dateFormat(el);
+        },
+
+         /**
+		 * Calcul de la propriété isSuspension basée sur les suspensions actuelles.
+		 *
+		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
+		 */
+		 wasSuspended(suspension, habilitation) {
+			return suspension.habilitation_id === habilitation.id && (suspension.df === null || new Date(suspension.df) > new Date());
+		},
+
         /**
          * retourne le nom du personnel ou bine personnel non trouvé
          * 
