@@ -22,6 +22,7 @@
                         <span>le {{ changeFormatDateLit(getSuspensionDate(hab.id)) }}</span>
                     </li>
                 </ul>
+                <p v-if="getSuspendedHabilitations().length === 0" class="text-center text-secondary">Aucune suspensions</p>
             </div>
         </div>
     </div>
@@ -41,11 +42,20 @@ export default {
             pending: {
                 agent: false,
             },
-            listControlDone: ''
+            listControlDone: '',
+            suspensions : null
         };
     },
+    watch:{
+        $route(){
+            const suspensionCollection = this.$assets.getCollection('suspensions');
+            suspensionCollection.load(); 
+            this.suspensions = suspensionCollection.getCollection()
+        }
+    },
+
     computed: {
-        ...mapState(['habilitationType', 'personnelsFiltered', 'suspensions', 'personnels', 'habilitations', 'types',]),
+        ...mapState(['habilitationType', 'personnelsFiltered', 'personnels', 'habilitations', 'types',]),
 
         /**
          * Retourne l'objet personnel correspondant à l'ID de l'URL.
@@ -61,21 +71,7 @@ export default {
          */
         habilitationPersonnel() {
             return this.habilitations.filter(el => el.personnel_id == this.$route.params.id);
-        },
-
-        /**
-         * Retourne les suspensions associées aux habilitations du personnel.
-         * @return {Array} Les suspensions du personnel.
-         */
-        suspensionsPersonnel() {
-            return this.habilitationPersonnel.reduce((suspensions, hab) => {
-                const suspension = this.suspensions.find(el => el.habilitation_id === hab.id);
-                if (suspension) {
-                    suspensions.push(suspension);
-                }
-                return suspensions;
-            }, []);
-        },
+        }
 
     },
 
@@ -93,14 +89,20 @@ export default {
 
         /**
          * Retourne les habilitations non suspendues du personnel.
+         *
          * @return {Array} Les habilitations non suspendues du personnel.
-         * 
          */
         getNonSuspendedHabilitations() {
-            const currentDate = new Date(); // Obtenir la date actuelle
-            return this.habilitationPersonnel.filter(hab => {
-                const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
-                return suspensionsForThisHab.every(sus => sus.df === null || new Date(sus.df) <= currentDate);
+            const suspendedHabilitation = this.suspensions?.filter((suspension) => {
+                if (new Date(suspension.df) > new Date()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+
+            return this.habilitationPersonnel.filter((hab) => {
+                return !suspendedHabilitation?.find((e) => e.habilitation_id == hab.id);
             });
         },
 
@@ -110,11 +112,19 @@ export default {
          * @return {Array} Les habilitations suspendues du personnel.
          */
         getSuspendedHabilitations() {
-            const currentDate = new Date(); // Obtenir la date actuelle
             return this.habilitationPersonnel.filter(hab => {
-            const suspensionsForThisHab = this.suspensionsPersonnel.filter(sus => sus.habilitation_id === hab.id);
-            return suspensionsForThisHab.some(sus => sus.df === null || new Date(sus.df) > currentDate);
-        });
+                // Vérifier si une suspension est trouvée et que la date df est nulle ou dans le futur
+                if (this.suspensions && this.suspensions.length > 0) {
+                    for (const suspension of this.suspensions) {
+                        if (suspension.habilitation_id === hab.id) {
+                            if (suspension.df === null || new Date(suspension.df) > new Date()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            });
         },  
 
 
@@ -153,6 +163,15 @@ export default {
             return hab ? hab.nom : '';
         },
 
+        loadSuspensions(){
+            const suspensionCollection = this.$assets.getCollection('suspensions');
+            suspensionCollection.load(); 
+            this.suspensions = suspensionCollection.getCollection()
+        },
+    },
+
+    mounted(){
+        this.loadSuspensions();
     }
 };
 
