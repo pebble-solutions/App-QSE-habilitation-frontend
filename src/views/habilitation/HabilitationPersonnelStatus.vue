@@ -2,7 +2,7 @@
     <div class="container" v-if="isReady">
         <div class="card mt-2">
             <div class="card-body">
-                <ControlTodoHabilitationItem :habilitation-personnel="habilitationPersonnel" :titre="true"></ControlTodoHabilitationItem>
+                <ControlTodoHabilitationItem :habilitation-personnel="habilitationPersonnel" :suspensions="suspensions" :titre="true"></ControlTodoHabilitationItem>
             </div>
         </div>
         <div class="card mt-2">
@@ -139,7 +139,7 @@ export default {
         loadSuspensions(){
             const suspensionCollection = this.$assets.getCollection('suspensions');
             suspensionCollection.load(); 
-            this.suspensions = suspensionCollection.getCollection()
+            this.suspensions = suspensionCollection.getCollection();
         },
 
         /**

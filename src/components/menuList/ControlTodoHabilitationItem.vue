@@ -47,10 +47,11 @@ export default {
     },
     props: {
         titre: Boolean,
-        habilitationPersonnel: Object
+        habilitationPersonnel: Object,
+        suspensions : Array
     },
     computed: {
-        ...mapState(['pending', 'suspensions']),
+        ...mapState(['pending']),
     },
     watch: {
         /**
