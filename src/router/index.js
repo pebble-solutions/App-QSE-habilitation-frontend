@@ -104,6 +104,18 @@ const routes = [
     path: '/habilitationPersonnel/:id',
     name: 'programmerHabilitationPersonnelInfo',
     component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationPersonnelStatus.vue'),
+    children: [
+      {
+        path: 'suspension/:idSuspension/edit',
+        name: 'editSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idPersonnel/create',
+        name: 'createSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
+    ]
   },
   {
     path: '/habilitation',
@@ -133,14 +145,24 @@ const routes = [
     children: [
       {
         path: ':idForm',
-        name: 'AgentStats',
+        name: 'agentStats',
         component: () => import("../views/AgentReadStats.vue"),
       },
       {
         path: ':idCollecte',
         name: 'readCollecteOperateur',
         component: () => import(/* webpackChunkName: "about" */ '../views/PersonnelReadCollecte.vue')
-      }
+      },
+      {
+        path: ':idSuspension/edit',
+        name: 'editSuspension',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idHabilitation/create',
+        name: 'createSuspension',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
       // {
         //   path: ':idHab',
         //   name: 'controlHistory',

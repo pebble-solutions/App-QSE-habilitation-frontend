@@ -44,7 +44,7 @@
 		</div>
         <div class="card custom-app-color text-white">
             <h1>Regitre des habilitations</h1>
-            <h3>Retrouver ici le reguistre de toutes les habilitations selon une liste du personnel et des habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de gauche!</h3>
+            <h3>Retrouvez ici le registre de toutes les habilitations selon une liste du personnel et des habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de gauche!</h3>
         </div>
     </div>
 

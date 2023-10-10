@@ -6,7 +6,7 @@
         <div v-if="!pending.habilitationPersonnel && change">
             <template v-for="habilitationPersonnel in habilittionWithPersonnel()" :key="habilitationPersonnel.id">
                 <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
-                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :titre="false"/>
+                    <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :suspensions="suspensions" :titre="false"/>
                 </app-menu-item>
             </template>
         </div>
@@ -38,7 +38,8 @@ export default {
             collection: null,
             noMoreAvailable: false,
             change: null,
-            personnels : null
+            personnels : null,
+            suspensions : null
         }
     },
 
@@ -121,12 +122,19 @@ export default {
                 return this.collection.getCollection().filter(habilitation => personnelIds.has(habilitation.personnel_id));
             }
             return [];
-        }
+        },
+
+        loadSuspensions(){
+            const suspensionCollection = this.$assets.getCollection('suspensions');
+            suspensionCollection.load(); 
+            this.suspensions = suspensionCollection.getCollection()
+        },
     },
 
     mounted() {
         this.personnels = this.$assets.getCollection("personnelsFiltered");
         this.collection = this.$assets.getCollection("habilitationsPersonnels");
+        this.loadSuspensions();
         this.change = false;
     },
 

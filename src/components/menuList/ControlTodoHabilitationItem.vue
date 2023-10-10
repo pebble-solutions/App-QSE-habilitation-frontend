@@ -17,11 +17,22 @@
             </span>
         </div>
     </div>
+    <div v-for="suspension in suspensions" :key="suspension.id">
+        <div v-if="wasSuspended(suspension)">
+            <div class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span>Suspendue du {{ changeFormatDateLit(suspension.dd) }}
+                    <template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)}}</template>
+                </span>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import UserImage from '../pebble-ui/UserImage.vue'
+import UserImage from '../pebble-ui/UserImage.vue';
+import { getDisplayFormatedDate } from '../../js/date';
 
 export default {
     data() {
@@ -36,7 +47,8 @@ export default {
     },
     props: {
         titre: Boolean,
-        habilitationPersonnel: Object
+        habilitationPersonnel: Object,
+        suspensions : Array
     },
     computed: {
         ...mapState(['pending']),
@@ -55,6 +67,25 @@ export default {
         },
     },
     methods: {
+        /**
+		 * Change le format de la date au format littéral.
+		 *
+		 * @param {Date} el - La date à formater.
+		 * @returns {string} La date formatée.
+		 */
+		changeFormatDateLit(el) {
+			return getDisplayFormatedDate(el);
+		},
+
+        /**
+		 * Calcul de la propriété isSuspension basée sur les suspensions actuelles.
+		 *
+		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
+		 */
+		 wasSuspended(suspension) {
+			return suspension.habilitation_id === this.habilitationPersonnel.id && (suspension.df === null || new Date(suspension.df) > new Date());
+		},
+
         /**
          * Passe une chaine de caractère au pluriel en fonction d'une quantité
          * 

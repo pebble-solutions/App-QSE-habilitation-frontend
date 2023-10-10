@@ -1,22 +1,21 @@
 <template>
 	<div class="card" :class="{ 'bg-light': !pending.control, 'border-danger red-card': shouldDisplayRedBorder() }">
 		<div v-for="suspension in suspensions" :key="suspension.id">
-			<div
-				v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
+			<div v-if="isSuspension(suspension)">
 				<div class="ribbon ribbon-top-left"><span>suspendue !</span></div>
 			</div>
 		</div>
 		<div class="card-body">
 			<!-- Titre -->
 			<div class="position-relative text-center">
-    <strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
-    <strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
-    <button class="btn btn-sm butn-custom-stats text-white position-absolute end-0"
-        @click.prevent="this.$router.push({ name: 'AgentStats', params: { id: this.$route.params.id, idForm: personnelHabilitation.configVeille.formulaire_id } })">
-        <span>STATS</span>
-        <i class="bi bi-arrow-up-right-square ms-2"></i>
-    </button>
-</div>
+				<strong v-if="displayAgent" class="me-2">{{ returnName(personnelHabilitation.personnel_id) }}</strong>
+				<strong v-if="displayHab">{{ personnelHabilitation.habilitationType.nom }}</strong>
+				<button class="btn btn-sm butn-custom-stats text-white position-absolute end-0"
+					@click.prevent="this.$router.push({ name: 'AgentStats', params: { id: this.$route.params.id, idForm: personnelHabilitation.configVeille.formulaire_id } })">
+					<span>STATS</span>
+					<i class="bi bi-arrow-up-right-square ms-2"></i>
+				</button>
+			</div>
 			<div class="row">
 				<!-- Colonne 1 : Validité de l'habilitation -->
 				<div class="col-lg-4 col-12">
@@ -30,11 +29,10 @@
 							:df="new Date(personnelHabilitation.df)"></ProgressBar>
 						<div>
 							<div v-for="suspension in suspensions" :key="suspension.id">
-								<div
-									v-if="suspension.habilitation_id == personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date())">
+								<div v-if="isSuspension(suspension)">
 									<div class="text-danger fw-bold">
 										<i class="bi bi-exclamation-triangle-fill me-2"></i>
-										<span>Suspendue le {{ changeFormatDateLit(suspension.dd) }}
+										<span>Suspendue du {{ changeFormatDateLit(suspension.dd) }}
 											<template v-if="suspension.df !== null">au {{ changeFormatDateLit(suspension.df)
 											}}</template>
 										</span>
@@ -98,6 +96,30 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="position-relative text-center mb-4">
+
+					<div v-for="suspension in suspensions" :key="suspension.id">
+						<div v-if="isSuspension(suspension)">
+							<router-link :to="{ name: 'editSuspension', params: { idSuspension: suspension.id } }"
+							v-slot="{ href, navigate }" custom v-if="shouldDisplayRedBorder()">
+								<a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-1">
+									<span>Lever la suspension</span>
+									<i class="bi bi-arrow-up-right-square ms-2"></i>
+								</a>
+                    		</router-link>
+						</div>
+					</div>
+
+					<router-link :to="{ name: 'createSuspension', params: { idHabilitation: personnelHabilitation.id }}"
+					v-slot="{ href, navigate }" custom v-if="!shouldDisplayRedBorder()">
+						<a :href="href" @click="navigate" class="btn btn-sm butn-custom-stats text-white position-absolute end-0 mb-1 me-1">
+							<span>Suspendre</span>
+							<i class="bi bi-arrow-up-right-square ms-2"></i>
+						</a>
+					</router-link> 
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -108,9 +130,8 @@
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
-
-
 import { mapState } from 'vuex';
+
 export default {
 	components: { ProgressBar },
 	props: {
@@ -136,10 +157,17 @@ export default {
 	methods: {
 
 		/**
+		 * Calcul de la propriété isSuspension basée sur les suspensions actuelles.
+		 *
+		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
+		 */
+		 isSuspension(suspension) {
+			return suspension.habilitation_id === this.personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date());
+		},
+
+		/**
 		 * Vérifie si une suspension est trouvée et que la date df est nulle ou dans le futur.
 		 *
-		 * @param {Array} suspensions - La liste des suspensions à vérifier.
-		 * @param {number} personnelHabilitationId - L'identifiant de l'habilitation du personnel.
 		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
 		 */
 		shouldDisplayRedBorder() {
@@ -202,7 +230,7 @@ export default {
 		 */
 		classNameFromSAMI(reponse) {
 			return classNameFromSAMI(reponse);
-		},
+		}
 	},
 	mounted() {
 		// Initialisation des tooltips Bootstrap après le rendu du composant
