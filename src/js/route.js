@@ -18,10 +18,6 @@ export const ROUTES_NAMES = {
 		'AgentStats',
 		'readCollecteOperateur',
 	],
-	personnels: [
-		'personnels',
-		'ficheIndividuelleSuivi',
-	],
 	suspension: [
 		'suspension'
 	],
