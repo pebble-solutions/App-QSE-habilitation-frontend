@@ -107,7 +107,7 @@
 									<span>Lever la suspension</span>
 									<i class="bi bi-arrow-up-right-square ms-2"></i>
 								</a>
-                    		</router-link>
+							</router-link>
 						</div>
 					</div>
 
@@ -161,7 +161,7 @@ export default {
 		 *
 		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
 		 */
-		 isSuspension(suspension) {
+		isSuspension(suspension) {
 			return suspension.habilitation_id === this.personnelHabilitation.id && (suspension.df === null || new Date(suspension.df) > new Date());
 		},
 

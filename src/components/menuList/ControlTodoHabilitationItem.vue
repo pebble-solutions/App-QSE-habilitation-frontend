@@ -82,7 +82,7 @@ export default {
 		 *
 		 * @returns {boolean} Renvoie vrai si une suspension correspondante est trouvée et que la date df est nulle ou dans le futur, sinon renvoie faux.
 		 */
-		 wasSuspended(suspension) {
+        wasSuspended(suspension) {
 			return suspension.habilitation_id === this.habilitationPersonnel.id && (suspension.df === null || new Date(suspension.df) > new Date());
 		},
 
