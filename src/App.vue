@@ -444,6 +444,7 @@ export default {
 					await this.$assets.getCollection("veilles").load();
 					await this.$assets.getCollection("personnels").load();
 					await this.$assets.getCollection("habilitationsPersonnels").load();
+                    this.$assets.getCollection("personnelsFiltered").reset();
 					await this.$assets.getCollection("personnelsFiltered").load();
 					// await this.$assets.getCollection("suspensions").load();
 
