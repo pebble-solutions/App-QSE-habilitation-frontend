@@ -55,6 +55,7 @@ export default {
             contratDfFilter: null,
             withContratFilter: true,
             withoutContratFilter: false,
+            ordreFilter: "asc"
         }
     },
 
@@ -73,7 +74,7 @@ export default {
          * Lance la recherche et tri la collection
          */
         async filter() {
-            this.search();
+            await this.search();
             this.pending.habilitationsPersonnels = true;
             const collection = this.$assets.getCollection("habilitationsPersonnels");
 
@@ -141,8 +142,8 @@ export default {
 				{
 					contratDd: this.contratDdFilter,
 					contratDf: this.contratDfFilter,
-					withContrat: this.withContratFilter ? 1 : 0,
-					withoutContrat: this.withoutContratFilter ? 1 : 0,
+                    active_only: this.withContratFilter ? 1 : 0,
+                    order_sort: this.ordreFilter
 				}
 			);
 		},

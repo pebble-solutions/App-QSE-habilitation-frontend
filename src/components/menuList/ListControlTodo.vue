@@ -4,7 +4,7 @@
         :change="change" @modif-change="setChange($event)"/>
 
         <div v-if="!pending.habilitationPersonnel && change">
-            <template v-for="habilitationPersonnel in habilittionWithPersonnel()" :key="habilitationPersonnel.id">
+            <template v-for="habilitationPersonnel in habilittionWithPersonnel" :key="habilitationPersonnel.id">
                 <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
                     <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" :suspensions="suspensions" :titre="false"/>
                 </app-menu-item>
@@ -77,7 +77,20 @@ export default {
          */
         noResults() {
             return !this.pending.habilitationsPersonnels && !this.collection?.getCollection().length ? true : false;
-        }
+        },
+
+        /**
+         * Retourne un tableau d'habilitationPersonnel en fonction de la liste de personnel selectionée
+         *
+         * @returns {Array}
+         */
+        habilittionWithPersonnel() {
+            if (this.collection && this.personnels) {
+                const personnelIds = new Set(this.personnels.getCollection().map(personnel => personnel.id));
+                return this.collection.getCollection().filter(habilitation => personnelIds.has(habilitation.personnel_id));
+            }
+            return [];
+        },
     },
 
     methods: {
@@ -111,19 +124,6 @@ export default {
             this.pending.habilitationsPersonnels = false;
         },
 
-        /**
-         * Retourne un tableau d'habilitationPersonnel en fonction de la liste de personnel selectionée
-         * 
-         * @returns {Array}
-         */
-        habilittionWithPersonnel(){
-            if (this.collection && this.personnels) {
-                const personnelIds = new Set(this.personnels.getCollection().map(personnel => personnel.id));
-                return this.collection.getCollection().filter(habilitation => personnelIds.has(habilitation.personnel_id));
-            }
-            return [];
-        },
-
         loadSuspensions(){
             const suspensionCollection = this.$assets.getCollection('suspensions');
             suspensionCollection.load(); 
@@ -131,9 +131,9 @@ export default {
         },
     },
 
-    mounted() {
-        this.personnels = this.$assets.getCollection("personnelsFiltered");
-        this.collection = this.$assets.getCollection("habilitationsPersonnels");
+    async mounted() {
+        this.personnels = await this.$assets.getCollection("personnelsFiltered");
+        this.collection = await this.$assets.getCollection("habilitationsPersonnels");
         this.loadSuspensions();
         this.change = false;
     },
