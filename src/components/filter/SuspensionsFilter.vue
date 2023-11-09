@@ -108,7 +108,6 @@ export default {
          async search() {
             this.pending.suspensions = true;
             
-            console.log("FILTRE PERSONNEL", this.personnel);
             this.$assets.getCollection("personnelsFiltered").reset();
 			await this.$assets.getCollection("personnelsFiltered").load(
 				{
@@ -122,11 +121,8 @@ export default {
             for (let personnel of this.$assets.getCollection("personnelsFiltered").getCollection()){
                 idsPersonnelsFiltered.push(personnel.id)
             }
-
-            console.log("TRI CHRONOLOGIQUE", this.searchOrdre);
             const triChronologique = "DESC" ? "desc" : "ASC";
 
-            console.log("FILTRE PERIODE", this.periode)
             this.$assets.getCollection("suspensions").reset();
 			await this.$assets.getCollection("suspensions").load(
 				{
@@ -136,8 +132,6 @@ export default {
                     tri_chronologique : triChronologique
 				}
 			);
-
-            console.log(this.$assets.getCollection("suspensions").getCollection())
             
             this.pending.suspensions = false;
         }
