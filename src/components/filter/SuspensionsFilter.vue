@@ -58,8 +58,6 @@
 <script>
 
 import PersonnelsFilter from './PersonnelsFilter.vue';
-import AppSearchBar from "@/components/pebble-ui/AppSearchBar.vue";
-import {diffDate} from "../../js/date";
 
 export default {
 
@@ -84,8 +82,7 @@ export default {
     },
 
     components:{
-        PersonnelsFilter,
-        AppSearchBar
+        PersonnelsFilter
     },
 
     computed: {
@@ -118,10 +115,9 @@ export default {
 			);
             
             const idsPersonnelsFiltered = [];
-            for (let personnel of this.$assets.getCollection("personnelsFiltered").getCollection()){
+            for (let personnel of this.$assets.getCollection("personnelsFiltered").getCollection()) {
                 idsPersonnelsFiltered.push(personnel.id)
             }
-            const triChronologique = "DESC" ? "desc" : "ASC";
 
             this.$assets.getCollection("suspensions").reset();
 			await this.$assets.getCollection("suspensions").load(
@@ -129,7 +125,7 @@ export default {
 					dd: this.periode.dd,
 					df: this.periode.df,
                     ids_personnels : idsPersonnelsFiltered,
-                    tri_chronologique : triChronologique
+                    tri_chronologique : this.searchOrdre.toUpperCase()
 				}
 			);
             
