@@ -21,7 +21,6 @@
 					<div class="alert alert-warning italic" role="alert"
 						v-else-if="listConsultation(types).length == 0 && displaySearch">Aucune habilitation renseignée avec
 						cette recherche</div>
-
 				</div>
 				<div class="text-center" v-else>
 					<div class="spinner-border text-primary" role="status">
@@ -37,6 +36,9 @@
 					<FicheIndividuelleSuiviItem :agent="personnelProps.personnel"
 						:stats="getStatsByAgent(personnelProps.personnel.id)" v-if="personnelProps" />
 				</PersonnelList>
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'suspension'">
+				<SuspensionsFilter/>
 			</AppMenu>
 			<AppMenu v-else>
 				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
@@ -112,6 +114,7 @@ import AppModal from './components/pebble-ui/AppModal.vue'
 import HabilitationList from './components/menuList/HabilitationList.vue'
 import PersonnelList from "@/components/PersonnelList.vue";
 import FicheIndividuelleSuiviItem from "@/components/menuList/FicheIndividuelleSuiviItem.vue";
+import SuspensionsFilter from './components/filter/SuspensionsFilter.vue'
 
 import CONFIG from "@/config.json"
 
@@ -409,7 +412,8 @@ export default {
 		AppModal,
 		HabilitationList,
 		PersonnelList,
-		FicheIndividuelleSuiviItem
+		FicheIndividuelleSuiviItem,
+		SuspensionsFilter
 	},
 
 	mounted() {
