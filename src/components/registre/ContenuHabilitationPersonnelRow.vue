@@ -143,9 +143,9 @@
                 width:  columnWidthPx , 
                 top:    getTopPosition((rowIndex * 10) + 10, 'px'),
             }">
-                <span class="text-success"> VA </span>
+                <span class="text-success"> VA : 18 avr. 2023 > 18 avr. 2025</span>
                 <span> & </span>
-                <span class="text-danger"> VP</span>
+                <span class="text-danger"> EP : 18 avr. 2022 > 18 avr. 2024</span>
         </div>
     </div>
     <!-- Fin Dixième ligne -->
