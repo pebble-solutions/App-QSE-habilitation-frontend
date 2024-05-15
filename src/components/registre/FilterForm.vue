@@ -41,7 +41,7 @@
             <Spinner v-else />
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="kn" class="form-label"><h5>Regrouper</h5></label>
 
             <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
@@ -51,7 +51,7 @@
                 <input type="radio" class="btn-check" name="priorite" id="switchHabilitation" autocomplete="off" v-model="requete.priorite" :value="true">
                 <label class="btn btn-outline-secondary" for="switchHabilitation">Par habilitations</label>
             </div>
-        </div>
+        </div> -->
         
         <div class="text-center">
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
