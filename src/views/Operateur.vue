@@ -13,39 +13,11 @@
 
 .container {
     display: flex;
-    flex-direction: column; /* Alignement vertical */
-    justify-content: center; /* Centre verticalement */
-    align-items: center; /* Centre horizontalement */
-    height: 100vh; /* Prend toute la hauteur de la vue */
-    padding: 20px; /* Ajoute un padding si nécessaire */
-}
-
-.logo {
-	max-width: 800px;
-	display:block;
-	margin: 100px auto;
-	margin-left: 20px auto;
-	margin-right: 20px auto;
-}
-.card {
-    background-color: #f7f7f7;
-    border-radius: 10px;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    height: 100vh; 
     padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    
-}
-
-.card h1 {
-    margin-bottom: 10px;
-}
-
-.card h3 {
-    margin-top: 10px;
-}
-.custom-app-color {
-    background-color: #F78C6B;
 }
 .text-custom {
     color: #F78C6B;
