@@ -1,14 +1,14 @@
 <template>
     <div class="container bg-white">
-			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
-        <div class="card custom-app-color text-white">
+			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100 mb-2">
+        <!-- <div class="card custom-app-color text-white">
             <h1>Type d'habilitations</h1>
-            <h3>Retrouver ici toutes les informations regroupées par type d'habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
-        </div>
+            <h3>Retrouvez ici toutes les informations regroupées par type d'habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents en haut de la liste !</h3>
+        </div> -->
         <div class="bg-white text-center my-4">
-            <button class="btn btn-custom-primary btn-lg" @click.prevent="$router.push($route.path + '/new')">Créer un nouveau type d'habilitation</button>
+            <button class="btn btn-custom-primary w-100 btn-lg" @click.prevent="$router.push($route.path + '/new')">+ Nouveau type d'habilitation</button>
         </div>
-        <div class="card  text-white text-center custom-app-color">
+        <div class="card mx-0 text-white text-center custom-app-color">
             <h4>Les veilles</h4>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                 <div class="col" v-for="veille in  veilles" :key="veille.id">
