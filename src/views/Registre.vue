@@ -8,76 +8,51 @@
         </div>
         <template v-else>
             <div v-if="echeancier.priorite == false">
-    
-                <div  v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
-                    <HabilitationGroup
-                        :operateurs="filteredOperateurs"
-                        :periode="periode"
+
+                <div v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
+                    <HabilitationGroup :operateurs="filteredOperateurs" :periode="periode"
                         :habilitationType="habilitationType"
-                        :controls="filteredKns(habilitationType.id, 'habilitation')"
-                        :contrats="contrats"
-                        :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)"
-                    />
+                        :controls="filteredKns(habilitationType.id, 'habilitation')" :contrats="contrats"
+                        :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)" />
 
                 </div>
             </div>
-    
+
             <template v-else>
                 <template v-for="personnel in filteredOperateurs" :key="personnel.id">
-                    <PersonnelGroup 
-                        :personnel="personnel" 
-                        :controls="filteredKns(personnel.id, 'personnel')" 
-                        :periode="periode" 
-                        :habilitationsTypes="filteredHabilitationsTypes"
-                        :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
-                        :contrats="contrats"
-                        v-if="getHabilitationByPersonnelId(personnel.id)?.length"
-                    />
+                    <PersonnelGroup :personnel="personnel" :controls="filteredKns(personnel.id, 'personnel')"
+                        :periode="periode" :habilitationsTypes="filteredHabilitationsTypes"
+                        :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)" :contrats="contrats"
+                        v-if="getHabilitationByPersonnelId(personnel.id)?.length" />
                 </template>
             </template>
         </template>
     </div>
 
-    <div class="bg-white" v-else>
-        <div>
-			<img src="@/assets/Habilitations.png" alt="Pebble Dev" class="logo w-100">
-		</div>
-        <div class="card custom-app-color text-white">
-            <h1>Regitre des habilitations</h1>
-            <h3>Retrouvez ici le registre de toutes les habilitations selon une liste du personnel et des habilitations. Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de gauche!</h3>
+    <div class="container py-2 px-2">
+        <div class="bg-white">
+            <div class="text-center text-custom px-5">
+                <h1>Registre des habilitations</h1>
+                <h3>Vous pouvez classer, filtrer et affiner vos recherches grâce aux outils présents dans la liste de
+                    gauche!</h3>
+
+            </div>
         </div>
     </div>
-
-
-  </template>
+</template>
 
 <style scoped>
-.logo {
-	max-width: 800px;
-	display:block;
-	margin: 100px auto;
-	margin-left: 20px auto;
-	margin-right: 20px auto;
-}
-.card {
-    background-color: #f7f7f7;
-    border-radius: 10px;
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    
 }
 
-.card h1 {
-    margin-bottom: 10px;
-}
-
-.card h3 {
-    margin-top: 10px;
-}
-.custom-app-color {
-    background-color: #F78C6B;
+.text-custom {
+    color: #F78C6B;
 }
 </style>
 
@@ -90,7 +65,7 @@ import { mapActions, mapState } from 'vuex';
 export default {
 
     data() {
-		return {
+        return {
             allHabilitationsTypes: [],
             allOperateurs: [],
             habilitationsPersonnel: [],
@@ -105,31 +80,31 @@ export default {
                 personnels: false,
                 periode: false
             }
-		}
-	},
+        }
+    },
 
-    components: {HabilitationGroup, PersonnelGroup},
+    components: { HabilitationGroup, PersonnelGroup },
 
-    watch:{
+    watch: {
         /**
          * Ecoute la varible echeancier dans le store 
          * et fais les appels necessaire au methodes de recuperation de données 
          * lors du changement de celle-ci
          */
-        echeancier:{
-            handler(newValue){
-                if(newValue.dd && newValue.df){
+        echeancier: {
+            handler(newValue) {
+                if (newValue.dd && newValue.df) {
                     this.getPeriode();
                     this.getKn();
                     this.getHabilitationsPersonnel();
                     this.getContrats();
                 }
             },
-            deep:true,
+            deep: true,
         }
     },
 
-    computed:{
+    computed: {
         ...mapState(['echeancier']),
 
         /**
@@ -138,7 +113,7 @@ export default {
          * @returns {array}
          */
         filteredHabilitationsTypes() {
-            if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
+            if (this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
                 return this.allHabilitationsTypes;
             } else {
                 return this.allHabilitationsTypes.filter(item => this.echeancier.habilitation.includes(item.id));
@@ -151,7 +126,7 @@ export default {
          * @returns {array}
          */
         filteredOperateurs() {
-            if(this.echeancier.operateurs?.length == 0 || (this.echeancier.operateurs?.length == 1 && this.echeancier.operateurs?.includes(''))) {
+            if (this.echeancier.operateurs?.length == 0 || (this.echeancier.operateurs?.length == 1 && this.echeancier.operateurs?.includes(''))) {
                 return this.allOperateurs
             } else {
                 return this.allOperateurs.filter(item => this.echeancier.operateurs?.includes(item.id))
@@ -227,16 +202,16 @@ export default {
                 this.pending.habilitationsPersonnel = true;
 
                 let query = {
-                    personnel_id : this.echeancier.operateurs.join(","),
-                    characteristic_id : this.echeancier.habilitation.join(","),
-                    dd_active : this.echeancier.dd,
-                    df_active : this.echeancier.df
+                    personnel_id: this.echeancier.operateurs.join(","),
+                    characteristic_id: this.echeancier.habilitation.join(","),
+                    dd_active: this.echeancier.dd,
+                    df_active: this.echeancier.df
                 }
 
                 this.$app.api.get('/v2/characteristic/personnel', query)
-                .then(data => {
-                    this.habilitationsPersonnel = data;
-                }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
+                    .then(data => {
+                        this.habilitationsPersonnel = data;
+                    }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
             }
         },
 
@@ -288,10 +263,10 @@ export default {
                 structure__personnel_id: this.echeancier.operateurs.join(","),
                 limit: "aucune"
             })
-            .then(data => {
-                this.contrats = data
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.contrats = false);
+                .then(data => {
+                    this.contrats = data
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.contrats = false);
         }
 
     },
@@ -307,5 +282,3 @@ export default {
 }
 
 </script>
-
-
