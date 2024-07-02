@@ -9,14 +9,6 @@ const routes = [
     meta: { transitionName: 'fade' }, 
   },
   {
-    path: '/about',
-    name: 'À propos',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
     path: '/types',
     name: 'types',
     meta: { transitionName: 'fade' } ,
@@ -41,7 +33,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/TypeConfig.vue'),
     children: [
-      
       {
         path: 'edit',
         name: 'editConfig',
@@ -57,33 +48,34 @@ const routes = [
         name: 'editVeille',
         component: () => import(/* webpackChunkName: "about" */ '../views/TypeVeilleEdit.vue')
       },
+    
+      {
+        path: ':idCollecte',
+        name: 'readCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/TypeReadCollecte.vue')
+      },
+      {
+        path: ':idForm/:idAgent',
+        name: 'StatsAgent',
+        component: () => import("../views/TypeReadStats.vue"),
+      },
     ]
-  },
-  {
-    path: '/personnels',
-    name: 'personnels',
-    meta: { transitionName: 'fade' }, 
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Personnels.vue'),
   },
   {
     path: '/suspension',
     name: 'suspension',
-    meta: { transitionName: 'fade' }, 
+    meta: { transitionName: 'fade' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Suspension.vue'),
-  },
-  {
-    path: '/personnels/:id',
-    name: 'ficheIndividuelleSuivi',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/FicheIndividuelle.vue'),
+    children: [
+        {
+            path: ':idSuspension',
+            name: 'suspensionInfo',
+            component: () => import(/* webpackChunkName: "about" */ '../views/SuspensionFormModal.vue')
+        }
+    ]
   },
   {
     path:'/registre',
@@ -112,6 +104,18 @@ const routes = [
     path: '/habilitationPersonnel/:id',
     name: 'programmerHabilitationPersonnelInfo',
     component: () => import(/* webpackChunkName: "about" */ '../views/habilitation/HabilitationPersonnelStatus.vue'),
+    children: [
+      {
+        path: 'suspension/:idSuspension/edit',
+        name: 'editSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idPersonnel/create',
+        name: 'createSuspensionHabilitationPersonnel',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
+    ]
   },
   {
     path: '/habilitation',
@@ -140,17 +144,37 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
     children: [
       {
-        path: ':idHab',
-        name: 'controlHistory',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
-        children: [
-          {
-            path: ':idCollecte',
-            name: 'controlView',
-            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
-          }
-        ]
-      }
+        path: ':idForm',
+        name: 'agentStats',
+        component: () => import("../views/AgentReadStats.vue"),
+      },
+      {
+        path: ':idCollecte',
+        name: 'readCollecteOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/PersonnelReadCollecte.vue')
+      },
+      {
+        path: ':idSuspension/edit',
+        name: 'editSuspension',
+        component: () => import('../views/SuspensionFormModal.vue'),
+      },
+      {
+        path: 'suspension/:idHabilitation/create',
+        name: 'createSuspension',
+        component: () => import('../views/SuspensionCreateFormModal.vue'),
+      },
+      // {
+        //   path: ':idHab',
+        //   name: 'controlHistory',
+        //   component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        //   children: [
+          //     {
+            //       path: ':idCollecte',
+            //       name: 'controlView',
+            //       component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+            //     }
+            //   ]
+            // },
     ]
   },
 ]

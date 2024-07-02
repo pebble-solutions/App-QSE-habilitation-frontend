@@ -16,8 +16,7 @@
     </div>
 </template>
 <script>
-// import {mapState, mapActions} from 'vuex'; 
-// import HabMonitor from '../components/HabMonitor.vue';
+
 import { mapState } from 'vuex';
 import HabMonitor from '../components/HabMonitor.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
@@ -81,10 +80,6 @@ export default {
             await assemblerType.joinAsset(this.$assets.getCollection ("types"), 'habilitation_type_id', 'habilitationtype');
             let joinedType = assemblerType.getResult();
             this.listHabPersoType = joinedType;
-
-
-
-
         },
 
 

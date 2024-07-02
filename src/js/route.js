@@ -6,17 +6,19 @@ export const ROUTES_NAMES = {
 		'typeConfig',
 		'editConfig',
 		'editVeille',
-		'newVeille'
+		'newVeille',
+		'readCollecte',
+		'StatsAgent'
 	],
 	operateur: [
 		'operateur',
 		'habilitationByAgent',
 		'controlHistory',
-		'controlView'
-	],
-	personnels: [
-		'personnels',
-		'ficheIndividuelleSuivi',
+		'controlView',
+		'agentStats',
+		'readCollecteOperateur',
+		'editSuspension',
+		'createSuspension'
 	],
 	suspension: [
 		'suspension'
@@ -35,6 +37,8 @@ export const ROUTES_NAMES = {
 		'programmerHabilitationPersonnel',
 		'programmerHabilitationPersonnelInfo',
 		'programmerHabilitationHab',
-		'programmerHabilitation'
+		'programmerHabilitation',
+		'createSuspensionHabilitationPersonnel',
+		'editSuspensionHabilitationPersonnel'
 ]
 };

@@ -10,10 +10,16 @@
         "logos": null,
         "appMenu": [
             {
-                "label": "Types",
-                "icon": "bi bi-gear-fill", 
+                "label": "Types d'habilitation",
+                "icon": "bi bi-list-check", 
                 "key": "types",
                 "href": "/types"
+            },
+            {
+                "label": "Fiche Individuelle de Suivi",
+                "icon": "bi bi-person-check-fill",
+                "key": "operateur",
+                "href": "/operateur"
             },
             {
                 "label": "Suspensions",
@@ -22,32 +28,20 @@
                 "href": "/suspension"
             },
             {
-                "label": "Personnels",
-                "icon": "bi bi-person-gear", 
-                "key": "personnels",
-                "href": "/personnels"
-            },
-            {
                 "label": "Échéancier",
-                "icon": "bi bi-calendar2-check-fill", 
+                "icon": "bi bi-calendar2-range-fill", 
                 "key": "echeancier",
                 "href": "/echeancier"
             },
             {
                 "label": "Habilitations à programmer",
-                "icon": "bi bi-calendar2-check-fill", 
+                "icon": "bi bi-journal-plus", 
                 "key": "programmer",
                 "href": "/programmer"
             },
             {
-                "label": "Fiche individuelle de suivi",
-                "icon": "bi bi-person-check-fill",
-                "key": "operateur",
-                "href": "/operateur"
-            },
-            {
                 "label": "Registre des habilitations",
-                "icon": "bi bi-calendar2-check-fill", 
+                "icon": "bi bi-book", 
                 "key": "registre",
                 "href": "/registre"
             }
@@ -62,7 +56,7 @@
         "href": "#config"
     },
     "cfgSlots": {
-        "menu": false,
+        "menu": true,
         "list": true,
         "core": true,
         "header": true
@@ -80,7 +74,7 @@
         },
         "dev": {
             "pas": true,
-            "authServer": "172.17.0.4:3333",
+            "authServer": "127.0.0.1:3333",
             "tls": false
         }
     },
@@ -92,7 +86,7 @@
             "projectId": "ace-charter-310713",
             "storageBucket": "ace-charter-310713.appspot.com",
             "messagingSenderId": "914156232758",
-            "appId": "APP ID REGISTERED FOR PRODUCTION"
+            "appId": "1:914156232758:web:5f91c25e7eb7bc9268f897"
         },
         "test": {
             "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
@@ -101,7 +95,7 @@
             "projectId": "ace-charter-310713",
             "storageBucket": "ace-charter-310713.appspot.com",
             "messagingSenderId": "914156232758",
-            "appId": "APP ID REGISTERED FOR TEST"
+            "appId": "1:914156232758:web:5f91c25e7eb7bc9268f897"
         },
         "dev": {
             "apiKey": "AIzaSyAzwQE4rI03KgtFYEN2zkXhqUA1-agVQsA",

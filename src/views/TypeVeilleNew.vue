@@ -68,18 +68,15 @@ export default{
                 tli: this.$route.params.id,
             })
             .then((data) => {
-                    console.log(data, 'retour data')
-                    this.veille = data;
-                    alert('la configuration "' + this.veille.nom + '" a été créée');
-					this.$assets.getCollection("veilles").load();
-                    this.$router.push('/types/'+this.$route.params.id);
+                this.veille = data;
+                alert('la configuration "' + this.veille.nom + '" a été créée');
+                this.$assets.getCollection("veilles").load();
+                this.$router.push('/types/'+this.$route.params.id);
             }) 
             .catch(this.$app.catchError)
             .finally(() => {
                 this.pending.config = false;
-                this.$router.push('/types/'+this.$route.params.id);
             });
-            this.pending.config = false
         },
          /**
          * Retourne a la vue précédente

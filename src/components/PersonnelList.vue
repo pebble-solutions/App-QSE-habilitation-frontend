@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<AppSearchBar @search="search()" :pending="pending.personnelsFiltered" @filterShow="displayFilter=true" @filterHide="displayFilter=false">
-			<PersonnelsFilter v-if="displayFilter" v-model:contratDd="contratDdFilter" v-model:contratDf="contratDfFilter" v-model:withContrat="withContratFilter" v-model:withoutContrat="withoutContratFilter" v-model:ordre="ordre"/>
+		<AppSearchBar @search="search()" :pending="pending.personnelsFiltered" @filterShow="displayFilter=true" @filterHide="displayFilter=false" v-model:search-value="nameFilter">
+			<PersonnelsFilter v-if="displayFilter" v-model:contratDd="contratDdFilter" v-model:contratDf="contratDfFilter" v-model:withContrat="withContratFilter" v-model:withoutContrat="withoutContratFilter" v-model:ordre="ordreFilter"/>
 		</AppSearchBar>
 
 		<template v-if="!pending.personnelsFiltered">
@@ -32,11 +32,12 @@ export default {
 		return {
 			displayFilter: false,
 
+            nameFilter: null,
 			contratDdFilter: null,
 			contratDfFilter: null,
 			withContratFilter: true,
 			withoutContratFilter: false,
-			ordre: "croissant"
+			ordreFilter: "asc"
 		}
 	},
 
@@ -52,11 +53,11 @@ export default {
 			this.$assets.getCollection("personnelsFiltered").reset();
 			await this.$assets.getCollection("personnelsFiltered").load(
 				{
-					contratDd: this.contratDdFilter,
-					contratDf: this.contratDfFilter,
-					withContrat: this.withContratFilter ? 1 : 0,
-					withoutContrat: this.withoutContratFilter ? 1 : 0,
-					ordre: this.ordre
+					date_start: this.contratDdFilter,
+					date_end: this.contratDfFilter,
+					active_only: this.withContratFilter ? 1 : 0,
+					order_sort: this.ordreFilter,
+                    name: this.nameFilter === '' ? null : this.nameFilter
 				}
 			);
 		},
