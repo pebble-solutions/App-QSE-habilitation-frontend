@@ -7,18 +7,22 @@
             Chargement...
         </div>
         <template v-else>
-            <div v-if="echeancier.priorite == false">
+            <!-- Impossibilité de parvenir a habilitationGroup pour le moment -->
+            <div v-if="echeancier.priorite == false && echeancier.priorite == true">
 
                 <div v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
-                    <HabilitationGroup :operateurs="filteredOperateurs" :periode="periode"
-                        :habilitationType="habilitationType"
-                        :controls="filteredKns(habilitationType.id, 'habilitation')" :contrats="contrats"
+                    <HabilitationGroup :operateurs="filteredOperateurs" :habilitationType="habilitationType"
                         :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)" />
 
                 </div>
             </div>
 
             <template v-else>
+                <!-- <PersonnelGroup 
+                    :personnels="filteredOperateurs" 
+                    :habilitationsTypes="filteredHabilitationsTypes"
+                    :habilitationsPersonnel="habilitationsPersonnel"
+                /> -->
                 <template v-for="personnel in filteredOperateurs" :key="personnel.id">
                     <PersonnelGroup :personnel="personnel" :controls="filteredKns(personnel.id, 'personnel')"
                         :periode="periode" :habilitationsTypes="filteredHabilitationsTypes"
@@ -58,8 +62,8 @@
 
 <script>
 
-import HabilitationGroup from '../components/echeancier/HabilitationGroup.vue'
-import PersonnelGroup from '../components/echeancier/PersonnelGroup.vue';
+import HabilitationGroup from '../components/registre/HabilitationGroup.vue'
+import PersonnelGroup from '../components/registre/PersonnelGroup.vue';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -69,16 +73,10 @@ export default {
             allHabilitationsTypes: [],
             allOperateurs: [],
             habilitationsPersonnel: [],
-            periode: [],
-            kns: [],
-            contrats: [],
             pending: {
                 habilitationsTypes: false,
                 habilitationsPersonnel: false,
-                collectes: false,
-                contrats: false,
                 personnels: false,
-                periode: false
             }
         }
     },
@@ -97,7 +95,6 @@ export default {
                     this.getPeriode();
                     this.getKn();
                     this.getHabilitationsPersonnel();
-                    this.getContrats();
                 }
             },
             deep: true,
@@ -139,7 +136,7 @@ export default {
          * @return {bool}
          */
         isPending() {
-            return (this.pending.habilitationsTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
+            return (this.pending.personnelsFiltered || this.pending.habilitationsPersonnel) ? true : false;
         }
     },
 
@@ -200,6 +197,8 @@ export default {
         getHabilitationsPersonnel() {
             if (this.echeancier) {
                 this.pending.habilitationsPersonnel = true;
+                this.habilitationsPersonnel = this.$assets.getCollection("habilitationsPersonnels").getCollection();
+                this.pending.habilitationsPersonnel = false;
 
                 let query = {
                     personnel_id: this.echeancier.operateurs.join(","),
@@ -213,17 +212,6 @@ export default {
                         this.habilitationsPersonnel = data;
                     }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
             }
-        },
-
-        /**
-         * Retourne la liste des habilitation pour un personnel
-         * 
-         * @param {number} personnelId ID du personnel à tester
-         * 
-         * @return {array}
-         */
-        getHabilitationByPersonnelId(personnelId) {
-            return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
         },
 
         /**
@@ -242,8 +230,8 @@ export default {
          */
         getAllOperateurs() {
             return this.loadCollection({
-                pending: "personnels",
-                name: "personnels",
+                pending: "personnelsFiltered",
+                name: "personnelsFiltered",
                 payload: {
                     limit: "aucune"
                 },
@@ -276,6 +264,7 @@ export default {
     },
 
     mounted() {
+        this.setEcheance(null)
         this.getAllHabilitations();
         this.getAllOperateurs();
     }

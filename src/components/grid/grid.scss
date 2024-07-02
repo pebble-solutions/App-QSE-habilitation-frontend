@@ -21,7 +21,7 @@
     width:100%;
 }
 
-.table-row {
+.table-row{
     border-left-width: 0px !important;
     border-right-width: 0px !important;
 }
@@ -41,4 +41,15 @@
 
 .table-header {
     line-height: 50px;
+}
+
+.backgroudFalse{
+    background: linear-gradient(45deg, #000 1%, #fff 1%, #fff 49%, #000 49%, #000 51%, #fff 51%, #fff 99%, #000 99%);
+    background-size: 6px 6px;
+    z-index: -1;
+}
+
+.entete{
+    background-color: #fff;
+    z-index: 3;
 }
