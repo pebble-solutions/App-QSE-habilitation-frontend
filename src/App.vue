@@ -1,26 +1,27 @@
 <template>
 	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user"
 		@config-menu="displayConfig = true">
-
-		<template v-slot:header>
-
-		</template>
+		<template v-slot:header></template>
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'programmer'">
 				<HabilitationList />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'habilitation'">
-				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+				<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" />
 				<div v-if="!pending.habilitations">
 					<AppMenuItem :href="'/types/' + type.id" icon="bi bi-patch-check-fill" :key="type.id"
-						v-for="type in listConsultation(types)"> {{ cleanTypeName(type.nom) }} </AppMenuItem>
+						v-for="type in listConsultation(types)">
+						{{ cleanTypeName(type.nom) }}
+					</AppMenuItem>
 
 					<div class="alert alert-warning italic" role="alert"
-						v-if="listConsultation(types).length == 0 && types.length == 0">Aucune habilitation renseignée sur
-						cette structure</div>
+						v-if="listConsultation(types).length === 0 && types.length === 0">
+						Aucune habilitation renseignée sur cette structure
+					</div>
 					<div class="alert alert-warning italic" role="alert"
-						v-else-if="listConsultation(types).length == 0 && displaySearch">Aucune habilitation renseignée avec
-						cette recherche</div>
+						v-else-if="listConsultation(types).length === 0 && displaySearch">
+						Aucune habilitation renseignée avec cette recherche
+					</div>
 				</div>
 				<div class="text-center" v-else>
 					<div class="spinner-border text-primary" role="status">
@@ -28,7 +29,7 @@
 					</div>
 				</div>
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'echeancier' || listMode === 'registre'">
+			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FilterFormEcheancier />
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'registre'">
@@ -41,7 +42,7 @@
 				</PersonnelList>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'suspension'">
-				<SuspensionsFilter/>
+				<SuspensionsFilter />
 			</AppMenu>
 			<AppMenu v-else>
 				<AppMenuItem :href="getItemLink(item)" v-for="item in currentList" :key="item.id">
@@ -49,14 +50,14 @@
 						<itemPersonnelSuspension :personnel="item" :icon="'bi bi-person-fill'" :num="item.id" />
 					</template>
 					<template v-else>
-						<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'" :num="item.id" />
+						<itemHabilitationSuspension :habilitation="item" :icon="'bi bi-patch-check-fill'"
+							:num="item.id" />
 					</template>
 					<a>
 						{{ showPersonnels ? item.personnel_name : item.habilitation_name }}
 					</a>
 				</AppMenuItem>
 			</AppMenu>
-
 		</template>
 
 		<template v-slot:core>
@@ -69,61 +70,30 @@
 				<Config v-if="!pending.config" />
 			</AppModal>
 		</template>
-
 	</AppWrapper>
 </template>
 
-<style lang="scss">
-@import './variables';
-
-.fs-7 {
-	font-size: 0.80rem !important;
-}
-
-.progress-ht {
-	height: 25px !important;
-}
-
-.list-group-item.active {
-	z-index: 2;
-	color: var(--bs-list-group-active-color) !important;
-	;
-	background-color: $theme-color !important;
-	;
-	border-color: $theme-color !important;
-	;
-	border-top: solid 15px $theme-color !important;
-	border-bottom: solid 15px $theme-color !important;
-	font-size: 110%;
-	font-weight: bold;
-	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.565);
-}
-
-</style>
-
 <script>
-
-import AppWrapper from '@/components/pebble-ui/AppWrapper.vue'
-import AppMenu from '@/components/pebble-ui/AppMenu.vue'
-import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
-import { mapState, mapActions } from 'vuex'
-import { AssetsCollection } from './js/app/services/AssetsCollection'
-import { ROUTES_NAMES } from './js/route';
-import itemHabilitationSuspension from '@/components/itemHabilitationSuspension.vue'
-import itemPersonnelSuspension from '@/components/itemPersonnelSuspension.vue'
-import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
-import Config from './components/config/Config.vue'
-import AppModal from './components/pebble-ui/AppModal.vue'
-import HabilitationList from './components/menuList/HabilitationList.vue'
+import AppWrapper from "@/components/pebble-ui/AppWrapper.vue";
+import AppMenu from "@/components/pebble-ui/AppMenu.vue";
+import AppMenuItem from "@/components/pebble-ui/AppMenuItem.vue";
+import { mapState, mapActions } from "vuex";
+import { AssetsCollection } from "./js/app/services/AssetsCollection";
+import { ROUTES_NAMES } from "./js/route";
+import itemHabilitationSuspension from "@/components/itemHabilitationSuspension.vue";
+import itemPersonnelSuspension from "@/components/itemPersonnelSuspension.vue";
+import FilterFormEcheancier from "./components/echeancier/FilterForm.vue";
+import Config from "./components/config/Config.vue";
+import AppModal from "./components/pebble-ui/AppModal.vue";
+import HabilitationList from "./components/menuList/HabilitationList.vue";
 import PersonnelList from "@/components/PersonnelList.vue";
 import FicheIndividuelleSuiviItem from "@/components/menuList/FicheIndividuelleSuiviItem.vue";
-import FilterFormRegistre from './components/registre/FilterForm.vue'
-import SuspensionsFilter from './components/filter/SuspensionsFilter.vue'
+import FilterFormRegistre from "./components/registre/FilterForm.vue";
+import SuspensionsFilter from "./components/filter/SuspensionsFilter.vue";
 
-import CONFIG from "@/config.json"
+import CONFIG from "@/config.json";
 
 export default {
-
 	data() {
 		return {
 			cfg: CONFIG.cfg,
@@ -132,25 +102,19 @@ export default {
 			pending: {
 				habilitations: false,
 				config: false,
-				formulaires: false
+				formulaires: false,
 			},
 			isConnectedUser: false,
-			displaySearch: '',
+			displaySearch: "",
 			currentList: [],
 			displayConfig: false,
 			characteristicPersonnelStats: [],
-		}
+		};
 	},
 
 	computed: {
-		...mapState(['habilitationType', 'types', 'personnels']),
+		...mapState(["habilitationType", "types", "personnels"]),
 
-		/**
-		 * Détermine quelle liste afficher :
-		 * collecte, programmation
-		 * 
-		 * @return {string}
-		 */
 		listMode() {
 			return this.getRouteGroupName(this.$route.name);
 		},
@@ -158,33 +122,22 @@ export default {
 		listItems() {
 			return this.showPersonnels ? this.personnels : this.habilitations;
 		},
-
 	},
 
 	methods: {
-		...mapActions(['refreshHabilitationType', 'refreshFormulaires']),
+		...mapActions(["refreshHabilitationType", "refreshFormulaires"]),
 
 		cleanTypeName(name) {
-			// Supprime le préfixe "Habilitation : " du nom si présent
-			return name.startsWith('Habilitation : ') ? name.substr(14) : name;
+			return name.startsWith("Habilitation : ") ? name.substr(14) : name;
 		},
 
 		isActiveItem(item) {
 			return this.openedElement && this.openedElement.id === item.id;
 		},
 
-
-		/**
-		 * Retourne le nom du groupe auquel appartient la route à analyser.
-		 * 
-		 * @param {string} routeName Nom de la route à analyser
-		 * 
-		 * @return {string}
-		 */
 		getRouteGroupName(routeName) {
 			for (const groupName in ROUTES_NAMES) {
 				const names = ROUTES_NAMES[groupName];
-
 				if (names.includes(routeName)) {
 					return groupName;
 				}
@@ -192,79 +145,63 @@ export default {
 			return null;
 		},
 
-		/**
-		 * Retourn les states du personnel qui correspond a l'agent fournis en parametre
-		 *
-		 * @param {integer} personnelId l'id du personnel
-		 *
-		 * @return {array}
-		 */
 		getStatsByAgent(personnelId) {
-			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == personnelId);
+			let statsByAgent = this.characteristicPersonnelStats.find(
+				(e) => e.personnel_id == personnelId
+			);
 			return statsByAgent;
 		},
 
-		/**
-		 * Charge les states de characteristic personnel par personnel
-		 */
 		loadCharacteristicPersonnelStats() {
 			this.pending.stats = true;
-
-			this.$app.apiGet('v2/characteristicPersonnel/stats')
+			this.$app
+				.apiGet("v2/characteristicPersonnel/stats")
 				.then((data) => {
 					this.characteristicPersonnelStats = data;
 				})
 				.catch(this.$app.catchError)
-				.finally(this.pending.stats = false);
+				.finally(() => {
+					this.pending.stats = false;
+				});
 		},
 
-
-		/**
-		 * Met à jour les informations de l'utilisateur connecté
-		 * @param {Object} user Un objet LocalUser
-		 */
 		setLocal_user(user) {
 			if (user) {
-				this.$store.dispatch('login', user);
+				this.$store.dispatch("login", user);
 				this.isConnectedUser = true;
-			}
-			else {
-				this.$store.dispatch('logout');
+			} else {
+				this.$store.dispatch("logout");
 				this.isConnectedUser = false;
 			}
 		},
 
-		/**
-		 * retourne un tableau des types d'habilitations filtrés
-		 * @param {Array} list liste des types d'habilitation
-		 * @returns	{Array}	typeFiltred	résultat du filtre
-		 */
 		listConsultation(list) {
-
 			let typeFiltred = list;
 			if (this.displaySearch) {
 				const searchInput = this.displaySearch.trim();
 				if (/^\d+$/.test(searchInput)) {
-					typeFiltred = typeFiltred.filter(item => searchInput.includes(item.id));
+					typeFiltred = typeFiltred.filter((item) =>
+						searchInput.includes(item.id)
+					);
 				} else if (/^[a-zA-Z]+$/.test(searchInput)) {
-					const searchPattern = new RegExp(searchInput, 'i');
-					typeFiltred = typeFiltred.filter(item => item.nom?.toUpperCase().match(searchPattern));
-				}
-				else {
-					if (confirm('Cette recherche n\'est pas acceptée: "' + this.displaySearch + '". Filtre sur caractères numériques et alphabétiques uniquement.')) {
-						this.displaySearch = '';
+					const searchPattern = new RegExp(searchInput, "i");
+					typeFiltred = typeFiltred.filter((item) =>
+						item.nom?.toUpperCase().match(searchPattern)
+					);
+				} else {
+					if (
+						confirm(
+							'Cette recherche n\'est pas acceptée: "' +
+							this.displaySearch +
+							'". Filtre sur caractères numériques et alphabétiques uniquement.'
+						)
+					) {
+						this.displaySearch = "";
 					}
 				}
 			}
 			return typeFiltred;
-
 		},
-
-		/**
-		 * retourne un tableau des personnels triés par ordre alpha
-		 * @param	{Array}	list liste du personnel
-		 * @return	{Array}	personnelFiltred liste du personnel trié
-		 */
 
 		listPersonnel(list) {
 			let personnelFiltered = list;
@@ -274,127 +211,112 @@ export default {
 				if (nameA < nameB) {
 					return -1;
 				}
-
 				if (nameA > nameB) {
 					return 1;
 				}
-
 				return 0;
 			});
-			return personnelFiltered
-
+			return personnelFiltered;
 		},
 
-		/**
-		 * Initialise les collections de données au niveau du contrôleur d'assets
-		 */
 		initCollections() {
-
 			const typesCollection = new AssetsCollection(this, {
-				assetName: 'types',
-				apiRoute: 'v2/habilitation/type'
+				assetName: "types",
+				apiRoute: "v2/habilitation/type",
 			});
 			typesCollection.reset();
 
 			const veillesCollection = new AssetsCollection(this, {
-				assetName: 'veilles',
-				apiRoute: 'v2/controle/veille'
+				assetName: "veilles",
+				apiRoute: "v2/controle/veille",
 			});
 			veillesCollection.reset();
 
 			const personnelsCollection = new AssetsCollection(this, {
-				assetName: 'personnels',
-				apiRoute: 'v2/personnel',
+				assetName: "personnels",
+				apiRoute: "v2/personnel",
 				requestPayload: {
-					limit: "aucune"
-				}
+					limit: "aucune",
+				},
 			});
 			personnelsCollection.reset();
 
 			const habilitationsPersonnelsCollection = new AssetsCollection(this, {
-				assetName: 'habilitationsPersonnels',
-				apiRoute: 'v2/characteristic/personnel',
+				assetName: "habilitationsPersonnels",
+				apiRoute: "v2/characteristic/personnel",
 				requestPayload: {
 					last_control: 1,
 					limit: "aucune",
-				}
+				},
 			});
 			habilitationsPersonnelsCollection.reset();
 
 			const suspensionsCollection = new AssetsCollection(this, {
-				assetName: 'suspensions',
-				apiRoute: 'v2/habilitation/suspension'
+				assetName: "suspensions",
+				apiRoute: "v2/habilitation/suspension",
 			});
 			suspensionsCollection.reset();
 
 			const habilitationsCollection = new AssetsCollection(this, {
-				assetName: 'habilitations',
-				apiRoute: 'v2/habilitation'
+				assetName: "habilitations",
+				apiRoute: "v2/habilitation",
 			});
 			habilitationsCollection.reset();
 
 			const habilitationsTypesCollection = new AssetsCollection(this, {
-				assetName: 'habilitationsTypes',
-				apiRoute: 'v2/controle/habilitation/type'
+				assetName: "habilitationsTypes",
+				apiRoute: "v2/controle/habilitation/type",
 			});
 			habilitationsTypesCollection.reset();
 
 			const personnelsFilteredCollection = new AssetsCollection(this, {
 				name: "personnelsFiltered",
 				assetName: "personnelsFiltered",
-				apiRoute: "v2/personnel"
+				apiRoute: "v2/personnel",
 			});
 			personnelsFilteredCollection.reset();
 
 			this.$assets.addCollection("types", typesCollection);
 			this.$assets.addCollection("veilles", veillesCollection);
 			this.$assets.addCollection("personnels", personnelsCollection);
-			this.$assets.addCollection("habilitationsPersonnels", habilitationsPersonnelsCollection);
+			this.$assets.addCollection(
+				"habilitationsPersonnels",
+				habilitationsPersonnelsCollection
+			);
 			this.$assets.addCollection("suspensions", suspensionsCollection);
 			this.$assets.addCollection("habilitations", habilitationsCollection);
-			this.$assets.addCollection("habilitationsTypes", habilitationsTypesCollection);
-			this.$assets.addCollection("personnelsFiltered", personnelsFilteredCollection);
-
+			this.$assets.addCollection(
+				"habilitationsTypes",
+				habilitationsTypesCollection
+			);
+			this.$assets.addCollection(
+				"personnelsFiltered",
+				personnelsFilteredCollection
+			);
 		},
 
-		/**
-		 * charge la liste des habilitations type depuis le serveur et les charge dans le store
-		 */
 		loadHabilitationType() {
 			this.pending.habilitations = true;
-			this.$app.apiGet('v2/habilitation/type')
+			this.$app
+				.apiGet("v2/habilitation/type")
 				.then((data) => {
 					this.refreshHabilitationType(data);
-				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+				})
+				.catch(this.$app.catchError)
+				.finally(() => (this.pending.habilitations = false));
 		},
 
-		/**
-		 *  Charge la liste des formulaires et les enregistre dans le store
-		 */
-
 		loadFormulaires() {
-			this.pending.formulaires = true
-			let route = 'data/GET/formulaire'
-			this.$app.apiGet(route)
+			this.pending.formulaires = true;
+			let route = "data/GET/formulaire";
+			this.$app
+				.apiGet(route)
 				.then((data) => {
 					this.refreshFormulaires(data);
-				}).catch(this.$app.catchError).finally(() => this.pending.formulaires = false);
-		}
-		/**
-		 * Recupère toutes les applications auquelles l'utilisateur connecté à accés avec la licence selectionnée
-		 */
-		// getFirebaseAppLicence() {
-		// 	const auth = getAuth();
-		// 	const user = auth.currentUser;
-		// 	const appLicences = this.$app.licence;
-		// 	const licences = appLicences.users.includes(user.email) ? appLicences.apps : [];
-		// 	for (const lic of licences) {
-		// 		if (lic.includes("kn")) {
-		// 			console.log("J'ai aussi kn regarde");
-		// 		}
-		// 	}
-		// 	console.log(licences);
-		// }
+				})
+				.catch(this.$app.catchError)
+				.finally(() => (this.pending.formulaires = false));
+		},
 	},
 
 	components: {
@@ -410,40 +332,38 @@ export default {
 		PersonnelList,
 		FicheIndividuelleSuiviItem,
 		FilterFormRegistre,
-		SuspensionsFilter
+		SuspensionsFilter,
 	},
 
 	mounted() {
-
-		this.$app.addEventListener('structureChanged', async (structureId) => {
+		this.$app.addEventListener("structureChanged", async (structureId) => {
 			this.loadHabilitationType();
-
-			this.$store.dispatch('switchStructure', structureId);
+			this.$store.dispatch("switchStructure", structureId);
 
 			if (this.isConnectedUser) {
 				this.initCollections();
 
-						const personnelsCollection = this.$assets.getCollection("personnels");
-						this.$assets.getCollection("suspensions").load();
-						await personnelsCollection.load();
-						const personnels = personnelsCollection.getCollection();
-						let ids = [];
-						personnels.forEach(personnel => {
-							ids.push(personnel.id);
-						});
-						this.$assets.getCollection("habilitations").load({
-							personnel_id: ids.join(',')
-						});
-						
-						await this.$assets.getCollection("types").load();
-						await this.$assets.getCollection("veilles").load();
-						await this.$assets.getCollection("personnels").load();
-						await this.$assets.getCollection("habilitationsPersonnels").load();
-						await this.$assets.getCollection("personnelsFiltered").load({
-							withContratFilter: 1,
-							ordre: "croissant",
-							limit: "aucune"
-						});
+				const personnelsCollection = this.$assets.getCollection("personnels");
+				this.$assets.getCollection("suspensions").load();
+				await personnelsCollection.load();
+				const personnels = personnelsCollection.getCollection();
+				let ids = [];
+				personnels.forEach((personnel) => {
+					ids.push(personnel.id);
+				});
+				this.$assets.getCollection("habilitations").load({
+					personnel_id: ids.join(","),
+				});
+
+				await this.$assets.getCollection("types").load();
+				await this.$assets.getCollection("veilles").load();
+				await this.$assets.getCollection("personnels").load();
+				await this.$assets.getCollection("habilitationsPersonnels").load();
+				await this.$assets.getCollection("personnelsFiltered").load({
+					withContratFilter: 1,
+					ordre: "croissant",
+					limit: "aucune",
+				});
 				this.pending.habilitations = true;
 				try {
 					this.loadHabilitationType();
@@ -451,35 +371,25 @@ export default {
 					this.loadCharacteristicPersonnelStats();
 
 					const personnelsCollection = this.$assets.getCollection("personnels");
-					// this.$assets.getCollection("suspensions").load();
 					await personnelsCollection.load();
 					const personnels = personnelsCollection.getCollection();
 					let ids = [];
-					personnels.forEach(personnel => {
+					personnels.forEach((personnel) => {
 						ids.push(personnel.id);
 					});
 					this.$assets.getCollection("habilitations").load({
-						personnel_id: ids.join(',')
+						personnel_id: ids.join(","),
 					});
 
 					await this.$assets.getCollection("types").load();
 					await this.$assets.getCollection("veilles").load();
 					await this.$assets.getCollection("personnels").load();
 					await this.$assets.getCollection("habilitationsPersonnels").load();
-                    this.$assets.getCollection("personnelsFiltered").reset();
+					this.$assets.getCollection("personnelsFiltered").reset();
 					await this.$assets.getCollection("personnelsFiltered").load();
-					// await this.$assets.getCollection("suspensions").load();
-
-					// Mettre à jour currentItemId en fonction des paramètres de l'URL
-					const currentItemIdFromURL = parseInt(this.$route.params.id);
-					if (!isNaN(currentItemIdFromURL)) {
-						this.currentItemId = currentItemIdFromURL;
-					}
-				}
-				catch (e) {
+				} catch (e) {
 					this.$app.catchError(e);
-				}
-				finally {
+				} finally {
 					this.pending.habilitations = false;
 				}
 			}
@@ -487,12 +397,33 @@ export default {
 			this.currentList.forEach((item, index) => {
 				this.idToIndexMap[item.id] = index;
 			});
-		},
-		);
+		});
 
-		this.$router.push('/types');
+		this.$router.push("/types");
 	},
-
-
-}
+};
 </script>
+
+<style lang="scss">
+@import "./variables";
+
+.fs-7 {
+	font-size: 0.8rem !important;
+}
+
+.progress-ht {
+	height: 25px !important;
+}
+
+.list-group-item.active {
+	z-index: 2;
+	color: var(--bs-list-group-active-color) !important;
+	background-color: $theme-color !important;
+	border-color: $theme-color !important;
+	border-top: solid 15px $theme-color !important;
+	border-bottom: solid 15px $theme-color !important;
+	font-size: 110%;
+	font-weight: bold;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.565);
+}
+</style>
