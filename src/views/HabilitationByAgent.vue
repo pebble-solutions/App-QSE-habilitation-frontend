@@ -107,7 +107,8 @@ export default {
             for (let i = 0; i < this.listHabByPersoJoinType.length; i++) {
                 this.pending.control = true;
                 if (this.listHabByPersoJoinType[i].configVeille) {
-                    await this.$app.apiGet('v2/controle/veille/' + this.listHabByPersoJoinType[i].configVeille.id + '/todo', { CSP_min: 0, CSP_max: 600 })
+                    // CSP_max = 600 pour 1 an 
+                    await this.$app.apiGet('v2/controle/veille/' + this.listHabByPersoJoinType[i].configVeille.id + '/todo', { CSP_min: 0, CSP_max: 1800 })
                         .then((data) => {
                             let veille = data;
                             if (veille) {
