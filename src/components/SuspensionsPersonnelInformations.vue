@@ -92,7 +92,7 @@ export default {
             if (!this.suspensions) return [];
             return this.allHabilitations.filter(hab =>
                 this.suspensions.some(sus =>
-                    sus.habilitation_id === hab.id && new Date(sus.df) > today
+                    sus.habilitation_id === hab.id && (sus.df === null || new Date(sus.df) > today)
                 )
             );
         },
@@ -109,8 +109,8 @@ export default {
             const today = new Date();
             return this.allHabilitations.filter(hab => {
                 const endDate = new Date(hab.df);
-                const isCurrentlySuspended = this.suspensions.some(sus => 
-                    sus.habilitation_id === hab.id && new Date(sus.df) > today
+                const isCurrentlySuspended = this.suspensions.some(sus =>
+                    sus.habilitation_id === hab.id && (sus.df === null || new Date(sus.df) > today)
                 );
                 return endDate >= today && !isCurrentlySuspended;
             });
