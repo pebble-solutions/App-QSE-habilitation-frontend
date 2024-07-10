@@ -108,10 +108,10 @@ export default {
         modifyDate(){
             this.pending.buttonModif = true 
             if (!this.suspension.dd && !this.suspension.df) {
-                alert("Vous devez entrer une nouvelle date de début et une nouvelle date de fin pour envoyer la création.")
+                alert("Vous devez entrer date de début et date de fin pour valider la création.")
             } else {
                 this.suspension.characteristic__personnel_id = this.habilitationId;
-                if (confirm("Etes vous sur de vouloir créer cette suspension?")){  
+                if (confirm("Etes-vous sûr de vouloir créer cette suspension?")){  
                     this.$app.api.post('/v2/habilitation/suspension',
                         this.suspension
                     )
