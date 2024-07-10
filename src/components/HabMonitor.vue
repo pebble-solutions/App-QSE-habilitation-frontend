@@ -20,10 +20,31 @@
 				<!-- Colonne 1 : Validité de l'habilitation -->
 				<div class="col-lg-4 col-12">
 					<div class="px-2 pt-2 mb-3 mb-lg-0">
-						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">{{
+						<div class="fw-bold col-12">Validité : 3 ans<span class="fw-lighter ms-2">#{{
 							personnelHabilitation.id }}</span></div>
-						<div class="col-12 pb-1">Du {{ changeFormatDateLit(personnelHabilitation.dd) }} au
-							{{ changeFormatDateLit(personnelHabilitation.df) }}</div>
+						<div class="col-12 pb-1" v-if="showDate">Du {{ changeFormatDateLit(personnelHabilitation.dd) }} au
+							{{ changeFormatDateLit(personnelHabilitation.df) }}
+							<button class="btn btn-sm" @click.prevent="showDate = false">
+								<i class="bi bi-pencil-square ms-2"></i>
+							</button> 
+						</div>
+						<div class="row align-items-end mb-2 ms-3" v-if="!showDate">
+							<div class="col-6">
+								<label for="dd" class="form-label ms-4">Date de début</label>
+								<input type="date" format="YYYY-MM-DD" class="form-control" id="dd" v-model="ddHab">
+							</div>
+							<div class="col-2">
+								<button class="btn btn-sm btn-success w-100 mb-1" @click.prevent="saveNewDate()" :disabled="!ddHab">
+								<i class="bi bi-check"></i>
+								</button>
+							</div>
+							<div class="col-2">
+								<button class="btn btn-sm btn-secondary w-100 mb-1" @click.prevent="showDate = true">
+								<i class="bi bi-x"></i>
+								</button>
+							</div>
+						</div>
+												
 						<!-- Composant ProgressBar -->
 						<ProgressBar class="mb-2" :dd="new Date(personnelHabilitation.dd)"
 							:df="new Date(personnelHabilitation.df)"></ProgressBar>
@@ -131,6 +152,7 @@ import { Tooltip } from 'bootstrap';
 import ProgressBar from '../components/ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../js/collecte';
 import { mapState } from 'vuex';
+import { toSqlDate } from '../js/date';
 
 export default {
 	components: { ProgressBar },
@@ -149,6 +171,8 @@ export default {
 	},
 	data() {
 		return {
+			showDate: true,
+			ddHab: null,
 			pending: {
 				control: false
 			},
@@ -230,6 +254,34 @@ export default {
 		 */
 		classNameFromSAMI(reponse) {
 			return classNameFromSAMI(reponse);
+		},
+
+		async saveNewDate() {
+			const newStartDate = this.ddHab.slice(0, 10);
+			const currentStartDate = this.personnelHabilitation.dd.slice(0, 10);
+
+			if (newStartDate !== currentStartDate) {
+				const startDate = new Date(this.ddHab);
+				const endDate = new Date(startDate);
+				endDate.setFullYear(startDate.getFullYear() + 3);
+				endDate.setDate(endDate.getDate() - 1);
+
+				const obj = {
+				dd: newStartDate,
+				df: toSqlDate(endDate)
+				};
+
+				const habilitationsPersonnelsCollection = this.$assets.getCollection("habilitationsPersonnels");
+
+				try {
+				const data = await this.$app.api.patch(`v2/habilitation/personnel/${this.personnelHabilitation.id}`, obj);
+				habilitationsPersonnelsCollection.updateCollection([data]);
+				} catch (error) {
+				this.$app.catchError(error);
+				} finally {
+				this.showDate = true;
+				}
+			}
 		}
 	},
 	mounted() {
@@ -240,6 +292,8 @@ export default {
 				return new Tooltip(tooltipTriggerEl)
 			})
 		})
+		this.dd = this.personnelHabilitation.dd;
+
 	}
 }
 </script>
